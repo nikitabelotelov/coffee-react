@@ -1,0 +1,75 @@
+.manager-panel__root {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 0.5fr 0.5fr;
+    grid-template-areas: "topleft topright"
+                        "middleleft bottomright"
+                        "bottomleft bottomright";
+}
+
+.manager-panel__block {
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+    margin: .375rem;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
+    text-transform: uppercase;
+    padding: .7rem .75rem;
+    text-align: center;
+    vertical-align: middle;
+    display: inline-block;
+    font-size: 1rem;
+    line-height: 1.5;
+    font-weight: 400;
+    border-radius: 0.25rem;
+}
+
+
+
+.manager-panel__topleft { 
+    grid-area: topleft; 
+    background: #343a40;
+    color: #ffffff;
+}
+
+.manager-panel__topright {
+    grid-area: topright;
+    background: #343a40;
+    color: #ffffff; 
+}
+
+.manager-panel__middleleft {
+    grid-area: middleleft; 
+    background: #6c757d;
+    color: #ffffff;
+}
+
+.manager-panel__bottomleft {
+    grid-area: bottomleft; 
+    background: #6c757d;
+    color: #ffffff;
+}
+
+.manager-panel__bottomright {
+    grid-area: bottomright; 
+    background: #6610f2;
+    color: #ffffff;
+}
+
+
+.setting__root {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+
+.setting__profile {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas: "list hand"
+                        "list back";
+}
+
+.setting__profile-list {
+    grid-area: list;
+}
