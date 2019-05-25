@@ -8,7 +8,6 @@ class App extends Component {
     render() {
         return (
             <div>
-                START PAGE
                 <Router>
                     <Panel/>
                 </Router>
