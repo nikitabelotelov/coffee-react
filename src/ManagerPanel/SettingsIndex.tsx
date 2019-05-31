@@ -4,14 +4,14 @@ import {getBackLink} from "../types";
 
 export default function Setting() {
     return (
-        <div className='setting__root'>
-            <NavLink to='setting/profile' className='manager-panel__block btn-outline-dark'>
+        <div className='setting__root panel_root'>
+            <NavLink to='settings/profile' className='manager-panel__block btn-outline-dark'>
                 Выбор профиля
             </NavLink>
-            <NavLink to='setting/color' className='manager-panel__block btn-outline-dark'>
+            <NavLink to='settings/color' className='manager-panel__block btn-outline-dark'>
                 Цветовая схема
             </NavLink>
-            <NavLink to='setting/update' className='manager-panel__block btn-outline-dark'>
+            <NavLink to='settings/update' className='manager-panel__block btn-outline-dark'>
                 Обновление
             </NavLink>
             <NavLink to={getBackLink()} className='manager-panel__block btn-outline-success'>

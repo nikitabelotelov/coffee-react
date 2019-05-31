@@ -7,11 +7,9 @@ import {Panel} from './ManagerPanel/Panel'
 class App extends Component {
     render() {
         return (
-            <div>
-                <Router>
-                    <Panel/>
-                </Router>
-            </div>
+            <Router>
+                <Panel/>
+            </Router>
         );
     }
 }

@@ -1,5 +1,5 @@
 let ACTION_TYPES = {
-    addSetting: 'ADD_SETTING'
+    setSetting: 'SET_SETTING'
 };
 
 export default ACTION_TYPES;

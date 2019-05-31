@@ -1,5 +1,5 @@
 import ACTION_TYPES from '../actions/actionTypes';
-import {IMachineState} from "../types";
+import {IFullMachineState, IMachineState, ISettingsState} from "../types";
 
 const initialMachineState:IMachineState = {
     group1: {
@@ -30,12 +30,39 @@ const initialMachineState:IMachineState = {
     }
 };
 
-const initialState = {
-    machineState: initialMachineState
+const initialSettingsState:ISettingsState = {
+    g1TSet: 94,
+    g2TSet: 92,
+    g1TimeSet: 0,
+    g2TimeSet: 0,
+    g1AutoMode1: 0,
+    g2AutoMode1: 0,
+    g1_1TimeSet: 0,
+    g2_1TimeSet: 0,
+    steam: 1000,
+    rCold: 0,
+    gCold: 0,
+    bCold: 16,
+    aCold: 16,
+    rHot: 16,
+    gHot: 0,
+    bHot: 0,
+    aHot: 16
 }
 
-function settingsReducer(state: any = initialState, action: any) {
+const initialState = {
+    machineState: initialMachineState,
+    settingsState: initialSettingsState
+}
+
+function rootReducer(state: any = initialState, action: any) {
+    switch (action.type) {
+        case ACTION_TYPES.setSetting:
+            let newSettingsState = Object.assign({}, state.settingsState);
+            newSettingsState[action.payload.settingName] = action.payload.settingValue;
+            return Object.assign({}, state, { settingsState: newSettingsState });
+    }
     return state;
 };
 
-export default settingsReducer;
+export default rootReducer;

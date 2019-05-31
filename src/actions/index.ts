@@ -1,4 +1,10 @@
 import ACTION_TYPES from './actionTypes';
-export function addSetting(payload:any) {
-    return { type: ACTION_TYPES.addSetting, payload }
+
+interface ISetSettingAction {
+    settingName: string,
+    settingValue: number
+}
+
+export function setSetting(payload:ISetSettingAction) {
+    return { type: ACTION_TYPES.setSetting, payload }
 };
