@@ -1,5 +1,6 @@
 let ACTION_TYPES = {
-    setSetting: 'SET_SETTING'
+    setSetting: 1,
+    setMachineState: 2
 };
 
 export default ACTION_TYPES;

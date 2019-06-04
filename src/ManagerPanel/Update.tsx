@@ -11,7 +11,7 @@ export default function Update(props: any) {
                         Во время обновления нельзя отключать кофемашину от сети.</b>
                 </div>
                 <div className='manager-panel__block manager-panel__topright btn-outline-dark'>
-                    Начать процесс обновления
+                    <a href="/update">Начать процесс обновления</a>
                 </div>
                 <NavLink to='/manage/settings'
                          className='manager-panel__block btn-outline-dark manager-panel__bottomright'>
