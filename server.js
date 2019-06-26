@@ -1,15 +1,8 @@
-const root = process.cwd(),
-    path = require('path'),
+const path = require('path'),
     express = require('express'),
     fs = require('fs'),
     app = express(),
-    resourcesPath = path.join('', 'application');
-
-const global = (function() {
-    return this || (0, eval)('this');
-})();
-
-const indexFile = fs.readFileSync(path.join(root, 'application', 'Coffee', 'index.html'), 'utf8');
+    resourcesPath = path.join('', 'client/build');
 
 EXIT_CODES = {
     OK: 0,
@@ -17,37 +10,11 @@ EXIT_CODES = {
     ERROR: 2
 };
 
-var requirejs = require(path.join(root, 'node_modules', 'saby-units', 'lib', 'requirejs', 'r.js'));
-global.requirejs = requirejs;
-global.originRequire = require;
-
-
-const createConfig = require(path.join(root, 'node_modules', 'sbis3-ws', 'WS.Core', 'ext', 'requirejs', 'config.js'));
-const config = createConfig(path.join(root, 'application'),
-    path.join(root, 'application', 'WS.Core'),
-    path.join(root, 'application'),
-    {lite: true});
-
-global.require = global.requirejs = require = requirejs;
-requirejs.config(config);
-
 app.use(express.static(resourcesPath));
 
-const port = process.env.PORT || 777;
+const port = 3001;
 var expressServer = app.listen(port);
 console.log('app available on port ' + port);
-
-console.log('start init');
-require(['Core/core-init'], () => {
-    console.log('core init success');
-}, (err) => {
-    console.log(err);
-    console.log('core init failed');
-});
-
-app.get('/Coffee/*', (req, res) => {
-    res.send(indexFile);
-});
 
 // websockets
 
@@ -76,7 +43,34 @@ global.settings = {
     aHot: 16
 };
 
-global.currentInfo = {};
+global.currentInfo = {
+    group1: {
+        temperature: 96,
+        setting: {
+            temperature: 97,
+            value: 120
+        }
+    },
+    group2: {
+        temperature: 92,
+        setting: {
+            temperature: 92,
+            value: 120
+        }
+    },
+    predictGroup: {
+        temperature: 85,
+        setting: {
+            temperature: 85
+        }
+    },
+    steam: {
+        power: 1337,
+        setting: {
+            power: 1337
+        }
+    }
+};
 
 var INTERVALS = [];
 
@@ -101,7 +95,7 @@ const wss = createServer(function connectionListener(ws) {
         handleMessage(JSON.parse(data));
     });
 
-}).listen(8080, function() {
+}).listen(3001, function() {
     const {address, port} = this.address() // this is the http[s].Server
     console.log('listening on http://%s:%d (%s)', /::/.test(address) ? '0.0.0.0' : address, port)
 });
@@ -163,7 +157,7 @@ function handleCurrentInfoUpdated(receivedInfo) {
 function sendSettings(data) {
     global.SerialHelper.Transmit(data);
 }
-
-global.originRequire('./serialHelper.js');
-global.SerialHelper.SerialOpen();
-global.SerialHelper.onReceiveUpdate(handleCurrentInfoUpdated);
+//
+// global.originRequire('./serialHelper.js');
+// global.SerialHelper.SerialOpen();
+// global.SerialHelper.onReceiveUpdate(handleCurrentInfoUpdated);
