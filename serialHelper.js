@@ -345,6 +345,3 @@
 //       this.serial.write(buffer);
 //    }
 // }
-//
-
-export default 123;

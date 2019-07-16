@@ -22,7 +22,7 @@ export function RootView(props: any) {
                 <b>Паровой</b><br />
                 Давление: {props.machineState.steam.power/1000} / {props.machineState.steam.setting.power/1000}
             </div>
-            <NavLink to='manage/settings' className='manager-panel__block btn-outline-dark manager-panel__bottomright'>
+            <NavLink to='/settings' className='manager-panel__block btn-outline-dark manager-panel__bottomright'>
                 Настройки
             </NavLink>
         </div>
