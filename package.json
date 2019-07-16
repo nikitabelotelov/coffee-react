@@ -15,6 +15,7 @@
   ],
   "author": "callicoder",
   "license": "MIT",
+  "proxy": "localhost:3001",
   "dependencies": {
     "bcrypt": "*",
     "body-parser": "^1.18.3",
