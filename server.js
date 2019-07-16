@@ -13,7 +13,7 @@ EXIT_CODES = {
 app.use(express.static(resourcesPath));
 
 const port = 3001;
-var expressServer = app.listen(port);
+var expressServer = app.listen(process.env.PORT || port);
 console.log('app available on port ' + port);
 
 // websockets
