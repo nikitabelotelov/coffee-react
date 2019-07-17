@@ -1,3 +1,5 @@
+import ACTION_TYPES from "./actionTypes";
+
 const socket = new WebSocket("ws://localhost:3002");
 
 socket.onopen = () => {
@@ -17,10 +19,20 @@ socket.onerror = (error:any) => {
 export const init = ( store: any ) => {
     socket.onmessage = (event:any) => {
         console.log("Получены данные " + event.data);
-        store.dispatch({
-            type: event.type,
-            payload: event.data
-        })
+        let parsed = JSON.parse(event.data);
+        let dispatched = false;
+        for(let key in ACTION_TYPES) {
+            if(key === parsed.type) {
+                dispatched = true;
+                store.dispatch({
+                    type: key,
+                    payload: parsed.data
+                });
+            }
+        }
+        if(!dispatched) {
+            console.error("Unknown websocket message type: " + parsed.type);
+        }
     };
 };
 export const emit = ( type: string, payload: string ) => socket.send( JSON.stringify({type, payload}) );

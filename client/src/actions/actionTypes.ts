@@ -1,6 +1,7 @@
 let ACTION_TYPES = {
-    setSetting: 1,
-    setMachineState: 2
+    setSetting: "setSetting",
+    setMachineState: "setMachineState",
+    currentInfoUpdate: "currentInfoUpdate"
 };
 
 export default ACTION_TYPES;
