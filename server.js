@@ -2,7 +2,8 @@ const path = require('path'),
     express = require('express'),
     fs = require('fs'),
     app = express(),
-    resourcesPath = path.join('', 'client/build');
+    resourcesPath = path.join('', 'client/build'),
+    SerialHelper = require('./serialHelper').SerialHelper;
 
 EXIT_CODES = {
     OK: 0,
@@ -157,7 +158,6 @@ function handleCurrentInfoUpdated(receivedInfo) {
 function sendSettings(data) {
     global.SerialHelper.Transmit(data);
 }
-//
-// global.originRequire('./serialHelper.js');
-// global.SerialHelper.SerialOpen();
+
+SerialHelper.SerialOpen();
 // global.SerialHelper.onReceiveUpdate(handleCurrentInfoUpdated);
