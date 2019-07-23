@@ -1,7 +1,7 @@
 import ACTION_TYPES from '../actions/actionTypes';
 import {IMachineState, ISettingsState} from "../types";
 
-const initialMachineState:IMachineState = {
+const initialMachineState: IMachineState = {
     group1: {
         temperature: 95,
         setting: {
@@ -30,7 +30,7 @@ const initialMachineState:IMachineState = {
     }
 };
 
-const initialSettingsState:ISettingsState = {
+const initialSettingsState: ISettingsState = {
     g1TSet: 94,
     g2TSet: 92,
     g1TimeSet: 0,
@@ -39,7 +39,7 @@ const initialSettingsState:ISettingsState = {
     g2AutoMode1: 0,
     g1_1TimeSet: 0,
     g2_1TimeSet: 0,
-    steam: 1000,
+    parTSet: 1000,
     rCold: 0,
     gCold: 0,
     bCold: 16,
@@ -60,9 +60,15 @@ function rootReducer(state: any = initialState, action: any) {
         case ACTION_TYPES.setSetting:
             let settingsValueChanged = Object.assign({}, state.settingsState);
             settingsValueChanged[action.payload.settingName] = action.payload.settingValue;
-            return Object.assign({}, state, { settingsState: settingsValueChanged });
+            return Object.assign({}, state, {settingsState: settingsValueChanged});
         case ACTION_TYPES.currentInfoUpdate:
             return Object.assign({}, state, {machineState: action.payload});
+        case ACTION_TYPES.initialSettings:
+            let newSettings: any = {};
+            for (let key in action.payload) {
+                newSettings[key] = action.payload[key];
+            }
+            return Object.assign({}, state, {settingsState: newSettings});
     }
     return state;
 };

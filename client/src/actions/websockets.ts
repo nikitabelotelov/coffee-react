@@ -18,7 +18,6 @@ socket.onerror = (error:any) => {
 };
 export const init = ( store: any ) => {
     socket.onmessage = (event:any) => {
-        console.log("Получены данные " + event.data);
         let parsed = JSON.parse(event.data);
         let dispatched = false;
         for(let key in ACTION_TYPES) {

@@ -4,7 +4,8 @@ import {RootView} from "./RootView";
 
 const mapStateToProps = (state:any) => {
     return {
-        machineState : state.machineState
+        machineState : state.machineState,
+        settingsState : state.settingsState
     }
 };
 

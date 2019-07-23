@@ -22,8 +22,8 @@ console.log('app available on port ' + port);
 const {createServer} = require('wss')
 
 global.settings = {
-    g1TSet: 94,
-    g2TSet: 92,
+    g1TSet: 91,
+    g2TSet: 91,
     g1TimeSet: 0,
     g2TimeSet: 0,
     g1AutoMode1: 0,
@@ -96,7 +96,7 @@ const wss = createServer(function connectionListener(ws) {
         handleMessage(JSON.parse(data));
     });
 
-}).listen(3002, function() {
+}).listen(3002, function () {
     const {address, port} = this.address() // this is the http[s].Server
     console.log('listening on http://%s:%d (%s)', /::/.test(address) ? '0.0.0.0' : address, port)
 });
@@ -150,9 +150,7 @@ function stopServers() {
 }
 
 function handleCurrentInfoUpdated(receivedInfo) {
-    for (var key in receivedInfo) {
-        global.currentInfo[key] = receivedInfo[key];
-    }
+    global.currentInfo = receivedInfo;
 }
 
 function sendSettings(data) {
@@ -160,4 +158,4 @@ function sendSettings(data) {
 }
 
 SerialHelper.SerialOpen();
-// global.SerialHelper.onReceiveUpdate(handleCurrentInfoUpdated);
+SerialHelper.onReceiveUpdate(handleCurrentInfoUpdated);

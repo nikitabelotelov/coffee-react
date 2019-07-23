@@ -42,7 +42,7 @@ export interface ISettingsState {
     g2AutoMode1: 0,
     g1_1TimeSet: 0,
     g2_1TimeSet: 0,
-    steam: 1000,
+    parTSet: 1000,
     rCold: 0,
     gCold: 0,
     bCold: 16,
