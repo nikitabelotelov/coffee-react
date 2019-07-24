@@ -34,4 +34,4 @@ export const init = ( store: any ) => {
         }
     };
 };
-export const emit = ( type: string, payload: string ) => socket.send( JSON.stringify({type, payload}) );
+export const emit = ( type: string, payload: any ) => socket.send( JSON.stringify({type, data: payload}) );

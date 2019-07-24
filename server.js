@@ -154,7 +154,8 @@ function handleCurrentInfoUpdated(receivedInfo) {
 }
 
 function sendSettings(data) {
-    global.SerialHelper.Transmit(data);
+    global.settings[data.settingName] = data.settingValue;
+    SerialHelper.Transmit(data);
 }
 
 SerialHelper.SerialOpen();

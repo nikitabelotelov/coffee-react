@@ -2,7 +2,8 @@ let ACTION_TYPES = {
     setSetting: "setSetting",
     setMachineState: "setMachineState",
     currentInfoUpdate: "currentInfoUpdate",
-    initialSettings: "initialSettings"
+    initialSettings: "initialSettings",
+    updateSettings: "updateSettings"
 };
 
 export default ACTION_TYPES;
