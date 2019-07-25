@@ -8,32 +8,10 @@ var mockSerialHelper = {
         console.log("SerialHelper mock: onReceiveUpdate");
         setInterval(function() {
             callback({
-                group1: {
-                    temperature: 99,
-                        setting: {
-                        temperature: 9,
-                            value: 120
-                    }
-                },
-                group2: {
-                    temperature: 99,
-                        setting: {
-                        temperature: 92,
-                            value: 120
-                    }
-                },
-                predictGroup: {
-                    temperature: 89,
-                        setting: {
-                        temperature: 85
-                    }
-                },
-                steam: {
-                    power: 1337,
-                        setting: {
-                        power: 1337
-                    }
-                }
+                currentParP: 1000,
+                currentGroup1P: 95,
+                currentGroup2P: 97
+
             });
         }, 10000);
         },

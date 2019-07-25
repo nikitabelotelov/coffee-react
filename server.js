@@ -46,30 +46,16 @@ global.settings = {
 
 global.currentInfo = {
     group1: {
-        temperature: 96,
-        setting: {
-            temperature: 97,
-            value: 120
-        }
+        temperature: 96
     },
     group2: {
-        temperature: 92,
-        setting: {
-            temperature: 92,
-            value: 120
-        }
+        temperature: 92
     },
     predictGroup: {
-        temperature: 85,
-        setting: {
-            temperature: 85
-        }
+        temperature: 85
     },
     steam: {
-        power: 1337,
-        setting: {
-            power: 1337
-        }
+        power: 1337
     }
 };
 
@@ -104,8 +90,8 @@ const wss = createServer(function connectionListener(ws) {
 function handleMessage(data) {
     switch (data.type) {
         case "newSettings":
-            global.settings = data.data;
-            return sendSettings(data.data);
+            global.settings[data.settingName] = data.data.settingValue;
+            return sendSettings(global.settings);
         default:
             return "wrong request";
     }
@@ -150,11 +136,13 @@ function stopServers() {
 }
 
 function handleCurrentInfoUpdated(receivedInfo) {
-    global.currentInfo = receivedInfo;
+    global.currentInfo.steam.power = receivedInfo.currentParP;
+    global.currentInfo.group1.temperature = receivedInfo.currentGroup1P;
+    global.currentInfo.group2.temperature = receivedInfo.currentGroup2P;
+    global.currentInfo.predictGroup.temperature = 99;
 }
 
 function sendSettings(data) {
-    global.settings[data.settingName] = data.settingValue;
     SerialHelper.Transmit(data);
 }
 

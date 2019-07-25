@@ -1,7 +1,7 @@
 import {NavLink} from "react-router-dom";
 import * as React from "react";
 import {getBackLink, ISettingsState} from "../../types";
-import NumberInput from "./NumberInput";
+import NumberInput from "../NumberInput";
 import settingStore from "../../SettingsStore/index";
 import {setSetting} from "../../actions/index";
 

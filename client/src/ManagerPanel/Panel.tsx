@@ -9,6 +9,7 @@ import Profile from './Profile';
 import Update from './Update';
 import ParametersSettings from './ParametersSettings';
 import Steam from './Parameters/Steam'
+import ColorHot from "./Colors/ColorHot";
 
 export class Panel extends React.Component {
     render() {
@@ -17,6 +18,7 @@ export class Panel extends React.Component {
                 <Route exact path='/' component={Root} />
                 <Route exact path='*/settings' component={SettingsIndex} />
                 <Route exact path='*/settings/profile' component={Profile} />
+                <Route exact path='*/settings/color' component={ColorHot} />
                 <Route exact path='*/settings/update' component={Update} />
                 <Route exact path='*/settings/profile/hand' component={ParametersSettings} />
                 <Route exact path='*/settings/profile/hand/steam' component={Steam} />
