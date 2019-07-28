@@ -33,25 +33,18 @@ var SerialHelper = {
       this.receivedUpdateCallback = callback;
    },
    SerialOpen: function() {
-      // console.log("SERIAL OPENING");
       const raspi = require('raspi');
       const Serial = require('raspi-serial').Serial;
       raspi.init(() => {
          var serial = new Serial();
          serial.open(() => {
-            //console.log("SERIAL OPENED");
             this.serial = serial;
             serial.on('data', (data) => {
-               //console.log("DATA RECEIVED");
                data.forEach((element) => {
                   this.Received(element);
                });
+               this.receivedUpdateCallback(this.currentData);
             });
-            setInterval(() => {
-               if(this.receivedUpdateCallback) {
-                  this.receivedUpdateCallback(this.currentData);
-               }
-            }, 1000);
          });
       });
    },

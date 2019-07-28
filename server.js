@@ -63,6 +63,7 @@ var INTERVALS = [];
 
 const wss = createServer(function connectionListener(ws) {
     var initSettingsTmt = setTimeout(() => {
+        console.log("SENDING INITIAL SETTINGS");
         ws.send(JSON.stringify(getInitialSettings()));
     }, 5000);
 
