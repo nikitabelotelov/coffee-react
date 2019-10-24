@@ -1,8 +1,8 @@
 import ACTION_TYPES from './actionTypes';
-import {emit} from '../actions/websockets';
-import { ISTMMessage } from '../../server/stm/Converter';
+import { IBasicMessage } from '../types';
+import { emit } from '../SettingsStore';
 
-export function setSetting(payload: ISTMMessage) {
+export function setSetting(payload: IBasicMessage) {
     emit(payload);
     return {type: ACTION_TYPES.setSetting, payload}
 };

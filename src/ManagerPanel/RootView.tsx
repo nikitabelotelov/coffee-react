@@ -9,25 +9,25 @@ export function RootView(props: IAppState) {
       <div className="manager-panel__block btn-outline-dark manager-panel__topleft ">
         <b>Группа 1</b>
         <br />
-        Температура: {props[StmMessages.Group1Temperature]} C /{" "}
-        {props[StmMessages.SetGroup1Temperature]} C<br />
+        Температура: {props.machine[StmMessages.Group1Temperature]} C /{" "}
+        {props.settings.Group1Temperature} C<br />
       </div>
       <div className="manager-panel__block btn-outline-dark manager-panel__topright">
         <b>Группа 2</b>
         <br />
-        Температура: {props[StmMessages.Group2Temperature]} C /{" "}
-        {props[StmMessages.SetGroup2Temperature]} C<br />
+        Температура: {props.machine[StmMessages.Group2Temperature]} C /{" "}
+        {props.settings.Group2Temperature} C<br />
       </div>
       <div className="manager-panel__block btn-outline-dark manager-panel__middleleft">
         <b>Преднагревательный</b>
         <br />
-        Температура: {props[StmMessages.PredictGroupTemperature]} C
+        Температура: {props.machine[StmMessages.PredictGroupTemperature]} C
       </div>
       <div className="manager-panel__block btn-outline-dark manager-panel__bottomleft">
         <b>Паровой</b>
         <br />
-        Давление: {props[StmMessages.SteamPressure]} /{" "}
-        {props[StmMessages.SetSteamPressure]}
+        Давление: {props.machine[StmMessages.SteamPressure]} /{" "}
+        {props.settings.SteamPressure}
       </div>
       <NavLink
         to="/settings"

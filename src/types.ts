@@ -7,23 +7,44 @@ export interface IMachineState {
   [StmMessages.Group2Pressure]: string;
   [StmMessages.Group2Temperature]: string;
   [StmMessages.PredictGroupTemperature]: string;
-  [StmMessages.Error1]: string;
+  [StmMessages.Error]: string;
+  [StmMessages.Valve1]: string;
+  [StmMessages.Valve2]: string;
+  [StmMessages.Valve3]: string;
+  [StmMessages.Valve4]: string;
+  [StmMessages.Valve5]: string;
+  [StmMessages.Valve6]: string;
+  [StmMessages.Relay1]: string;
+  [StmMessages.Relay2]: string;
+  [StmMessages.Relay3]: string;
+  [StmMessages.Relay4]: string;
+  [StmMessages.Relay5]: string;
+  [StmMessages.Relay6]: string;
+  [StmMessages.Relay7]: string;
+  [StmMessages.Relay8]: string;
+  [StmMessages.Echo]: string;
+  [StmMessages.WaterLevel]: string;
 }
 
 export interface ISettingsState {
-  [StmMessages.SetGroup1Temperature]: string,
-  [StmMessages.SetGroup1AutoMode1]: string,
-  [StmMessages.SetGroup1AutoMode2]: string,
-  [StmMessages.SetGroup2Temperature]: string,
-  [StmMessages.SetGroup2AutoMode1]: string,
-  [StmMessages.SetGroup2AutoMode2]: string,
-  [StmMessages.SetSteamPressure]: string,
-  [StmMessages.SetRedCold]: string,
-  [StmMessages.SetGreenCold]: string,
-  [StmMessages.SetBlueCold]: string,
-  [StmMessages.SetRedHot]: string,
-  [StmMessages.SetGreenHot]: string,
-  [StmMessages.SetBlueHot]: string
+    Group1Temperature: string,
+    Group1AutoMode1: string,
+    Group1AutoMode2: string,
+    Group2Temperature: string,
+    Group2AutoMode1: string,
+    Group2AutoMode2: string,
+    SteamPressure: string,
+    RedCold: string,
+    GreenCold: string,
+    BlueCold: string,
+    RedHot: string,
+    GreenHot: string,
+    BlueHot: string
+}
+
+export interface IBasicMessage {
+  id: Extract<keyof ISettingsState, string>, 
+  content: string
 }
 
 export interface IFullMachineState {

@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import * as React from "react";
-import { getBackLink } from "../../types";
+import { getBackLink, ISettingsState } from "../../types";
 import NumberInput from "../NumberInput";
 import settingStore from "../../SettingsStore/index";
 import { setSetting } from "../../actions/index";
@@ -9,21 +9,21 @@ import { StmMessages } from "../../../server/stm/Converter";
 
 
 const SteamView = (props: IAppState) => {
-  const value = Number(props[StmMessages.SetSteamPressure]) || 0
+  const value = Number(props.settings.SteamPressure) || 0
   return (
     <div className="setting__profile-parameters panel_root">
       <div className="manager-panel__block manager-panel__top">
         <p>Давление парового бойлера</p>
         <NumberInput
-          increment={() => {
+          increment={(value:number) => {
             settingStore.dispatch(setSetting({
-              id: StmMessages.SetSteamPressure,
+              id: 'SteamPressure',
               content: `${value + 1}`
             }))
           }}
-          decrement={() => {
+          decrement={(value:number) => {
             settingStore.dispatch(setSetting({
-              id: StmMessages.SetSteamPressure,
+              id:'SteamPressure',
               content: `${value - 1}`
             }))
           }}

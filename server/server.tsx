@@ -37,7 +37,7 @@ const sendMessages = () => {
 }
 
 usart.msgHandlers.push(message => {
-  const stm = Converter.fromString(message);
+  const stm = Converter.fromString(message) as ISTMMessage;
   messagesFromStm.push(stm)
   sendMessages()  
 });
@@ -57,6 +57,13 @@ wss.on("connection", function connectionListener(ws) {
   ws.on("message", data => {
     console.log(data);
     // @ts-ignore
-    usart.sendMessage(JSON.parse(data).stm)
+    const message = JSON.parse(data)
+
+    if (message.stm) {
+      usart.sendMessage(message.stm)
+    } else if (message.settings) {
+      //todo: save settings to file
+      // read - change - save
+    }
   });
 });
