@@ -1,5 +1,6 @@
 import {NavLink} from "react-router-dom";
 import * as React from "react";
+import { getBackLink } from "../types";
 
 export default function Update(props: any) {
     return (
@@ -13,7 +14,7 @@ export default function Update(props: any) {
                 <div className='manager-panel__block manager-panel__topright btn-outline-dark'>
                     <a href="/update">Начать процесс обновления</a>
                 </div>
-                <NavLink to='/manage/settings'
+                <NavLink to={getBackLink()}
                          className='manager-panel__block btn-outline-dark manager-panel__bottomright'>
                     Назад
                 </NavLink>
