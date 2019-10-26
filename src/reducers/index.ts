@@ -6,9 +6,9 @@ import { StmMessages, ISTMMessage, ISTMCommand } from "../../server/stm/Converte
 export interface IAppState {
   machine: IMachineState
   settings: ISettingsState
-  echo: {
-    waiting: ISTMCommand | null
-    start: number
+  life: {
+    relay8: number
+    godMod: number
   }
   update: number
 }
@@ -16,9 +16,9 @@ export interface IAppState {
 
 const initialState: IAppState = {
   update: 0,
-  echo: {
-    waiting: null,
-    start: 0
+  life: {
+    relay8: 0,
+    godMod: 0,
   },
   machine: {
     [StmMessages.SteamPressure]: "",
@@ -70,10 +70,6 @@ function rootReducer(state: IAppState = initialState, action: {type: ACTION_TYPE
     case ACTION_TYPES.currentInfoUpdate:
       state.machine[(action.payload as ISTMMessage).id] = action.payload.content;
       return { ...state, machine: {...state.machine} };
-    case ACTION_TYPES.setEcho:
-      state.echo.waiting = (action.payload as ISTMCommand);
-      state.echo.start = Date.now()
-      return { ...state, echo: {...state.echo} };
   }
   return state;
 }

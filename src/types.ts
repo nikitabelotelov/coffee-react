@@ -1,4 +1,16 @@
-import { StmMessages } from "../server/stm/Converter";
+import { StmMessages, StmCommands } from "../server/stm/Converter";
+import { Process } from "./actions/Process";
+
+export type IObjectAny = {
+  [propname: string]: any
+}
+
+
+export enum ProcessStatus {
+  wip = 'wip',
+  done = 'done',
+  error = 'error'
+}
 
 export interface IMachineState {
   [StmMessages.SteamPressure]: string;
@@ -40,6 +52,31 @@ export interface ISettingsState {
     RedHot: string,
     GreenHot: string,
     BlueHot: string
+}
+
+export interface ICommandBlock {
+  [StmCommands.SetValve1]: number
+  [StmCommands.SetValve2]: number
+  [StmCommands.SetValve3]: number
+  [StmCommands.SetValve4]: number
+  [StmCommands.SetValve5]: number
+  [StmCommands.SetValve6]: number
+  
+  [StmCommands.SetRelay1]: number
+  [StmCommands.SetRelay2]: number
+  [StmCommands.SetRelay3]: number
+  [StmCommands.SetRelay4]: number
+  [StmCommands.SetRelay5]: number
+  [StmCommands.SetRelay6]: number
+  [StmCommands.SetRelay7]: number
+  [StmCommands.SetRelay8]: number
+
+  [StmCommands.SetRedCold]: number
+  [StmCommands.SetGreenCold]: number
+  [StmCommands.SetBlueCold]: number
+  [StmCommands.SetRedHot]: number
+  [StmCommands.SetGreenHot]: number
+  [StmCommands.SetBlueHot]: number
 }
 
 export interface IBasicMessage {

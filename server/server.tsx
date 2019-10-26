@@ -39,7 +39,7 @@ const sendMessages = () => {
 usart.msgHandlers.push(message => {
   const stm = Converter.fromString(message) as ISTMMessage;
   messagesFromStm.push(stm)
-  sendMessages()  
+  sendMessages()
 });
 
 wss.on("connection", function connectionListener(ws) {

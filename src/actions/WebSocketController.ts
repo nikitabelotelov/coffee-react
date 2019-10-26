@@ -32,7 +32,6 @@ export class WebSocketController {
             console.log('Обрыв соединения'); // например, "убит" процесс сервера
         }
         console.log('Код: ' + event.code + ' причина: ' + event.reason);
-        this.handleMessage(JSON.stringify({type: 'error', data: event}));
         setTimeout(() => {
           this.init()
         }, 1000)

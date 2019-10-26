@@ -2,57 +2,93 @@ import { Serial } from "raspi-serial";
 import Converter, { ISTMMessage, StmMessages, ISTMCommand, StmCommands } from "../stm/Converter";
 import Message from "../usart/Message";
 
+const machine = {
+  [StmMessages.Relay1]: '0',
+  [StmMessages.Relay2]: '0',
+  [StmMessages.Relay3]: '0',
+  [StmMessages.Relay4]: '0',
+  [StmMessages.Relay5]: '0',
+  [StmMessages.Relay6]: '0',
+  [StmMessages.Relay7]: '0',
+  [StmMessages.Relay8]: '0',
 
-const messages:ISTMMessage[] = [
-  {
-    id: StmMessages.SteamPressure,
-    content: '1024'
-  },
-  {
-    id: StmMessages.Group1Pressure,
-    content: '587'
-  },
-  {
-    id: StmMessages.Group1Temperature,
-    content: '882'
-  },
-  {
-    id: StmMessages.Group2Pressure,
-    content: '432'
-  },
-  {
-    id: StmMessages.Group2Temperature,
-    content: '909'
-  },
-  {
-    id: StmMessages.WaterLevel,
-    content: '0'
-  },
-  {
-    id: StmMessages.Relay1,
-    content: '0'
-  }
-]
+  [StmMessages.Valve1]: '0',
+  [StmMessages.Valve2]: '0',
+  [StmMessages.Valve3]: '0',
+  [StmMessages.Valve4]: '0',
+  [StmMessages.Valve5]: '0',
+  [StmMessages.Valve6]: '0',
+  
+  [StmMessages.SteamPressure]: '1010',
+  [StmMessages.Group1Pressure]: '90',
+  [StmMessages.Group1Temperature]: '90',
+  [StmMessages.Group2Pressure]: '90',
+  [StmMessages.Group2Temperature]: '90',
+
+  [StmMessages.WaterLevel]: '0'
+}
+
 
 
 const MochaMashine = {
-  needWater: '0',
+  [StmCommands.SetRelay1]: '0',
+  [StmCommands.SetRelay2]: '0',
+  [StmCommands.SetRelay3]: '0',
+  [StmCommands.SetRelay4]: '0',
+  [StmCommands.SetRelay5]: '0',
+  [StmCommands.SetRelay6]: '0',
+  [StmCommands.SetRelay7]: '0',
+  [StmCommands.SetRelay8]: '0',
+  
+  [StmCommands.SetValve1]: '0',
+  [StmCommands.SetValve2]: '0',
+  [StmCommands.SetValve3]: '0',
+  [StmCommands.SetValve4]: '0',
+  [StmCommands.SetValve5]: '0',
+  [StmCommands.SetValve6]: '0',
+
+
 }
 
 const waterProcess = () => {
   setTimeout(()=>{
-    messages[5].content = '1'
-  }, 10000)
+    machine[StmMessages.WaterLevel] = '1'
+  }, 8000)
+}
+
+function set(cmd: StmCommands, msg: StmMessages){
+  // @ts-ignore
+  if (MochaMashine[cmd] === '1' && machine[msg] === '0') {
+    // @ts-ignore
+    machine[msg] = '1'
+  }
+  // @ts-ignore
+  if (MochaMashine[cmd] === '0') {
+    // @ts-ignore
+    machine[msg] = '0'
+  }
 }
 
 setInterval(() => {
-  if (MochaMashine.needWater === '1' && messages[6].content === '0') {
-    messages[6].content = '1'
-    waterProcess()
+  if (MochaMashine[StmCommands.SetRelay8] === '1' && machine[StmMessages.Relay8] === '0') {
+    machine[StmMessages.Relay8] = '1'
+    if (machine[StmMessages.Relay8] === '1') { // todo check valve
+      waterProcess()
+    }
   }
-  if (MochaMashine.needWater === '0') {
-    messages[6].content = '0'
+
+  if (MochaMashine[StmCommands.SetRelay8] === '0') {
+    machine[StmMessages.Relay8] = '0'
   }
+
+  set(StmCommands.SetValve1, StmMessages.Valve1)
+  set(StmCommands.SetValve2, StmMessages.Valve2)
+  set(StmCommands.SetValve3, StmMessages.Valve3)
+  set(StmCommands.SetValve4, StmMessages.Valve4)
+  set(StmCommands.SetValve5, StmMessages.Valve5)
+  set(StmCommands.SetValve6, StmMessages.Valve6)
+
+  
 }, 100)
 
 
@@ -90,11 +126,13 @@ export class RSerial {
   public msg = 0
   public startMessages(func: any) {
     setTimeout(() => {
+      const messages = Object.keys(machine)
       if (!messages[this.msg]) {
         this.msg = 0
       }
       const msgObject = new Message()
-      const msg = msgObject.getMessageFromString(Converter.toString(messages[this.msg]))
+      // @ts-ignore
+      const msg = msgObject.getMessageFromString(Converter.toString({id:messages[this.msg], content: machine[messages[this.msg]]}))
       func(msg)
       if (this.echoAns) {
         const msg = msgObject.getMessageFromString(Converter.toString({id: StmMessages.Echo, content: this.echoAns}))
@@ -131,12 +169,7 @@ export class RSerial {
     this.echoAns = message
     console.log('STM:', stmM)
     // @ts-ignore
-    
-    switch (stmM.id) {
-      case StmCommands.SetRelay1:
-        MochaMashine.needWater = stmM.content
-        break
-    }
+    MochaMashine[stmM.id as StmCommands] = stmM.content
 
     setTimeout(()=>{
       cb()

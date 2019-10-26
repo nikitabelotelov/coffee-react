@@ -2,60 +2,108 @@ import store, { emitStm } from "../SettingsStore"
 import Converter, { StmMessages, StmCommands } from "../../server/stm/Converter"
 import Message from "../../server/usart/Message"
 import ACTION_TYPES from "./actionTypes"
+import { Process } from "./Process"
+import { IObjectAny, ProcessStatus, ICommandBlock } from "../types"
+import { WaterLevel } from "./life/WaterLevel"
+import { WaterLevelGroup } from "./life/WaterLevelGroup"
 
-export const step = () => {
-  const machine = store.getState().machine
-  const settings = store.getState().settings
-  const echo = store.getState().echo
 
-  if (echo.waiting) {
-    const currentTime = Date.now()
-    if (currentTime - echo.start > 2000) {
-      console.log('TIMEOUT ERROR')
-      store.dispatch({
-        type: ACTION_TYPES.setEcho,
-        payload: null
-      })
-      // set command as failed
-      return
-    }
-    if (machine[StmMessages.Echo]) {
-      const converted = Converter.fromString(machine[StmMessages.Echo])
-      console.log('ECHO:', converted)
-      
-      if (echo.waiting.id === converted.id && echo.waiting.content === converted.content) {
-        // set command as success
-      } else {
-        // set command as failed
-      }
-      store.dispatch({
-        type: ACTION_TYPES.currentInfoUpdate,
-        payload: {
-          id: StmMessages.Echo,
-          content: ''
+export interface IProcesses {
+  process: Process
+  children: Process[]
+}
+
+class MachineLife {
+  
+  public processes: IProcesses[] = []
+
+  public addProcess(p: IProcesses) {
+    p.process.onStatusChange = (newStatus: ProcessStatus, oldStatus: ProcessStatus) => {
+      p.children.forEach(process => {
+        if (newStatus === ProcessStatus.done) {
+          process.start()
+        } else {
+          process.stop()
         }
       })
-      store.dispatch({
-        type: ACTION_TYPES.setEcho,
-        payload: null
-      })
-      return
+    }
+    this.processes.push(p)
+  }
+
+  constructor() {
+    const waterLevel = new Process('waterLevel', WaterLevel, 20000)
+    const waterLevelG1 = new Process('waterLevelG1', WaterLevelGroup(StmMessages.Group1Pressure, StmCommands.SetValve2, 'Group1Temperature'), 20000)
+    const waterLevelG2 = new Process('waterLevelG2', WaterLevelGroup(StmMessages.Group2Pressure, StmCommands.SetValve3, 'Group2Temperature'), 20000)
+    waterLevel.start()
+
+    this.addProcess({
+      process: waterLevel,
+      children: [waterLevelG1, waterLevelG2]
+    })
+    
+    this.addProcess({
+      process: waterLevelG1,
+      children: []
+    })
+
+    this.addProcess({
+      process: waterLevelG2,
+      children: []
+    })
+  }
+
+  public checkAndSend(commands:ICommandBlock, command: StmCommands, status: StmMessages) {
+    const machine = store.getState().machine
+    if (commands[command] > 0) {
+      if (machine[status] === '0') {
+        emitStm({id: command, content: '1'})
+      }
+    } else {
+      if (machine[status] === '1') {
+        emitStm({id: command, content: '0'})
+      }
+    }
+  }
+
+  public step() {
+
+    const commands:ICommandBlock = {
+      [StmCommands.SetValve1]: 0,
+      [StmCommands.SetValve2]: 0,
+      [StmCommands.SetValve3]: 0,
+      [StmCommands.SetValve4]: 0,
+      [StmCommands.SetValve5]: 0,
+      [StmCommands.SetValve6]: 0,
+      
+      [StmCommands.SetRelay1]: 0,
+      [StmCommands.SetRelay2]: 0,
+      [StmCommands.SetRelay3]: 0,
+      [StmCommands.SetRelay4]: 0,
+      [StmCommands.SetRelay5]: 0,
+      [StmCommands.SetRelay6]: 0,
+      [StmCommands.SetRelay7]: 0,
+      [StmCommands.SetRelay8]: 0,
+
+      [StmCommands.SetRedCold]: 0,
+      [StmCommands.SetGreenCold]: 0,
+      [StmCommands.SetBlueCold]: 0,
+      [StmCommands.SetRedHot]: 0,
+      [StmCommands.SetGreenHot]: 0,
+      [StmCommands.SetBlueHot]: 0,
     }
 
-    return
-  }
-
-  switch (machine[StmMessages.WaterLevel]) {
-    case "1":
-      //know level and we have enough water
-      if (machine[StmMessages.Relay1] === '1') {
-        console.log('RELE OFF')
-        emitStm({id: StmCommands.SetRelay1, content: "0"})
+    this.processes.forEach(one => {
+      if (one.process.isActive) {
+        one.process.step(commands)
       }
-      break
-    case "0":
-      // we don't know or we don't have water
-      emitStm({id: StmCommands.SetRelay1, content: "1"})
-      break
+    })
+
+    this.checkAndSend(commands, StmCommands.SetRelay8, StmMessages.Relay8)
+    this.checkAndSend(commands, StmCommands.SetValve1, StmMessages.Valve1)
+    this.checkAndSend(commands, StmCommands.SetValve2, StmMessages.Valve2)
+    this.checkAndSend(commands, StmCommands.SetValve3, StmMessages.Valve3)
+
   }
 }
+
+export const Life = new MachineLife()

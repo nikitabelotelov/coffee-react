@@ -1,10 +1,10 @@
 import { createStore } from "redux";
 import rootReducer from "../reducers/index";
 import { WebSocketController } from "../actions/WebSocketController";
-import Converter, { ISTMCommand, ISTMMessage } from "../../server/stm/Converter";
+import Converter, { ISTMCommand, ISTMMessage, StmMessages } from "../../server/stm/Converter";
 import ACTION_TYPES from "../actions/actionTypes";
 import { IBasicMessage } from "../types";
-import { step } from "../actions/machineLife";
+import { Life } from "../actions/machineLife";
 const store = createStore(rootReducer);
 
 const WebSocketInst = new WebSocketController()
@@ -21,18 +21,35 @@ export const emit = (payload: IBasicMessage) => {
   WebSocketInst.send(JSON.stringify({ settings: payload }));
 }
 
-export const emitStm = (payload: ISTMCommand) => {
-  store.dispatch({
-    type: ACTION_TYPES.setEcho,
-    payload: payload
-  })
-
+export const emitStm = (payload: ISTMCommand, waitEcho?: boolean) => {
   console.log('COMMAND:', payload)
   WebSocketInst.send(JSON.stringify({ stm: Converter.toString(payload) }));
+  if (waitEcho) {
+    
+    const echoWaiter = (data: any) => {
+      const parsed = JSON.parse(data)
+      const msg = Converter.fromString(parsed.stm) as ISTMMessage;
+      if (msg.id === StmMessages.Echo) {
+        const converted = Converter.fromString(msg.content)
+        console.log('ECHO:', converted)
+        if (payload.id === converted.id && payload.content === converted.content) {
+          clearTimeout(echoTimeout)
+        } else {
+          emitStm(payload, true)
+        }
+        WebSocketInst.unRegisterCallback(echoWaiter)
+      } 
+    }
+    const echoTimeout = setTimeout(() => {
+      emitStm(payload, true)
+      WebSocketInst.unRegisterCallback(echoWaiter)
+    }, 1000)
+    WebSocketInst.registerCallback(echoWaiter)
+  }
 }
 
 setInterval(()=>{
-  step()
+  Life.step()
 }, 100)
 
 

@@ -17,25 +17,25 @@ export enum StmMessages {
   PredictGroupTemperature = 'f',
   Error = 'g',
 
-  Valve1 = 'e', // statuses. When we send "SetValve1, 1" we wait for Valve1 status in messages
-  Valve2 = 'f',
-  Valve3 = 'g',
-  Valve4 = 'h',
-  Valve5 = 'k',
-  Valve6 = 'l',
+  Valve1 = 'h', // statuses. When we send "SetValve1, 1" we wait for Valve1 status in messages
+  Valve2 = 'k',
+  Valve3 = 'l',
+  Valve4 = 'm',
+  Valve5 = 'n',
+  Valve6 = 'o',
 
-  Relay1 = 'm', // the same as Valve. Relay 
-  Relay2 = 'n',
-  Relay3 = 'o',
-  Relay4 = 'p',
-  Relay5 = 'q',
-  Relay6 = 'r',
-  Relay7 = 's',
-  Relay8 = 't',
+  Relay1 = 'p', // the same as Valve. Relay 
+  Relay2 = 'q',
+  Relay3 = 'r',
+  Relay4 = 's',
+  Relay5 = 't',
+  Relay6 = 'u',
+  Relay7 = 'v',
+  Relay8 = 'w',
   
-  Echo = 'u', // when we need echo message
+  Echo = 'x', // when we need echo message
 
-  WaterLevel = 'v',
+  WaterLevel = 'y',
 }
 
 export enum StmCommands {

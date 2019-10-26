@@ -3,7 +3,6 @@ enum ACTION_TYPES {
     setMachineState = "setMachineState",
     currentInfoUpdate = "currentInfoUpdate",
     updateSettings = "updateSettings",
-    setEcho = "setEcho"
 };
 
 export default ACTION_TYPES;
