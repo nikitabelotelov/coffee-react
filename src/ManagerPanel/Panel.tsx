@@ -10,8 +10,7 @@ import ParametersSettings from "./ParametersSettings";
 import Steam from "./Parameters/Steam";
 import ColorHot from "./Colors/ColorHot";
 
-export class Panel extends React.Component {
-  render() {
+export function Panel() {
     return (
       <React.Fragment>
         <Route exact path="/" component={Root} />
@@ -27,5 +26,4 @@ export class Panel extends React.Component {
         <Route exact path="*/settings/profile/hand/steam" component={Steam} />
       </React.Fragment>
     );
-  }
 }
