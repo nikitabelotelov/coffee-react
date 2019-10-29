@@ -41,7 +41,7 @@ export class Process {
 
   public stop() {
     this.isActive = false
-    this.state = this.stateMachine({...this.state, stop: true}, {} as ICommandBlock, this.onStatusChangeHdl)
+    this.onStatusChangeHdl(ProcessStatus.stopped)
   }
 
   public step(commands: ICommandBlock) {

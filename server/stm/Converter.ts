@@ -36,6 +36,18 @@ export enum StmMessages {
   Echo = 'x', // when we need echo message
 
   WaterLevel = 'y',
+
+  Button1 = 'z',
+  Button2 = 'A',
+  Button3 = 'B',
+  Button4 = 'C',
+  Button5 = 'D',
+  Button6 = 'E',
+  Button7 = 'F',
+  Button8 = 'G',
+  
+  VolumetricGroup1 = 'H',
+  VolumetricGroup2 = 'K',
 }
 
 export enum StmCommands {

@@ -44,6 +44,17 @@ const initialState: IAppState = {
     [StmMessages.Relay8]: "",
     [StmMessages.Echo]: "",
     [StmMessages.WaterLevel]: "",
+    [StmMessages.Button1]: "0",
+    [StmMessages.Button2]: "0",
+    [StmMessages.Button3]: "0",
+    [StmMessages.Button4]: "0",
+    [StmMessages.Button5]: "0",
+    [StmMessages.Button6]: "0",
+    [StmMessages.Button7]: "0",
+    [StmMessages.Button8]: "0",
+    [StmMessages.VolumetricGroup1]: "0",
+    [StmMessages.VolumetricGroup2]: "0",
+    
   },
   settings: { //TODO:: load from file here
     Group1Temperature: '0',
@@ -58,7 +69,8 @@ const initialState: IAppState = {
     BlueCold: '16',
     RedHot: '16',
     GreenHot: '0',
-    BlueHot: '0'
+    BlueHot: '0',
+    EnergyMode: '0',
   }
 }
 

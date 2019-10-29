@@ -21,10 +21,10 @@ class Usart {
   }
 
   extractMessage() {
-    const start = this.buffer.indexOf(Constants.startBit)
+    const start = this.buffer.indexOf(Constants.startBit.charCodeAt(0))
     if (start > -1) {
       this.buffer = this.buffer.slice(start)
-      const end = this.buffer.indexOf(Constants.endBit)
+      const end = this.buffer.indexOf(Constants.endBit.charCodeAt(0))
       const message = this.buffer.splice(0, end+1)
       const msgObject = new Message()
       const stringMsg = msgObject.getMessageFromCode(message)

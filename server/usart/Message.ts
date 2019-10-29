@@ -13,7 +13,7 @@ class Message {
       code = code ^ char
     }
     
-    return [Constants.startBit, length].concat(messageBits).concat([code, Constants.endBit])
+    return [Constants.startBit.charCodeAt(0), length].concat(messageBits).concat([code, Constants.endBit.charCodeAt(0)])
   }
 
   public getMessageFromCode(code: number[]):string {

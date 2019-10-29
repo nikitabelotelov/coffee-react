@@ -15,9 +15,6 @@ export const WaterLevelGroup = (
   const settings = store.getState().settings
 
   if (state.stop) {
-    /*if (machine[StmMessages.Relay8] === "1") {
-      emitStm({ id: StmCommands.SetRelay1, content: "0" }, true);
-    }*/
     return state;
   }
 

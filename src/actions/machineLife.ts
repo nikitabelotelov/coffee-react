@@ -6,6 +6,7 @@ import { Process } from "./Process"
 import { IObjectAny, ProcessStatus, ICommandBlock } from "../types"
 import { WaterLevel } from "./life/WaterLevel"
 import { WaterLevelGroup } from "./life/WaterLevelGroup"
+import { BoilProcessGroup } from "./life/BoilProcessGroup"
 
 
 export interface IProcesses {
@@ -31,7 +32,15 @@ class MachineLife {
   }
 
   constructor() {
+    const boilGroup1 = new Process('boilGroup1', BoilProcessGroup(StmMessages.Button2, StmCommands.SetValve2, StmCommands.SetValve4, StmMessages.VolumetricGroup1, 'Group1AutoMode1'), 0)
+    boilGroup1.start()
+
     const waterLevel = new Process('waterLevel', WaterLevel, 20000)
+    this.addProcess({
+      process: boilGroup1,
+      children: [waterLevel]
+    })
+
     const waterLevelG1 = new Process('waterLevelG1', WaterLevelGroup(StmMessages.Group1Pressure, StmCommands.SetValve2, 'Group1Temperature'), 20000)
     const waterLevelG2 = new Process('waterLevelG2', WaterLevelGroup(StmMessages.Group2Pressure, StmCommands.SetValve3, 'Group2Temperature'), 20000)
     waterLevel.start()

@@ -9,7 +9,8 @@ export type IObjectAny = {
 export enum ProcessStatus {
   wip = 'wip',
   done = 'done',
-  error = 'error'
+  error = 'error',
+  stopped = 'stopped'
 }
 
 export interface IMachineState {
@@ -36,6 +37,17 @@ export interface IMachineState {
   [StmMessages.Relay8]: string;
   [StmMessages.Echo]: string;
   [StmMessages.WaterLevel]: string;
+  [StmMessages.Button1]: string;
+  [StmMessages.Button2]: string;
+  [StmMessages.Button3]: string;
+  [StmMessages.Button4]: string;
+  [StmMessages.Button5]: string;
+  [StmMessages.Button6]: string;
+  [StmMessages.Button7]: string;
+  [StmMessages.Button8]: string;
+
+  [StmMessages.VolumetricGroup1]: string;
+  [StmMessages.VolumetricGroup2]: string;
 }
 
 export interface ISettingsState {
@@ -51,7 +63,8 @@ export interface ISettingsState {
     BlueCold: string,
     RedHot: string,
     GreenHot: string,
-    BlueHot: string
+    BlueHot: string,
+    EnergyMode: string
 }
 
 export interface ICommandBlock {
