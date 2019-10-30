@@ -62,7 +62,8 @@ wss.on("connection", function connectionListener(ws) {
     if (message.stm) {
       usart.sendMessage(message.stm)
     } else if (message.settings) {
-      //todo: save settings to file
+      
+      // todo: save settings to file
       // read - change - save
     }
   });

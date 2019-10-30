@@ -1,8 +1,8 @@
 import ACTION_TYPES from './actionTypes';
 import { IBasicMessage } from '../types';
-import { emit } from '../SettingsStore';
+import { emitSettingsChange } from '../SettingsStore';
 
 export function setSetting(payload: IBasicMessage) {
-    emit(payload);
+    emitSettingsChange(payload);
     return {type: ACTION_TYPES.setSetting, payload}
 };

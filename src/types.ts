@@ -13,6 +13,11 @@ export enum ProcessStatus {
   stopped = 'stopped'
 }
 
+export interface ISettingsProfiles {
+  choosenProfile: string,
+  profiles: Map<string, ISettingsState>
+}
+
 export interface IMachineState {
   [StmMessages.SteamPressure]: string;
   [StmMessages.Group1Pressure]: string;

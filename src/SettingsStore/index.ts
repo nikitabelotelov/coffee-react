@@ -17,7 +17,7 @@ WebSocketInst.registerCallback((data: any) => {
   });
 })
 
-export const emit = (payload: IBasicMessage) => {
+export const emitSettingsChange = (payload: IBasicMessage) => {
   WebSocketInst.send(JSON.stringify({ settings: payload }));
 }
 
