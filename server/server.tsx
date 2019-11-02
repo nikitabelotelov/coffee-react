@@ -30,6 +30,7 @@ const clients: {[propname:string]: {ws: WebSocket}} = {};
 const serial = new RSerial();
 
 const messagesFromStm:ISTMMessage[] = [];
+const settingsMsg:any[] = [];
 
 const usart = new Usart(serial as any);
 
@@ -39,6 +40,14 @@ const sendMessages = () => {
       try {
         clients[client].ws.send(JSON.stringify({stm: Converter.toString(msg)}))
         messagesFromStm.splice(i, 1) //TODO:: check it!
+      } catch(e) {}
+    }
+  })
+  settingsMsg.forEach((msg, i) => {
+    for (let client in clients) {
+      try {
+        clients[client].ws.send(JSON.stringify({settings: msg}))
+        settingsMsg.splice(i, 1) //TODO:: check it!
       } catch(e) {}
     }
   })
@@ -57,6 +66,9 @@ wss.on("connection", function connectionListener(ws) {
   };
 
   console.log("новое соединение " + id);
+
+  // TODO:: read file with settings here 
+  // settingsMsg.push(here is settings from file)
 
   ws.on("close", () => {
     delete clients[id];
