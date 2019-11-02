@@ -76,14 +76,49 @@ export enum StmCommands {
 
 }
 
+const TempratureData = [4331, 4281, 4232, 4225, 4218, 4211, 4204, 4197, 4190, 4183, 4176, //11
+  4467, 4348, 4229, 4107, 4085, 4063, 4040, 4018, 3996, 3971, 3946, //22
+  3863, 3780, 3698, 3710, 3673, 3640, 3606, 3573, 3539, 3506, 3472, //33
+  3437, 3416, 3395, 3375, 3400, 3359, 3317, 3276, 3235, 3193, 3152,
+  3127, 3090, 3048, 3006, 2964, 2922, 2880, 2839, 2797, 2755, 2721,
+  2688, 2656, 2618, 2594, 2531, 2494, 2469, 2436, 2402, 2353, 2317,
+  2282, 2245, 2211, 2164, 2122, 2082, 2057, 2008, 1973, 1936, 1899,
+  1874, 1812, 1775, 1737, 1712, 1675, 1638, 1626, 1570, 1514, 1458,
+  1402, 1346, 1291, 1241, 1220, 1199, 1178, 1157, 1135, 1114, 1093,
+  1072, 1051, 1030, 1009, 988, 967, 946, 924, 903, 882, 861,
+  840, 819, 798, 777, 756, 735, 714, 692, 671, 650, 629,
+  608, 587, 566, 545, 524, 503, 481, 460, 439, 418, 397,
+  376, 355, 334, 313, 292, 271, 249, 228, 207, 186, 165,
+  144, 123, 102, 81, 60, 38, 17, 2]
+
+const HAND_COLIBR_VOLTAGE = 2290
+const VoltCalibrBase = 1950
+
+TempratureData.forEach((value, index) => {
+  TempratureData[index] = value * HAND_COLIBR_VOLTAGE / VoltCalibrBase;
+})
+
+
+
 const Converter = {
   fromString: (msg: string):ISTMMessage | ISTMCommand => {
-
     return {id: msg[0] as StmMessages, content: msg.substring(1)}
   },
 
   toString: (msg: ISTMMessage | ISTMCommand): string => {
     return `${msg.id}${msg.content}`
+  },
+
+  voltToCelsium: (voltage: string): number => {
+    const volt = parseInt(voltage, 10) || 0
+    for(let i=0; i<TempratureData.length-1; i++) {
+      if (TempratureData[i+1]<volt) {
+        const desatki = (10 * (volt - TempratureData[i+1]))/
+            (TempratureData[i] - TempratureData[i+1]);
+        return ((i+1) * 10 - desatki) / 10;
+      }
+    }
+    return 150;
   }
 }
 

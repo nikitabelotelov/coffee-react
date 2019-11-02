@@ -1,13 +1,17 @@
 import ACTION_TYPES from "../actions/actionTypes";
 import { IMachineState, ISettingsState, IBasicMessage } from "../types";
-import { StmMessages, ISTMMessage, ISTMCommand } from "../../server/stm/Converter";
+import Converter, { StmMessages, ISTMMessage, ISTMCommand } from "../../server/stm/Converter";
 
+export interface ITempPoint {time: number, value: number}
 
 export interface IAppState {
   machine: IMachineState
   settings: ISettingsState
   life: {
-    relay8: number
+    tTrendG1: ITempPoint[],
+    tTrendG2: ITempPoint[],
+    middleTTrendG1: ITempPoint[],
+    middleTTrendG2: ITempPoint[],
     godMod: number
   }
   update: number
@@ -17,7 +21,10 @@ export interface IAppState {
 const initialState: IAppState = {
   update: 0,
   life: {
-    relay8: 0,
+    tTrendG1: [],
+    tTrendG2: [],
+    middleTTrendG1: [],
+    middleTTrendG2: [],
     godMod: 0,
   },
   machine: {
@@ -74,6 +81,55 @@ const initialState: IAppState = {
   }
 }
 
+function getChanges(source: ITempPoint[]): number[] {
+  let changes: number[] = []
+  for (let i=1; i< source.length; i++) {
+    const current = source[i].value
+    const prev = source[i-1].value
+    changes.push(current > prev ? current / prev : prev / current)
+  }
+  return changes
+}
+
+
+function CreateMiddleTrend(source: ITempPoint[]): ITempPoint[] {
+  const result:ITempPoint[] = []
+  let changes: number[] = getChanges(source)
+  let middleOfChanges = 0
+  for (let i=0; i< changes.length; i++) {
+    middleOfChanges += changes[i]
+  }
+  middleOfChanges /= changes.length
+
+  const smooth = [ ...source]
+  // find impuls
+  for (let i=1; i< smooth.length-1; i++) {
+    const current = smooth[i].value
+    const prev = smooth[i-1].value
+    const next = smooth[i+1].value
+
+    if (current < prev && current < next || current > next && current > prev) {
+      if (changes[i] > middleOfChanges) {
+        smooth[i] = {time: smooth[i].time, value: (prev + next) / 2}
+        changes = getChanges(smooth)
+      }
+    }
+  }
+
+  for (let i=1; i< smooth.length-1; i++) {
+    const current = smooth[i]
+    const prev = smooth[i-1].value
+    const next = smooth[i+1].value
+    result.push({value: (current.value + prev + next) / 3, time: current.time})
+  }
+  return result
+}
+
+const getLastTrend = (source: ITempPoint[]): {time: number, value: number} => {
+  const last = source[source.length - 1]
+  return last
+}
+
 function rootReducer(state: IAppState = initialState, action: {type: ACTION_TYPES, payload: ISTMMessage | IBasicMessage | ISTMCommand | null}) {
   switch (action.type) {
     case ACTION_TYPES.setSetting:
@@ -81,7 +137,21 @@ function rootReducer(state: IAppState = initialState, action: {type: ACTION_TYPE
       return { ...state, settings: {...state.settings} };
     case ACTION_TYPES.currentInfoUpdate:
       state.machine[(action.payload as ISTMMessage).id] = action.payload.content;
-      return { ...state, machine: {...state.machine} };
+
+      if ((action.payload as ISTMMessage).id === StmMessages.Group1Temperature) {
+        const temp = Converter.voltToCelsium((action.payload as ISTMMessage).content)
+        state.life.tTrendG1.push({
+          time: Date.now(),
+          value: temp
+        })
+        state.life.tTrendG1 = [...state.life.tTrendG1]
+        if (state.life.tTrendG1.length > 100) {
+          state.life.tTrendG1.splice(0, 1)
+          state.life.middleTTrendG1 = CreateMiddleTrend(state.life.tTrendG1)
+        }
+      }
+
+      return { ...state, machine: {...state.machine}, life: {...state.life} };
   }
   return state;
 }
