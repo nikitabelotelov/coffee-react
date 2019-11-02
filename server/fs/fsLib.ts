@@ -1,42 +1,50 @@
 import fs from 'fs';
 import { ISettingsProfiles, ISettingsState } from '../../src/types';
-import { reject } from 'q';
+
+const settingsProfilesFileName: string = "settingsProfiles.json";
 
 function getDefaultSettingsProfiles(): ISettingsProfiles {
     var profiles: Map<string, ISettingsState> = new Map([
         [ "default", {
-            Group1Temperature: '1000',
-            Group1AutoMode1: '',
-            Group1AutoMode2: '',
-            Group2Temperature: '1000',
-            Group2AutoMode1: '',
-            Group2AutoMode2: '',
-            SteamPressure: '1000',
-            RedCold: '1',
-            GreenCold: '1',
-            BlueCold: '1',
-            RedHot: '1',
-            GreenHot: '1',
-            BlueHot: '1',
-            EnergyMode: '1'
+            Group1Temperature: '0',
+            Group1AutoMode1: '0',
+            Group1AutoMode2: '0',
+            Group2Temperature: '0',
+            Group2AutoMode1: '0',
+            Group2AutoMode2: '0',
+            SteamPressure: '0',
+            RedCold: '0',
+            GreenCold: '0',
+            BlueCold: '16',
+            RedHot: '16',
+            GreenHot: '0',
+            BlueHot: '0',
+            EnergyMode: '0',
         }]
     ]);
     return {
         choosenProfile: "default",
-        profiles
+        profiles: profiles
     };
 }
 
 export function loadSettings(): Promise<ISettingsProfiles> {
-    return new Promise((resolve, reject) => {
-        fs.readFile("settingsProfiles.json", (error, data) => {
+    return new Promise((resolve) => {
+        fs.readFile(settingsProfilesFileName, (error, data) => {
             if(error) {
-                console.error('Could not load profiles');
-                reject({});
+                console.error('Could not load profiles. Default profile loaded. ' + error);
+                resolve(getDefaultSettingsProfiles());
             } else {
-
+                resolve(JSON.parse(data.toString()));
             }
-            resolve(JSON.parse(data.toString()));
         })
+    });
+}
+
+export function serializeSettingsProfiles(profiles: ISettingsProfiles) {
+    fs.writeFile(settingsProfilesFileName, JSON.stringify(profiles), (err) => {
+        if(err) {
+            console.error('Error while saving settings profiles: ' + err);
+        }
     });
 }
