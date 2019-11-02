@@ -10,11 +10,16 @@ const store = createStore(rootReducer);
 const WebSocketInst = new WebSocketController()
 WebSocketInst.registerCallback((data: any) => {
   const parsed = JSON.parse(data)
-  const msg = Converter.fromString(parsed.stm) as ISTMMessage;
-  store.dispatch({
-    type: ACTION_TYPES.currentInfoUpdate,
-    payload: msg
-  });
+  if (parsed.stm) {
+    const msg = Converter.fromString(parsed.stm) as ISTMMessage;
+    store.dispatch({
+      type: ACTION_TYPES.currentInfoUpdate,
+      payload: msg
+    });
+  } 
+  if (parsed.settings) {
+    // set settings to client store
+  }
 })
 
 export const emit = (payload: IBasicMessage) => {
