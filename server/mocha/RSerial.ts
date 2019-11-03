@@ -167,7 +167,7 @@ export class RSerial {
     const message = msg.getMessageFromCode(data)
     const stmM:ISTMCommand = Converter.fromString(message) as ISTMCommand
     this.echoAns = message
-    console.log('STM:', stmM)
+    //console.log('STM:', stmM)
     // @ts-ignore
     MochaMashine[stmM.id as StmCommands] = stmM.content
 

@@ -17,7 +17,7 @@ WebSocketInst.registerCallback((data: any) => {
       payload: msg
     });
   } 
-  if (parsed.settings) {
+  if (parsed.settingsProfiles) {
     // set settings to client store
   }
 })

@@ -16,9 +16,6 @@ let settingsProfiles: ISettingsProfiles;
 app.use(express.static(resourcesPath));
 
 const port = process.env.PORT || 777;
-loadSettings().then((result) => {
-  settingsProfiles = result;
-});
 
 const expressServer = app.listen({ port }, () =>
     console.log(`🚀 Server ready`)
@@ -30,27 +27,31 @@ const clients: {[propname:string]: {ws: WebSocket}} = {};
 const serial = new RSerial();
 
 const messagesFromStm:ISTMMessage[] = [];
-const settingsMsg:any[] = [];
+const settingsMsg:ISettingsProfiles[] = [];
 
 const usart = new Usart(serial as any);
 
 const sendMessages = () => {
-  messagesFromStm.forEach((msg, i) => {
+  while(messagesFromStm.length) {
+    let msg = messagesFromStm.pop();
     for (let client in clients) {
       try {
         clients[client].ws.send(JSON.stringify({stm: Converter.toString(msg)}))
-        messagesFromStm.splice(i, 1) //TODO:: check it!
-      } catch(e) {}
+      } catch(e) {
+        console.error(e);
+      }
     }
-  })
-  settingsMsg.forEach((msg, i) => {
+  }
+  while(settingsMsg.length) {
+    let msg = settingsMsg.pop();
     for (let client in clients) {
       try {
-        clients[client].ws.send(JSON.stringify({settings: msg}))
-        settingsMsg.splice(i, 1) //TODO:: check it!
-      } catch(e) {}
+        clients[client].ws.send(JSON.stringify({settingsProfiles: msg}))
+      } catch(e) {
+        console.error(e);
+      }
     }
-  })
+  }
 }
 
 usart.msgHandlers.push(message => {
@@ -67,15 +68,18 @@ wss.on("connection", function connectionListener(ws) {
 
   console.log("новое соединение " + id);
 
-  // TODO:: read file with settings here 
-  // settingsMsg.push(here is settings from file)
+  loadSettings().then((result) => {
+    settingsProfiles = result;
+    settingsMsg.push(settingsProfiles);
+    sendMessages();
+  });
 
   ws.on("close", () => {
     delete clients[id];
   });
 
   ws.on("message", data => {
-    console.log(data);
+    // console.log(data);
     // @ts-ignore
     const message = JSON.parse(data)
 

@@ -20,6 +20,22 @@ function getDefaultSettingsProfiles(): ISettingsProfiles {
             GreenHot: '0',
             BlueHot: '0',
             EnergyMode: '0',
+        }],
+        [ "user", {
+            Group1Temperature: '1',
+            Group1AutoMode1: '0',
+            Group1AutoMode2: '0',
+            Group2Temperature: '0',
+            Group2AutoMode1: '0',
+            Group2AutoMode2: '0',
+            SteamPressure: '0',
+            RedCold: '0',
+            GreenCold: '0',
+            BlueCold: '16',
+            RedHot: '16',
+            GreenHot: '0',
+            BlueHot: '0',
+            EnergyMode: '0',
         }]
     ]);
     return {

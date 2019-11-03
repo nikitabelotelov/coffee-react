@@ -18,6 +18,10 @@ export interface ISettingsProfiles {
   profiles: Map<string, ISettingsState>
 }
 
+export interface ISettingsProfilesMessage {
+  settingsProfiles: ISettingsProfiles
+}
+
 export interface IMachineState {
   [StmMessages.SteamPressure]: string;
   [StmMessages.Group1Pressure]: string;
