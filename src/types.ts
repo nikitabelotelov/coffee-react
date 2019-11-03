@@ -14,12 +14,16 @@ export enum ProcessStatus {
 }
 
 export interface ISettingsProfiles {
+  [index:string] : ISettingsState
+}
+
+export interface ISettingsProfilesState {
   choosenProfile: string,
-  profiles: Map<string, ISettingsState>
+  profiles: ISettingsProfiles
 }
 
 export interface ISettingsProfilesMessage {
-  settingsProfiles: ISettingsProfiles
+  settingsProfiles: ISettingsProfilesState
 }
 
 export interface IMachineState {

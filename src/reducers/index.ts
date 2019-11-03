@@ -1,5 +1,5 @@
 import ACTION_TYPES from "../actions/actionTypes";
-import { IMachineState, ISettingsState, IBasicMessage } from "../types";
+import { IMachineState, ISettingsState, IBasicMessage, ISettingsProfilesState, ISettingsProfilesMessage } from "../types";
 import Converter, { StmMessages, ISTMMessage, ISTMCommand } from "../../server/stm/Converter";
 
 export interface ITempPoint {time: number, value: number}
@@ -14,7 +14,8 @@ export interface IAppState {
     middleTTrendG2: ITempPoint[],
     godMod: number
   }
-  update: number
+  update: number,
+  settingsProfiles: ISettingsProfilesState | null
 }
 
 
@@ -78,7 +79,8 @@ const initialState: IAppState = {
     GreenHot: '0',
     BlueHot: '0',
     EnergyMode: '0',
-  }
+  },
+  settingsProfiles: null
 }
 
 function getChanges(source: ITempPoint[]): number[] {
@@ -130,13 +132,13 @@ const getLastTrend = (source: ITempPoint[]): {time: number, value: number} => {
   return last
 }
 
-function rootReducer(state: IAppState = initialState, action: {type: ACTION_TYPES, payload: ISTMMessage | IBasicMessage | ISTMCommand | null}) {
+function rootReducer(state: IAppState = initialState, action: {type: ACTION_TYPES, payload: ISTMMessage | IBasicMessage | ISTMCommand | ISettingsProfilesMessage | null}) {
   switch (action.type) {
     case ACTION_TYPES.setSetting:
-      state.settings[(action.payload as IBasicMessage).id] = action.payload.content;
+      state.settings[(action.payload as IBasicMessage).id] = (action.payload as IBasicMessage).content;
       return { ...state, settings: {...state.settings} };
     case ACTION_TYPES.currentInfoUpdate:
-      state.machine[(action.payload as ISTMMessage).id] = action.payload.content;
+      state.machine[(action.payload as ISTMMessage).id] = (action.payload as ISTMMessage).content;
 
       if ((action.payload as ISTMMessage).id === StmMessages.Group1Temperature) {
         const temp = Converter.voltToCelsium((action.payload as ISTMMessage).content)
@@ -152,6 +154,8 @@ function rootReducer(state: IAppState = initialState, action: {type: ACTION_TYPE
       }
 
       return { ...state, machine: {...state.machine}, life: {...state.life} };
+    case ACTION_TYPES.settingsProfilesInitialize:
+        return { ...state, machine: {...state.machine}, life: {...state.life}, settingsProfiles: (action.payload as ISettingsProfilesMessage).settingsProfiles };
   }
   return state;
 }

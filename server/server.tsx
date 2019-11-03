@@ -6,12 +6,12 @@ import Usart from "./usart/Usart";
 import { RSerial } from "./mocha/RSerial";
 import Converter, { ISTMMessage } from "./stm/Converter";
 import { loadSettings } from "./fs/fsLib";
-import { ISettingsProfiles } from "../src/types";
+import { ISettingsProfilesState } from "../src/types";
 
 const app: any = express(),
   resourcesPath = path.join("", ".");
 
-let settingsProfiles: ISettingsProfiles;
+let settingsProfiles: ISettingsProfilesState;
 
 app.use(express.static(resourcesPath));
 
@@ -27,7 +27,7 @@ const clients: {[propname:string]: {ws: WebSocket}} = {};
 const serial = new RSerial();
 
 const messagesFromStm:ISTMMessage[] = [];
-const settingsMsg:ISettingsProfiles[] = [];
+const settingsMsg:ISettingsProfilesState[] = [];
 
 const usart = new Usart(serial as any);
 

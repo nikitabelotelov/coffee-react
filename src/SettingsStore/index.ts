@@ -19,6 +19,7 @@ WebSocketInst.registerCallback((data: any) => {
   } 
   if (parsed.settingsProfiles) {
     // set settings to client store
+    console.log(parsed.settingsProfiles);
   }
 })
 

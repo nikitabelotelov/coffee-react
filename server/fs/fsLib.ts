@@ -1,11 +1,11 @@
 import fs from 'fs';
-import { ISettingsProfiles, ISettingsState } from '../../src/types';
+import { ISettingsProfiles, ISettingsState, ISettingsProfilesState } from '../../src/types';
 
 const settingsProfilesFileName: string = "settingsProfiles.json";
 
-function getDefaultSettingsProfiles(): ISettingsProfiles {
-    var profiles: Map<string, ISettingsState> = new Map([
-        [ "default", {
+function getDefaultSettingsProfiles(): ISettingsProfilesState {
+    var profiles: ISettingsProfiles = {
+        "default": {
             Group1Temperature: '0',
             Group1AutoMode1: '0',
             Group1AutoMode2: '0',
@@ -20,8 +20,8 @@ function getDefaultSettingsProfiles(): ISettingsProfiles {
             GreenHot: '0',
             BlueHot: '0',
             EnergyMode: '0',
-        }],
-        [ "user", {
+        },
+        "user": {
             Group1Temperature: '1',
             Group1AutoMode1: '0',
             Group1AutoMode2: '0',
@@ -36,15 +36,15 @@ function getDefaultSettingsProfiles(): ISettingsProfiles {
             GreenHot: '0',
             BlueHot: '0',
             EnergyMode: '0',
-        }]
-    ]);
+        }
+    };
     return {
         choosenProfile: "default",
         profiles: profiles
     };
 }
 
-export function loadSettings(): Promise<ISettingsProfiles> {
+export function loadSettings(): Promise<ISettingsProfilesState> {
     return new Promise((resolve) => {
         fs.readFile(settingsProfilesFileName, (error, data) => {
             if(error) {
@@ -57,7 +57,7 @@ export function loadSettings(): Promise<ISettingsProfiles> {
     });
 }
 
-export function serializeSettingsProfiles(profiles: ISettingsProfiles) {
+export function serializeSettingsProfiles(profiles: ISettingsProfilesState) {
     fs.writeFile(settingsProfilesFileName, JSON.stringify(profiles), (err) => {
         if(err) {
             console.error('Error while saving settings profiles: ' + err);
