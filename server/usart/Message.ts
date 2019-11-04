@@ -21,6 +21,7 @@ class Message {
     let message = `${String.fromCharCode(code[1])}`;
     let lastByte = 0xFF
     if (code.length !== length + 4) {
+      console.log('exit1', code.length, length)
       return ''
     }
     for (let i=0; i<length; i++) {
@@ -29,6 +30,7 @@ class Message {
       lastByte = lastByte ^ char
     }
     if (code[length+3] !== lastByte) {
+      console.log('exit2', code[length+3], lastByte)
       return ''
     }
     return message
