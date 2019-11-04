@@ -22,7 +22,7 @@ const clients: {[propname:string]: {ws: WebSocket}} = {};
 
 let serial;
 if(process.arch === 'arm') {
-  serial = new Serial();
+  serial = new Serial({baudRate: 57600});
 } else {
   serial = new RSerial();
 }
