@@ -14,7 +14,6 @@ class Usart {
       this.serial = serial
       console.log("Serial opened");
       serial.on('data', (data: number[]) => {
-        console.log("Received data from usart. " + JSON.stringify(data));
         this.buffer = [...this.buffer, ...data] 
         this.extractMessage()
       })
@@ -30,6 +29,7 @@ class Usart {
       const message = this.buffer.splice(0, end+1)
       const msgObject = new Message()
       const stringMsg = msgObject.getMessageFromCode(message)
+      console.log("Received data from usart. " + stringMsg);
       this.msgHandlers.forEach(el => el(stringMsg))
       this.extractMessage()
     }
