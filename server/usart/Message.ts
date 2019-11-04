@@ -7,20 +7,20 @@ class Message {
     
     const messageBits:number[] = []
     let code:number = 0xFF
-    for (let i=0; i<length; i++) {
+    for (let i=1; i<length; i++) {
       const char = message.charCodeAt(i)
       messageBits.push(char) 
       code = code ^ char
     }
     
-    return [Constants.startBit.charCodeAt(0), length].concat(messageBits).concat([code, Constants.endBit.charCodeAt(0)])
+    return [Constants.startBit.charCodeAt(0), message.charCodeAt(0), length - 1].concat(messageBits).concat([code, Constants.endBit.charCodeAt(0)])
   }
 
   public getMessageFromCode(code: number[]):string {
     const length = code[2]
-    let message = ''
+    let message = `${String.fromCharCode(code[1])}`;
     let lastByte = 0xFF
-    if (code.length !== length + 5) {
+    if (code.length !== length + 4) {
       return ''
     }
     for (let i=0; i<length; i++) {
