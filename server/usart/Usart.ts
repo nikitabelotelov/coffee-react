@@ -12,8 +12,8 @@ class Usart {
   constructor(serial: Serial) {
     serial.open(() => {
       this.serial = serial
+      console.log("Serial opened");
       serial.on('data', (data: number[]) => {
-        console.log("Serial opened");
         this.buffer = [...this.buffer, ...data] 
         this.extractMessage()
       })
