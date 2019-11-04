@@ -33,7 +33,7 @@ const sendMessages = () => {
       try {
         clients[client].ws.send(JSON.stringify({stm: Converter.toString(msg)}))
       } catch(e) {
-        console.error(e);
+        console.error('Couldn\'t send message to websocket. Connection is probably closed. ' + e.message);
       }
     }
   }
@@ -43,7 +43,7 @@ const sendMessages = () => {
       try {
         clients[client].ws.send(JSON.stringify({settingsProfiles: msg}))
       } catch(e) {
-        console.error(e);
+        console.error('Couldn\'t send message to websocket. Connection is probably closed. ' + e.message);
       }
     }
   }
@@ -51,8 +51,8 @@ const sendMessages = () => {
 
 usart.msgHandlers.push(message => {
   const stm = Converter.fromString(message) as ISTMMessage;
-  messagesFromStm.push(stm)
-  sendMessages()
+  messagesFromStm.push(stm);
+  sendMessages();
 });
 
 wss.on("connection", function connectionListener(ws) {
