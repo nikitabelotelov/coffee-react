@@ -20,7 +20,7 @@ class Message {
     const length = code[2]
     let message = `${String.fromCharCode(code[1])}`;
     let lastByte = 0xFF
-    if (code.length !== length + 4) {
+    if (code.length !== length + 5) {
       console.log('exit1', code.length, length)
       return ''
     }
