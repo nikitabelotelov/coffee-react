@@ -20,7 +20,7 @@ class Message {
     const length = code[2]
     let message = ''
     let lastByte = 0xFF
-    if (code.length !== length + 4) {
+    if (code.length !== length + 5) {
       return ''
     }
     for (let i=0; i<length; i++) {
