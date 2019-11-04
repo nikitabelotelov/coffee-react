@@ -4,6 +4,7 @@ import express from "express";
 import WebSocket from "ws";
 import Usart from "./usart/Usart";
 import { RSerial } from "./mocha/RSerial";
+import { Serial } from 'raspi-serial';
 import Converter, { ISTMMessage } from "./stm/Converter";
 
 const app: any = express(),
@@ -19,7 +20,12 @@ const expressServer = app.listen({ port }, () =>
 const wss = new WebSocket.Server({ server: expressServer });
 const clients: {[propname:string]: {ws: WebSocket}} = {};
 
-const serial = new RSerial();
+let serial;
+if(process.arch === 'arm') {
+  serial = new Serial();
+} else {
+  serial = new RSerial();
+}
 
 const messagesFromStm:ISTMMessage[] = [];
 const settingsMsg:any[] = [];
