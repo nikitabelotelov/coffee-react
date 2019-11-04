@@ -27,22 +27,26 @@ const settingsMsg:any[] = [];
 const usart = new Usart(serial as any);
 
 const sendMessages = () => {
-  messagesFromStm.forEach((msg, i) => {
+  while(messagesFromStm.length) {
+    let msg = messagesFromStm.pop();
     for (let client in clients) {
       try {
         clients[client].ws.send(JSON.stringify({stm: Converter.toString(msg)}))
-        messagesFromStm.splice(i, 1) //TODO:: check it!
-      } catch(e) {}
+      } catch(e) {
+        console.error(e);
+      }
     }
-  })
-  settingsMsg.forEach((msg, i) => {
+  }
+  while(settingsMsg.length) {
+    let msg = settingsMsg.pop();
     for (let client in clients) {
       try {
-        clients[client].ws.send(JSON.stringify({settings: msg}))
-        settingsMsg.splice(i, 1) //TODO:: check it!
-      } catch(e) {}
+        clients[client].ws.send(JSON.stringify({settingsProfiles: msg}))
+      } catch(e) {
+        console.error(e);
+      }
     }
-  })
+  }
 }
 
 usart.msgHandlers.push(message => {
