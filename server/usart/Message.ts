@@ -17,18 +17,18 @@ class Message {
   }
 
   public getMessageFromCode(code: number[]):string {
-    const length = code[1]
+    const length = code[2]
     let message = ''
     let lastByte = 0xFF
     if (code.length !== length + 4) {
       return ''
     }
     for (let i=0; i<length; i++) {
-      const char = code[i + 2]
+      const char = code[i + 3]
       message = `${message}${String.fromCharCode(char)}`
       lastByte = lastByte ^ char
     }
-    if (code[length+2] !== lastByte) {
+    if (code[length+3] !== lastByte) {
       return ''
     }
     return message

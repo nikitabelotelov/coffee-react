@@ -107,6 +107,7 @@ class MachineLife {
       }
     })
 
+    
     this.checkAndSend(commands, StmCommands.SetRelay8, StmMessages.Relay8)
     this.checkAndSend(commands, StmCommands.SetValve1, StmMessages.Valve1)
     this.checkAndSend(commands, StmCommands.SetValve2, StmMessages.Valve2)

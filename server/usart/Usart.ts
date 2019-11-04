@@ -28,6 +28,7 @@ class Usart {
       this.buffer = this.buffer.slice(start)
       const end = this.buffer.indexOf(Constants.endBit.charCodeAt(0))
       const message = this.buffer.splice(0, end+1)
+      console.log('ms=', message)
       const msgObject = new Message()
       const stringMsg = msgObject.getMessageFromCode(message)
       console.log("Received data from usart. " + stringMsg);
