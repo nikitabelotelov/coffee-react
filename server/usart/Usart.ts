@@ -15,7 +15,7 @@ class Usart {
       console.log("Serial opened");
       serial.on('data', (data: Buffer) => {
         // @ts-ignore
-        this.buffer = [...this.buffer, ...data.data]
+        this.buffer = [...this.buffer, ...data]
         console.log("Received data from usart " + JSON.stringify(data));
         this.extractMessage()
       })
