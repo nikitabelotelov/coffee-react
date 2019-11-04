@@ -155,7 +155,7 @@ function rootReducer(state: IAppState = initialState, action: {type: ACTION_TYPE
 
       return { ...state, machine: {...state.machine}, life: {...state.life} };
     case ACTION_TYPES.settingsProfilesInitialize:
-        return { ...state, machine: {...state.machine}, life: {...state.life}, settingsProfiles: (action.payload as ISettingsProfilesMessage).settingsProfiles };
+        return { ...state, settingsProfiles: {...(action.payload as ISettingsProfilesMessage).settingsProfiles} };
   }
   return state;
 }
