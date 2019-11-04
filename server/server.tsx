@@ -71,7 +71,7 @@ wss.on("connection", function connectionListener(ws) {
   });
 
   ws.on("message", data => {
-    console.log(data);
+    // console.log(data);
     // @ts-ignore
     const message = JSON.parse(data)
 
