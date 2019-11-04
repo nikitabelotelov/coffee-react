@@ -27,13 +27,16 @@ class Usart {
     if (start > -1) {
       this.buffer = this.buffer.slice(start)
       const end = this.buffer.indexOf(Constants.endBit.charCodeAt(0))
-      const message = this.buffer.splice(0, end+1)
-      console.log('ms=', message)
-      const msgObject = new Message()
-      const stringMsg = msgObject.getMessageFromCode(message)
-      console.log("Received data from usart. " + stringMsg);
-      this.msgHandlers.forEach(el => el(stringMsg))
-      this.extractMessage()
+      if (end > -1) {
+        const message = this.buffer.splice(0, end+1)
+        this.buffer = this.buffer.slice(end + 1)
+        console.log('ms=', message)
+        const msgObject = new Message()
+        const stringMsg = msgObject.getMessageFromCode(message)
+        console.log("Received data from usart. " + stringMsg);
+        this.msgHandlers.forEach(el => el(stringMsg))
+        this.extractMessage()
+      }
     }
   }
 
