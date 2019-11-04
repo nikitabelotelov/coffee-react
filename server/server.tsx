@@ -82,6 +82,7 @@ wss.on("connection", function connectionListener(ws) {
     const message = JSON.parse(data)
 
     if (message.stm) {
+      console.log("Got message from client. Trying to send to usart.");
       usart.sendMessage(message.stm)
     } else if (message.settings) {
       //todo: save settings to file

@@ -13,6 +13,7 @@ class Usart {
     serial.open(() => {
       this.serial = serial
       serial.on('data', (data: number[]) => {
+        console.log("Serial opened");
         this.buffer = [...this.buffer, ...data] 
         this.extractMessage()
       })
@@ -36,6 +37,7 @@ class Usart {
   sendMessage(message: string) {
     const msgObject = new Message()
     this.queue.push(msgObject.getMessageFromString(message))
+    console.log("Pushed to queue");
     this.queueProcess()
   }
 
@@ -45,6 +47,7 @@ class Usart {
         const msg = buffer.Buffer.from(this.queue[0]);
         this.queue = this.queue.slice(1)
         this.inProgress = true
+        console.log("Write to serial " + JSON.stringify(msg));
         this.serial.write(msg, () => {
           this.inProgress = false
           this.queueProcess()
