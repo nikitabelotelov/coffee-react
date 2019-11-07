@@ -22,8 +22,7 @@ const clients: {[propname:string]: {ws: WebSocket}} = {};
 
 let serial;
 if(process.arch === 'arm') {
-  // @ts-ignore
-  serial = new Serial();
+  serial = new Serial({baudRate: 57600});
 } else {
   serial = new RSerial();
 }
@@ -83,6 +82,7 @@ wss.on("connection", function connectionListener(ws) {
     const message = JSON.parse(data)
 
     if (message.stm) {
+      console.log("Got message from client. Trying to send to usart.");
       usart.sendMessage(message.stm)
     } else if (message.settings) {
       //todo: save settings to file
