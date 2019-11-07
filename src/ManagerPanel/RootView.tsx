@@ -39,7 +39,15 @@ export function RootView(props: IAppState) {
         B7={props.machine[StmMessages.Button7]} B8={props.machine[StmMessages.Button8]}
         V1={props.machine[StmMessages.Valve1]} V2={props.machine[StmMessages.Valve2]}
         V3={props.machine[StmMessages.Valve3]} V4={props.machine[StmMessages.Valve4]}
-        V5={props.machine[StmMessages.Valve5]} V6={props.machine[StmMessages.Valve6]}
+        V5={props.machine[StmMessages.Valve5]} V6={props.machine[StmMessages.Valve6]} <br />
+        R1={props.machine[StmMessages.Relay1]}
+        R2={props.machine[StmMessages.Relay2]}
+        R3={props.machine[StmMessages.Relay3]}
+        R4={props.machine[StmMessages.Relay4]}
+        R5={props.machine[StmMessages.Relay5]}
+        R6={props.machine[StmMessages.Relay6]}
+        R7={props.machine[StmMessages.Relay7]}
+        R8={props.machine[StmMessages.Relay8]}
       </NavLink>
     </div>
   );
