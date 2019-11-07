@@ -136,7 +136,6 @@ class MachineLife {
       emitStm({id: StmCommands.SetBlueGroup1, content: '0'})
       emitStm({id: StmCommands.SetBlueGroup2, content: '0'})
     }
-    return
     
     this.checkAndSend(commands, StmCommands.SetRelay1, StmMessages.Relay1)
     this.checkAndSend(commands, StmCommands.SetRelay2, StmMessages.Relay2)
