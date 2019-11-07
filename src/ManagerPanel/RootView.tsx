@@ -4,8 +4,8 @@ import { IAppState } from "../reducers";
 import { StmMessages } from "../../server/stm/Converter";
 
 export function RootView(props: IAppState) {
-  const tg1 = props.life.tTrendG1.length ? props.life.tTrendG1[props.life.tTrendG1.length - 1] : 0
-  const tg2 = props.life.tTrendG2.length ? props.life.tTrendG2[props.life.tTrendG2.length - 1] : 0
+  const tg1 = props.life.tTrendG1.length ? props.life.tTrendG1[props.life.tTrendG1.length - 1].value : 0
+  const tg2 = props.life.tTrendG2.length ? props.life.tTrendG2[props.life.tTrendG2.length - 1].value : 0
   return (
     <div className="manager-panel__root panel_root">
       <div className="manager-panel__block btn-outline-dark manager-panel__topleft ">
