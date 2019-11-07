@@ -156,28 +156,32 @@ const getSpeed = (source: ITempPoint[]): number => {
 }
 
 function rootReducer(state: IAppState = initialState, action: {type: ACTION_TYPES, payload: ISTMMessage | IBasicMessage | ISTMCommand | null}) {
-  switch (action.type) {
-    case ACTION_TYPES.setSetting:
-      state.settings[(action.payload as IBasicMessage).id] = action.payload.content;
-      return { ...state, settings: {...state.settings} };
-    case ACTION_TYPES.currentInfoUpdate:
-      state.machine[(action.payload as ISTMMessage).id] = action.payload.content;
+  try {
+    switch (action.type) {
+      case ACTION_TYPES.setSetting:
+        state.settings[(action.payload as IBasicMessage).id] = action.payload.content;
+        return { ...state, settings: {...state.settings} };
+      case ACTION_TYPES.currentInfoUpdate:
+        state.machine[(action.payload as ISTMMessage).id] = action.payload.content;
 
-      if ((action.payload as ISTMMessage).id === StmMessages.Group1Temperature) {
-        const temp = Converter.voltToCelsium((action.payload as ISTMMessage).content)
-        state.life.tTrendG1.push({
-          time: Date.now(),
-          value: temp
-        })
-        state.life.tTrendG1 = [...state.life.tTrendG1]
-        if (state.life.tTrendG1.length > 100) {
-          state.life.tTrendG1.splice(0, 1)
-          state.life.middleTTrendG1 = CreateMiddleTrend(state.life.tTrendG1)
-          state.life.speedG1 = getSpeed(state.life.middleTTrendG1)
+        if ((action.payload as ISTMMessage).id === StmMessages.Group1Temperature) {
+          const temp = Converter.voltToCelsium((action.payload as ISTMMessage).content)
+          state.life.tTrendG1.push({
+            time: Date.now(),
+            value: temp
+          })
+          state.life.tTrendG1 = [...state.life.tTrendG1]
+          if (state.life.tTrendG1.length > 100) {
+            state.life.tTrendG1.splice(0, 1)
+            state.life.middleTTrendG1 = CreateMiddleTrend(state.life.tTrendG1)
+            state.life.speedG1 = getSpeed(state.life.middleTTrendG1)
+          }
         }
-      }
 
-      return { ...state, machine: {...state.machine}, life: {...state.life} };
+        return { ...state, machine: {...state.machine}, life: {...state.life} };
+    }
+  } catch(e) {
+    console.log(e)
   }
   return state;
 }
