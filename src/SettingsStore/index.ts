@@ -53,9 +53,11 @@ export const emitStm = (payload: ISTMCommand, waitEcho?: boolean) => {
   }
 }
 
-setInterval(()=>{
-  Life.step()
-}, 100)
+setTimeout(()=>{
+  setInterval(()=>{
+    Life.step()
+  }, 100)
+}, 5000)
 
 
 export default store;
