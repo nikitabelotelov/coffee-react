@@ -33,7 +33,13 @@ export function RootView(props: IAppState) {
         to="/settings"
         className="manager-panel__block btn-outline-dark manager-panel__bottomright"
       >
-        Настройки
+        Настройки B1={props.machine[StmMessages.Button1]} B2={props.machine[StmMessages.Button2]}
+        B3={props.machine[StmMessages.Button3]} B4={props.machine[StmMessages.Button4]}
+        B5={props.machine[StmMessages.Button5]} B6={props.machine[StmMessages.Button6]}
+        B7={props.machine[StmMessages.Button7]} B8={props.machine[StmMessages.Button8]}
+        V1={props.machine[StmMessages.Valve1]} V2={props.machine[StmMessages.Valve2]}
+        V3={props.machine[StmMessages.Valve3]} V4={props.machine[StmMessages.Valve4]}
+        V5={props.machine[StmMessages.Valve5]} V6={props.machine[StmMessages.Valve6]}
       </NavLink>
     </div>
   );
