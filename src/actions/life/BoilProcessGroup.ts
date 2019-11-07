@@ -3,7 +3,7 @@ import store, { emitStm } from "../../SettingsStore";
 import { StmMessages, StmCommands } from "../../../server/stm/Converter";
 
 
-const checkToStop = (button: StmMessages.Button2 | StmMessages.Button4, state: IObjectAny) => {
+const checkToStop = (button: StmMessages.Button3 | StmMessages.Button6, state: IObjectAny) => {
   const machine = store.getState().machine
   if (machine[button] !== state.buttonState) {
     state.step = '0'
