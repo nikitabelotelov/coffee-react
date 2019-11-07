@@ -83,7 +83,7 @@ class MachineLife {
   }
 
   public step() {
-
+    const machine = store.getState().machine
     const commands:ICommandBlock = {
       [StmCommands.SetValve1]: 0,
       [StmCommands.SetValve2]: 0,
@@ -139,6 +139,15 @@ class MachineLife {
     this.checkAndSend(commands, StmCommands.SetValve4, StmMessages.Valve4)
     this.checkAndSend(commands, StmCommands.SetValve5, StmMessages.Valve5)
     this.checkAndSend(commands, StmCommands.SetValve6, StmMessages.Valve6)
+
+    const vol1 = parseInt(machine[StmMessages.VolumetricGroup1]) || 0
+    if (vol1 > 0 && commands[StmCommands.ResetVolumetricG1]) {
+      emitStm({id: StmCommands.ResetVolumetricG1, content: '1'})
+    }
+    const vol2 = parseInt(machine[StmMessages.VolumetricGroup2]) || 0
+    if (vol2 > 0 && commands[StmCommands.ResetVolumetricG2]) {
+      emitStm({id: StmCommands.ResetVolumetricG2, content: '1'})
+    }
 
   }
 }
