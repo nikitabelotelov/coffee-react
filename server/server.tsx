@@ -22,6 +22,7 @@ const clients: {[propname:string]: {ws: WebSocket}} = {};
 
 let serial;
 if(process.arch === 'arm') {
+  // @ts-ignore
   serial = new Serial();
 } else {
   serial = new RSerial();

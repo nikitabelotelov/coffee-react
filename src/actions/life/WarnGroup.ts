@@ -17,6 +17,8 @@ export const WarnGroup = (
   rele1: StmCommands.SetRelay4 | StmCommands.SetRelay6,
   rele2: StmCommands.SetRelay5 | StmCommands.SetRelay7, // ????
   setTemp: 'Group1Temperature' | 'Group2Temperature',
+  trend: 'middleTTrendG1' | 'middleTTrendG2',
+  speedWarm: 'speedG1' | 'speedG2'
 ) => (
   state: IObjectAny,
   commands: ICommandBlock,
@@ -24,79 +26,28 @@ export const WarnGroup = (
 ): IObjectAny => {
   const machine = store.getState().machine
   const settings = store.getState().settings
-  
+  const life = state.getState().life
+
   if (state.stop) {
     return state;
   }
 
   const needTemp = parseInt(settings[setTemp], 10) || 0
   if (needTemp < 70) {
+    changeStatus(ProcessStatus.done)
     return state
   }
 
-  // TODO: make middle
+  const trendG = life[trend]
+  const temperature = trendG[trendG - 1].value
+  const speed = life['speedG1']
 
-  /*const temperature = Converter.voltToCelsium(machine[groupTemp])
+  if (temperature < needTemp) {
+    changeStatus(ProcessStatus.wip)
+    commands[rele1]++
+  } else {
+    changeStatus(ProcessStatus.done)
+  }
 
-  
-
-  switch(state.step) {
-    case '1':
-      changeStatus(ProcessStatus.wip)
-      if (machine[button] === '0') {
-        state.step = '2'
-      }
-    break;
-    case '2':
-      if (checkToStop(button, state)) {
-        //TODO: add reset variom status
-
-        commands[valveIn]++
-        commands[valveOut]++
-        state.step = '3'
-        state.beforePressure = Date.now()
-      }
-      break;
-    case '3':
-      if (checkToStop(button, state)) {
-        // time before boil. TODO: change 0 to setting
-        if (Date.now() - state.beforePressure > 0) {
-          state.step = '4'
-          state.silentBeforePressure = Date.now()
-        } else {
-          commands[valveIn]++
-          commands[valveOut]++
-        }
-      }
-      break;
-    case '4':
-      if (checkToStop(button, state)) {
-        // time before boil. TODO: change 0 to setting
-        if (Date.now() - state.silentBeforePressure > 0) {
-          state.step = '5'
-          state.silentBeforePressure = Date.now()
-        }
-      }
-      break;
-    case '5':
-      if (checkToStop(button, state)) {
-        const volumne = parseInt(machine[volumeSensor], 10) || 0
-        const needVolume = parseInt(settings[autoMode]) || 0
-        if (volumne < needVolume) {
-          commands[valveIn]++
-          commands[valveOut]++
-          commands[StmCommands.SetRelay8]++
-        } else {
-          state.step = '0'
-        }
-      }
-      break;
-    default:
-      changeStatus(ProcessStatus.done)
-      if (machine[button] === '1') {
-        state.step = '1'
-      }
-      break
-  }*/
   return { ...state };
 };

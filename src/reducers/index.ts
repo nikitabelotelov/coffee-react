@@ -12,6 +12,8 @@ export interface IAppState {
     tTrendG2: ITempPoint[],
     middleTTrendG1: ITempPoint[],
     middleTTrendG2: ITempPoint[],
+    speedG1: number,
+    speedG2: number,
     godMod: number
   }
   update: number
@@ -25,6 +27,8 @@ const initialState: IAppState = {
     tTrendG2: [],
     middleTTrendG1: [],
     middleTTrendG2: [],
+    speedG1: 0,
+    speedG2: 0,
     godMod: 0,
   },
   machine: {
@@ -59,6 +63,8 @@ const initialState: IAppState = {
     [StmMessages.Button6]: "0",
     [StmMessages.Button7]: "0",
     [StmMessages.Button8]: "0",
+    [StmMessages.Button9]: "0",
+    
     [StmMessages.VolumetricGroup1]: "0",
     [StmMessages.VolumetricGroup2]: "0",
     
@@ -125,9 +131,28 @@ function CreateMiddleTrend(source: ITempPoint[]): ITempPoint[] {
   return result
 }
 
-const getLastTrend = (source: ITempPoint[]): {time: number, value: number} => {
+const getSpeed = (source: ITempPoint[]): number => {
   const last = source[source.length - 1]
-  return last
+  let min = source[0]
+  let max = source[0]
+  source.forEach(el => {
+    if (el.value < min.value) {
+      min = el
+    }
+    if (el.value > max.value) {
+      max = el
+    }
+  })
+
+  let speed = 0
+
+  if (min.time > max.time) {
+    speed = (last.value - min.value) / (last.time - min.time)
+  } else {
+    speed = (last.value - max.value) / (last.time - max.time)
+  }
+
+  return speed
 }
 
 function rootReducer(state: IAppState = initialState, action: {type: ACTION_TYPES, payload: ISTMMessage | IBasicMessage | ISTMCommand | null}) {
@@ -148,6 +173,7 @@ function rootReducer(state: IAppState = initialState, action: {type: ACTION_TYPE
         if (state.life.tTrendG1.length > 100) {
           state.life.tTrendG1.splice(0, 1)
           state.life.middleTTrendG1 = CreateMiddleTrend(state.life.tTrendG1)
+          state.life.speedG1 = getSpeed(state.life.middleTTrendG1)
         }
       }
 

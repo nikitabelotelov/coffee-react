@@ -45,9 +45,11 @@ export enum StmMessages {
   Button6 = 'E',
   Button7 = 'F',
   Button8 = 'G',
+  Button9 = 'H',
   
-  VolumetricGroup1 = 'H',
-  VolumetricGroup2 = 'K',
+  VolumetricGroup1 = 'K',
+  VolumetricGroup2 = 'L',
+
 }
 
 export enum StmCommands {
@@ -67,14 +69,42 @@ export enum StmCommands {
   SetRelay7 = 'N',
   SetRelay8 = 'O',
 
-  SetRedCold = 'P',
-  SetGreenCold = 'Q',
-  SetBlueCold = 'R',
-  SetRedHot = 'S',
-  SetGreenHot = 'T',
-  SetBlueHot = 'U'
+  SetRedGroup1 = 'P',
+  SetGreenGroup1 = 'Q',
+  SetBlueGroup1 = 'R',
+  SetRedGroup2 = 'S',
+  SetGreenGroup2 = 'T',
+  SetBlueGroup2 = 'U',
 
+  ResetVolumetricG1 = 'V',
+  ResetVolumetricG2 = 'W',
+
+  SetSecGroup1 = 'X',
+  SetSecGroup2 = 'Y',
+  
+  SetRedMachine = 'Z',
+  SetGreenMachine = 'a',
+  SetBlueMachine = 'b',
+  
 }
+
+/*				
+#define DIFFUSOR07 365
+#define DIFFUSOR06 375
+#define ACTIVEDIFFUSOR DIFFUSOR06
+uint16_t koefVarG1 = ACTIVEDIFFUSOR;
+uint16_t koefVarG2 = ACTIVEDIFFUSOR;
+if (needG1Mla1 > 0) {
+					if ( (variomsCount[0]*100) / koefVarG1 >= needG1Mla1){
+						DoButton3();
+					}
+				}
+				if (needG1Mla2 > 0) {
+					if ( (variomsCount[0]*100) / koefVarG1 >= needG1Mla2){
+						DoButton4();
+					}
+				}
+			}*/
 
 const TempratureData = [4331, 4281, 4232, 4225, 4218, 4211, 4204, 4197, 4190, 4183, 4176, //11
   4467, 4348, 4229, 4107, 4085, 4063, 4040, 4018, 3996, 3971, 3946, //22

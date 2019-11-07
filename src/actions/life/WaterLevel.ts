@@ -13,7 +13,7 @@ export const WaterLevel = (state: IObjectAny, commands: ICommandBlock, changeSta
     case "1":
       if (state.doneTime < 5000) {
         changeStatus(ProcessStatus.done)
-        commands[StmCommands.SetValve1] = 0
+        commands[StmCommands.SetValve1] = 1
         commands[StmCommands.SetRelay8]++
       }
       break

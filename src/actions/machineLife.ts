@@ -32,22 +32,30 @@ class MachineLife {
   }
 
   constructor() {
-    const boilGroup1 = new Process('boilGroup1', BoilProcessGroup(StmMessages.Button2, StmCommands.SetValve2, StmCommands.SetValve4, StmMessages.VolumetricGroup1, 'Group1AutoMode1'), 0)
-    boilGroup1.start()
-
+    const boilGroup1 = new Process('boilGroup1', BoilProcessGroup(StmMessages.Button2, StmCommands.SetValve2, StmCommands.SetValve4, StmMessages.VolumetricGroup1, StmCommands.ResetVolumetricG1, 'Group1AutoMode1'), 0)
+    const boilGroup2 = new Process('boilGroup1', BoilProcessGroup(StmMessages.Button4, StmCommands.SetValve3, StmCommands.SetValve5, StmMessages.VolumetricGroup2, StmCommands.ResetVolumetricG2, 'Group1AutoMode2'), 0)
     const waterLevel = new Process('waterLevel', WaterLevel, 20000)
-    this.addProcess({
-      process: boilGroup1,
-      children: [waterLevel]
-    })
-
     const waterLevelG1 = new Process('waterLevelG1', WaterLevelGroup(StmMessages.Group1Pressure, StmCommands.SetValve2, 'Group1Temperature'), 20000)
     const waterLevelG2 = new Process('waterLevelG2', WaterLevelGroup(StmMessages.Group2Pressure, StmCommands.SetValve3, 'Group2Temperature'), 20000)
+
+
+    this.addProcess({
+      process: boilGroup1,
+      children: [waterLevelG1]
+    })
+    this.addProcess({
+      process: boilGroup2,
+      children: [waterLevelG2]
+    })
+
+    boilGroup1.start()
+    boilGroup2.start()
+
     waterLevel.start()
 
     this.addProcess({
       process: waterLevel,
-      children: [waterLevelG1, waterLevelG2]
+      children: []
     })
     
     this.addProcess({
@@ -93,12 +101,22 @@ class MachineLife {
       [StmCommands.SetRelay7]: 0,
       [StmCommands.SetRelay8]: 0,
 
-      [StmCommands.SetRedCold]: 0,
-      [StmCommands.SetGreenCold]: 0,
-      [StmCommands.SetBlueCold]: 0,
-      [StmCommands.SetRedHot]: 0,
-      [StmCommands.SetGreenHot]: 0,
-      [StmCommands.SetBlueHot]: 0,
+      [StmCommands.SetRedGroup1]: 0,
+      [StmCommands.SetGreenGroup1]: 0,
+      [StmCommands.SetBlueGroup1]: 0,
+      [StmCommands.SetRedGroup2]: 0,
+      [StmCommands.SetGreenGroup2]: 0,
+      [StmCommands.SetBlueGroup2]: 0,
+      
+      [StmCommands.SetRedMachine]: 0,
+      [StmCommands.SetGreenMachine]: 0,
+      [StmCommands.SetBlueMachine]: 0,
+
+      [StmCommands.ResetVolumetricG1]: 0,
+      [StmCommands.ResetVolumetricG2]: 0,
+
+      [StmCommands.SetSecGroup1]: 100,
+      [StmCommands.SetSecGroup2]: 100,
     }
 
     this.processes.forEach(one => {
@@ -107,10 +125,20 @@ class MachineLife {
       }
     })
 
+    this.checkAndSend(commands, StmCommands.SetRelay1, StmMessages.Relay1)
+    this.checkAndSend(commands, StmCommands.SetRelay2, StmMessages.Relay2)
+    this.checkAndSend(commands, StmCommands.SetRelay3, StmMessages.Relay3)
+    this.checkAndSend(commands, StmCommands.SetRelay4, StmMessages.Relay4)
+    this.checkAndSend(commands, StmCommands.SetRelay5, StmMessages.Relay5)
+    this.checkAndSend(commands, StmCommands.SetRelay6, StmMessages.Relay6)
+    this.checkAndSend(commands, StmCommands.SetRelay7, StmMessages.Relay7)
     this.checkAndSend(commands, StmCommands.SetRelay8, StmMessages.Relay8)
     this.checkAndSend(commands, StmCommands.SetValve1, StmMessages.Valve1)
     this.checkAndSend(commands, StmCommands.SetValve2, StmMessages.Valve2)
     this.checkAndSend(commands, StmCommands.SetValve3, StmMessages.Valve3)
+    this.checkAndSend(commands, StmCommands.SetValve4, StmMessages.Valve4)
+    this.checkAndSend(commands, StmCommands.SetValve5, StmMessages.Valve5)
+    this.checkAndSend(commands, StmCommands.SetValve6, StmMessages.Valve6)
 
   }
 }
