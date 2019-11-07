@@ -13,7 +13,7 @@ const checkToStop = (button: StmMessages.Button2 | StmMessages.Button4, state: I
 }
 
 export const BoilProcessGroup = (
-  button: StmMessages.Button2 | StmMessages.Button4,
+  button: StmMessages.Button3 | StmMessages.Button6,
   valveIn: StmCommands.SetValve2 | StmCommands.SetValve3,
   valveOut: StmCommands.SetValve4 | StmCommands.SetValve5,
   volumeSensor: StmMessages.VolumetricGroup1 | StmMessages.VolumetricGroup2,
