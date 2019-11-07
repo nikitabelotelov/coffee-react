@@ -56,7 +56,7 @@ export const emitStm = (payload: ISTMCommand, waitEcho?: boolean) => {
 setTimeout(()=>{
   setInterval(()=>{
     Life.step()
-  }, 100)
+  }, 500)
 }, 5000)
 
 

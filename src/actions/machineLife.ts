@@ -82,6 +82,8 @@ class MachineLife {
     }
   }
 
+  public count: number = 0
+
   public step() {
     const machine = store.getState().machine
     const commands:ICommandBlock = {
@@ -125,6 +127,17 @@ class MachineLife {
       }
     })
 
+    if (this.count === 0) {
+      this.count = 1
+      emitStm({id: StmCommands.SetBlueGroup1, content: '50000'})
+      emitStm({id: StmCommands.SetBlueGroup2, content: '50000'})
+    } else {
+      this.count = 0
+      emitStm({id: StmCommands.SetBlueGroup1, content: '0'})
+      emitStm({id: StmCommands.SetBlueGroup2, content: '0'})
+    }
+    return
+    
     this.checkAndSend(commands, StmCommands.SetRelay1, StmMessages.Relay1)
     this.checkAndSend(commands, StmCommands.SetRelay2, StmMessages.Relay2)
     this.checkAndSend(commands, StmCommands.SetRelay3, StmMessages.Relay3)
@@ -141,11 +154,11 @@ class MachineLife {
     this.checkAndSend(commands, StmCommands.SetValve6, StmMessages.Valve6)
 
     const vol1 = parseInt(machine[StmMessages.VolumetricGroup1]) || 0
-    if (vol1 > 0 && commands[StmCommands.ResetVolumetricG1]) {
+    if (vol1 > 0 && commands[StmCommands.ResetVolumetricG1] > 0) {
       emitStm({id: StmCommands.ResetVolumetricG1, content: '1'})
     }
     const vol2 = parseInt(machine[StmMessages.VolumetricGroup2]) || 0
-    if (vol2 > 0 && commands[StmCommands.ResetVolumetricG2]) {
+    if (vol2 > 0 && commands[StmCommands.ResetVolumetricG2] > 0) {
       emitStm({id: StmCommands.ResetVolumetricG2, content: '1'})
     }
 
