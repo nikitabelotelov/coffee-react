@@ -6,11 +6,17 @@ import Usart from "./usart/Usart";
 import { RSerial } from "./mocha/RSerial";
 import { Serial } from 'raspi-serial';
 import Converter, { ISTMMessage } from "./stm/Converter";
+import fs from "fs"
 
 const app: any = express(),
   resourcesPath = path.join("", ".");
 
+const root = process.cwd()
 app.use(express.static(resourcesPath));
+const indexFile = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+app.use('/*', (req:any, res:any) => {
+  res.send(indexFile);
+})
 
 const port = process.env.PORT || 777;
 const expressServer = app.listen({ port }, () =>
