@@ -164,6 +164,10 @@ function rootReducer(state: IAppState = initialState, action: {type: ACTION_TYPE
       case ACTION_TYPES.currentInfoUpdate:
         state.machine[(action.payload as ISTMMessage).id] = action.payload.content;
 
+        if ((action.payload as ISTMMessage).id === StmMessages.PredictGroupTemperature) {
+          state.machine[(action.payload as ISTMMessage).id] = `${Math.round(Converter.voltToCelsium((action.payload as ISTMMessage).content)*10)/10}`
+        }
+
         if ((action.payload as ISTMMessage).id === StmMessages.Group1Temperature) {
           const temp = Converter.voltToCelsium((action.payload as ISTMMessage).content)
           state.life.tTrendG1.push({
@@ -175,6 +179,20 @@ function rootReducer(state: IAppState = initialState, action: {type: ACTION_TYPE
             state.life.tTrendG1.splice(0, 1)
             state.life.middleTTrendG1 = CreateMiddleTrend(state.life.tTrendG1)
             state.life.speedG1 = getSpeed(state.life.middleTTrendG1)
+          }
+        }
+
+        if ((action.payload as ISTMMessage).id === StmMessages.Group2Temperature) {
+          const temp = Converter.voltToCelsium((action.payload as ISTMMessage).content)
+          state.life.tTrendG2.push({
+            time: Date.now(),
+            value: temp
+          })
+          state.life.tTrendG2 = [...state.life.tTrendG2]
+          if (state.life.tTrendG2.length > 100) {
+            state.life.tTrendG2.splice(0, 1)
+            state.life.middleTTrendG2 = CreateMiddleTrend(state.life.tTrendG2)
+            state.life.speedG2 = getSpeed(state.life.middleTTrendG2)
           }
         }
 
