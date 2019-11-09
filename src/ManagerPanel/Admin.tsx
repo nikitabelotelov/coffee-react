@@ -32,7 +32,7 @@ const Admin = (props: IAppState) => {
                     <div className={"admin__button" + (props.machine[StmMessages.Button2]==='1' ? " admin__button_active" : "")}>B2</div>
                     <div className={"admin__button" + (props.machine[StmMessages.Button3]==='1' ? " admin__button_active" : "")}>B3</div>
                     <div className={"admin__button" + (props.machine[StmMessages.Button4]==='1' ? " admin__button_active" : "")}>B4</div>
-                    <div className={"admin__button admin__button_active" + (props.machine[StmMessages.Button5]==='1' ? " admin__button_active" : "")}>B5</div>
+                    <div className={"admin__button" + (props.machine[StmMessages.Button5]==='1' ? " admin__button_active" : "")}>B5</div>
                     <div className={"admin__button" + (props.machine[StmMessages.Button6]==='1' ? " admin__button_active" : "")}>B6</div>
                     <div className={"admin__button" + (props.machine[StmMessages.Button7]==='1' ? " admin__button_active" : "")}>B7</div>
                     <div className={"admin__button" + (props.machine[StmMessages.Button8]==='1' ? " admin__button_active" : "")}>B8</div>
