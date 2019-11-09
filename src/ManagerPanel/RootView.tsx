@@ -4,26 +4,25 @@ import { IAppState } from "../reducers";
 import { StmMessages } from "../../server/stm/Converter";
 
 export function RootView(props: IAppState) {
-  const tg1 = props.life.tTrendG1.length ? props.life.tTrendG1[props.life.tTrendG1.length - 1].value : 0
-  const tg2 = props.life.tTrendG2.length ? props.life.tTrendG2[props.life.tTrendG2.length - 1].value : 0
+  const tg1 = Math.round((props.life.tTrendG1.length ? props.life.tTrendG1[props.life.tTrendG1.length - 1].value : 0) * 10)/10
+  const tg2 = Math.round((props.life.tTrendG2.length ? props.life.tTrendG2[props.life.tTrendG2.length - 1].value : 0) * 10)/10
   return (
     <div className="manager-panel__root panel_root">
       <div className="manager-panel__block btn-outline-dark manager-panel__topleft ">
         <b>Группа 1</b>
         <br />
-        Температура: {props.machine[StmMessages.Group1Temperature]} {tg1} C /{" "}
-        {props.settings.Group1Temperature} C P = {props.machine[StmMessages.Group1Pressure]}
+        Температура: {tg1} C /{" "}{props.settings.Group1Temperature} C
       </div>
       <div className="manager-panel__block btn-outline-dark manager-panel__topright">
         <b>Группа 2</b>
         Температура: {props.machine[StmMessages.Group2Temperature]} {tg2} C /{" "}
         {props.settings.Group2Temperature} C P = {props.machine[StmMessages.Group2Pressure]}
       </div>
-      <div className="manager-panel__block btn-outline-dark manager-panel__middleleft">
+      <NavLink to="/admin" className="manager-panel__block btn-outline-dark manager-panel__middleleft">
         <b>Преднагревательный</b>
         <br />
         Температура: {props.machine[StmMessages.PredictGroupTemperature]} C
-      </div>
+      </NavLink>
       <div className="manager-panel__block btn-outline-dark manager-panel__bottomleft">
         <b>Паровой</b>
         Уровень: {props.machine[StmMessages.WaterLevel]} <br />
@@ -34,21 +33,7 @@ export function RootView(props: IAppState) {
         to="/settings"
         className="manager-panel__block btn-outline-dark manager-panel__bottomright"
       >
-        Настройки B1={props.machine[StmMessages.Button1]} B2={props.machine[StmMessages.Button2]}
-        B3={props.machine[StmMessages.Button3]} B4={props.machine[StmMessages.Button4]}
-        B5={props.machine[StmMessages.Button5]} B6={props.machine[StmMessages.Button6]}
-        B7={props.machine[StmMessages.Button7]} B8={props.machine[StmMessages.Button8]}
-        V1={props.machine[StmMessages.Valve1]} V2={props.machine[StmMessages.Valve2]}
-        V3={props.machine[StmMessages.Valve3]} V4={props.machine[StmMessages.Valve4]}
-        V5={props.machine[StmMessages.Valve5]} V6={props.machine[StmMessages.Valve6]} <br />
-        R1={props.machine[StmMessages.Relay1]}
-        R2={props.machine[StmMessages.Relay2]}
-        R3={props.machine[StmMessages.Relay3]}
-        R4={props.machine[StmMessages.Relay4]}
-        R5={props.machine[StmMessages.Relay5]}
-        R6={props.machine[StmMessages.Relay6]}
-        R7={props.machine[StmMessages.Relay7]}
-        R8={props.machine[StmMessages.Relay8]}
+        Настройки
       </NavLink>
     </div>
   );

@@ -7,6 +7,8 @@ import { IObjectAny, ProcessStatus, ICommandBlock } from "../types"
 import { WaterLevel } from "./life/WaterLevel"
 import { WaterLevelGroup } from "./life/WaterLevelGroup"
 import { BoilProcessGroup } from "./life/BoilProcessGroup"
+import { WarmPredict } from "./life/WarmPredict"
+import { WarmGroup } from "./life/WarmGroup"
 
 
 export interface IProcesses {
@@ -35,9 +37,12 @@ class MachineLife {
     const boilGroup1 = new Process('boilGroup1', BoilProcessGroup(StmMessages.Button3, StmCommands.SetValve2, StmCommands.SetValve4, StmMessages.VolumetricGroup1, StmCommands.ResetVolumetricG1, 'Group1AutoMode1'), 0)
     const boilGroup2 = new Process('boilGroup1', BoilProcessGroup(StmMessages.Button6, StmCommands.SetValve3, StmCommands.SetValve5, StmMessages.VolumetricGroup2, StmCommands.ResetVolumetricG2, 'Group1AutoMode2'), 0)
     const waterLevel = new Process('waterLevel', WaterLevel, 20000)
+    const predictWarm = new Process('predictWarm', WarmPredict, 0)
     const waterLevelG1 = new Process('waterLevelG1', WaterLevelGroup(StmMessages.Group1Pressure, StmCommands.SetValve2, 'Group1Temperature'), 20000)
     const waterLevelG2 = new Process('waterLevelG2', WaterLevelGroup(StmMessages.Group2Pressure, StmCommands.SetValve3, 'Group2Temperature'), 20000)
 
+    const warmG1 = new Process('warmG1', WarmGroup(StmMessages.Group1Pressure, StmCommands.SetRelay4, StmCommands.SetRelay5, "Group1Temperature", "middleTTrendG1"), 0)
+    const warmG2 = new Process('warmG2', WarmGroup(StmMessages.Group2Pressure, StmCommands.SetRelay6, StmCommands.SetRelay7, "Group2Temperature", "middleTTrendG2"), 0)
 
     this.addProcess({
       process: boilGroup1,
@@ -52,6 +57,13 @@ class MachineLife {
     boilGroup2.start()
 
     waterLevel.start()
+    predictWarm.start()
+
+    waterLevelG1.start()
+    waterLevelG2.start()
+
+    warmG1.start()
+    warmG2.start()
 
     this.addProcess({
       process: waterLevel,
@@ -65,6 +77,20 @@ class MachineLife {
 
     this.addProcess({
       process: waterLevelG2,
+      children: []
+    })
+
+    this.addProcess({
+      process: predictWarm,
+      children: []
+    })
+
+    this.addProcess({
+      process: warmG1,
+      children: []
+    })
+    this.addProcess({
+      process: warmG2,
       children: []
     })
   }
