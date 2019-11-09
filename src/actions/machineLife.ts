@@ -127,7 +127,7 @@ class MachineLife {
       }
     })
 
-    if (this.count === 0) {
+    /* if (this.count === 0) {
       this.count = 1
       emitStm({id: StmCommands.SetBlueGroup1, content: '50000'})
       emitStm({id: StmCommands.SetBlueGroup2, content: '50000'})
@@ -135,7 +135,7 @@ class MachineLife {
       this.count = 0
       emitStm({id: StmCommands.SetBlueGroup1, content: '0'})
       emitStm({id: StmCommands.SetBlueGroup2, content: '0'})
-    }
+    } */
     
     this.checkAndSend(commands, StmCommands.SetRelay1, StmMessages.Relay1)
     this.checkAndSend(commands, StmCommands.SetRelay2, StmMessages.Relay2)

@@ -48,15 +48,18 @@ export class Process {
     if (!this.errorTimeout && this.wipTimeout) {
       this.errorTimeout = Date.now()
     }
+    const wipTime = Date.now() - this.errorTimeout
 
-    if (this.wipTimeout && Date.now() - this.errorTimeout > this.wipTimeout) {
+    if (this.wipTimeout &&  wipTime > this.wipTimeout) {
       this.state.stop = 0
       // TODO:: NOTFIFICATION ERROR
     } 
     if (this.timeDone && this.status === ProcessStatus.done) {
       this.state.doneTime = Date.now() - this.timeDone
+      this.state.wipTime = 0
     } else {
       this.state.doneTime = 0
+      this.state.wipTime = wipTime
     }
     this.state = this.stateMachine(this.state, commands, this.onStatusChangeHdl)
   }
