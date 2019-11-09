@@ -27,7 +27,7 @@ export const emit = (payload: IBasicMessage) => {
 }
 
 export const emitStm = (payload: ISTMCommand, waitEcho?: boolean) => {
-  console.log("Message emitted " + JSON.stringify(payload));
+  //console.log("Message emitted " + JSON.stringify(payload));
   WebSocketInst.send(JSON.stringify({ stm: Converter.toString(payload) }));
   if (waitEcho) {
     

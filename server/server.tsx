@@ -4,9 +4,16 @@ import express from "express";
 import WebSocket from "ws";
 import Usart from "./usart/Usart";
 import { RSerial } from "./mocha/RSerial";
-import { Serial } from 'raspi-serial';
 import Converter, { ISTMMessage } from "./stm/Converter";
 import fs from "fs"
+
+let Serial:any;
+try {
+  Serial = require('raspi-serial').Serial;
+} catch(e) {
+  console.warn('Couldn\'t load raspi-serial. Will use mock-object instead.');
+  Serial = RSerial;
+}
 
 const app: any = express(),
   resourcesPath = path.join("", ".");
@@ -28,7 +35,7 @@ const clients: {[propname:string]: {ws: WebSocket}} = {};
 
 let serial;
 if(process.arch === 'arm') {
-  serial = new Serial({baudRate: 57600});
+  // serial = new Serial({baudRate: 57600});
 } else {
   serial = new RSerial();
 }
@@ -88,7 +95,7 @@ wss.on("connection", function connectionListener(ws) {
     const message = JSON.parse(data)
 
     if (message.stm) {
-      console.log("Got message from client. Trying to send to usart.");
+      //console.log("Got message from client. Trying to send to usart.");
       usart.sendMessage(message.stm)
     } else if (message.settings) {
       //todo: save settings to file
