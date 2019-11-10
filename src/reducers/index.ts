@@ -1,8 +1,9 @@
 import ACTION_TYPES from "../actions/actionTypes";
-import { IMachineState, ISettingsState, IBasicMessage, ISettingsProfilesState, ISettingsProfilesMessage } from "../types";
+import { IMachineState, ISettingsState, IBasicMessage, ISettingsProfilesState, ISettingsProfilesMessage, ISettingsChangeMessage } from "../types";
 import Converter, { StmMessages, ISTMMessage, ISTMCommand } from "../../server/stm/Converter";
+import { emitSettingsChange } from "../SettingsStore";
 
-export interface ITempPoint {time: number, value: number}
+export interface ITempPoint { time: number, value: number }
 
 export interface IAppState {
   machine: IMachineState
@@ -65,10 +66,10 @@ const initialState: IAppState = {
     [StmMessages.Button7]: "",
     [StmMessages.Button8]: "",
     [StmMessages.Button9]: "",
-    
+
     [StmMessages.VolumetricGroup1]: "0",
     [StmMessages.VolumetricGroup2]: "0",
-    
+
   },
   settings: { //TODO:: load from file here
     Group1Temperature: '0',
@@ -91,9 +92,9 @@ const initialState: IAppState = {
 
 function getChanges(source: ITempPoint[]): number[] {
   let changes: number[] = []
-  for (let i=1; i< source.length; i++) {
+  for (let i = 1; i < source.length; i++) {
     const current = source[i].value
-    const prev = source[i-1].value
+    const prev = source[i - 1].value
     changes.push(current > prev ? current / prev : prev / current)
   }
   return changes
@@ -101,34 +102,34 @@ function getChanges(source: ITempPoint[]): number[] {
 
 
 function CreateMiddleTrend(source: ITempPoint[]): ITempPoint[] {
-  const result:ITempPoint[] = []
+  const result: ITempPoint[] = []
   let changes: number[] = getChanges(source)
   let middleOfChanges = 0
-  for (let i=0; i< changes.length; i++) {
+  for (let i = 0; i < changes.length; i++) {
     middleOfChanges += changes[i]
   }
   middleOfChanges /= changes.length
 
-  const smooth = [ ...source]
+  const smooth = [...source]
   // find impuls
-  for (let i=1; i< smooth.length-1; i++) {
+  for (let i = 1; i < smooth.length - 1; i++) {
     const current = smooth[i].value
-    const prev = smooth[i-1].value
-    const next = smooth[i+1].value
+    const prev = smooth[i - 1].value
+    const next = smooth[i + 1].value
 
     if (current < prev && current < next || current > next && current > prev) {
       if (changes[i] > middleOfChanges) {
-        smooth[i] = {time: smooth[i].time, value: (prev + next) / 2}
+        smooth[i] = { time: smooth[i].time, value: (prev + next) / 2 }
         changes = getChanges(smooth)
       }
     }
   }
 
-  for (let i=1; i< smooth.length-1; i++) {
+  for (let i = 1; i < smooth.length - 1; i++) {
     const current = smooth[i]
-    const prev = smooth[i-1].value
-    const next = smooth[i+1].value
-    result.push({value: (current.value + prev + next) / 3, time: current.time})
+    const prev = smooth[i - 1].value
+    const next = smooth[i + 1].value
+    result.push({ value: (current.value + prev + next) / 3, time: current.time })
   }
   return result
 }
@@ -157,17 +158,17 @@ const getSpeed = (source: ITempPoint[]): number => {
   return speed
 }
 
-function rootReducer(state: IAppState = initialState, action: {type: ACTION_TYPES, payload: ISTMMessage | IBasicMessage | ISTMCommand | ISettingsProfilesMessage | null}) {
+function rootReducer(state: IAppState = initialState, action: { type: ACTION_TYPES, payload: ISTMMessage | IBasicMessage | ISTMCommand | ISettingsProfilesMessage | null }) {
   try {
     switch (action.type) {
       case ACTION_TYPES.setSetting:
         state.settings[(action.payload as IBasicMessage).id] = (action.payload as IBasicMessage).content;
-        return { ...state, settings: {...state.settings} };
+        return { ...state, settings: { ...state.settings } };
       case ACTION_TYPES.currentInfoUpdate:
         state.machine[(action.payload as ISTMMessage).id] = (action.payload as ISTMMessage).content;
 
         if ((action.payload as ISTMMessage).id === StmMessages.PredictGroupTemperature) {
-          state.machine[(action.payload as ISTMMessage).id] = `${Math.round(Converter.voltToCelsium((action.payload as ISTMMessage).content)*10)/10}`
+          state.machine[(action.payload as ISTMMessage).id] = `${Math.round(Converter.voltToCelsium((action.payload as ISTMMessage).content) * 10) / 10}`
         }
 
         if ((action.payload as ISTMMessage).id === StmMessages.Group1Temperature) {
@@ -198,11 +199,17 @@ function rootReducer(state: IAppState = initialState, action: {type: ACTION_TYPE
           }
         }
 
-        return { ...state, machine: {...state.machine}, life: {...state.life} };
+        return { ...state, machine: { ...state.machine }, life: { ...state.life } };
       case ACTION_TYPES.settingsProfilesInitialize:
-        return { ...state, settingsProfiles: {...(action.payload as ISettingsProfilesMessage).settingsProfiles} };
+        return {
+          ...state,
+          settingsProfiles: {
+            choosenProfile: (action.payload as ISettingsProfilesMessage).settingsProfiles.choosenProfile,
+            profiles: (action.payload as ISettingsProfilesMessage).settingsProfiles.profiles.concat()
+          }
+        };
     }
-  } catch(e) {
+  } catch (e) {
     console.log(e)
   }
   return state;

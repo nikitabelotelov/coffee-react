@@ -1,6 +1,7 @@
 import {NavLink} from "react-router-dom";
 import * as React from "react";
 import {getBackLink} from "../types";
+import { IAppState } from "../reducers";
 
 const Profiles = [
     {
@@ -21,12 +22,12 @@ const Profiles = [
     }
 ]
 
-export default function ProfileView() {
+export default function ProfileView(opts:IAppState) {
     return (
         <div className='setting__profile panel_root'>
             <ul className='setting__profile-list list-group list-group-flush'>
-                {Profiles.map((el)=>{
-                    return (<li className='list-group-item' key={el.key}>{el.title}</li>)
+                {opts.settingsProfiles.profiles.map((el, key)=>{
+                    return (<li className='list-group-item' key={key}>{el.title}</li>)
                 })}
             </ul>
             <NavLink to='profile/hand' className='manager-panel__block btn-outline-dark'>

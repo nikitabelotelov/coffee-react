@@ -13,13 +13,14 @@ export enum ProcessStatus {
   stopped = 'stopped'
 }
 
-export interface ISettingsProfiles {
-  [index:string] : ISettingsState
+export interface ISettingsProfile {
+  settings: ISettingsStateIndexable,
+  title: string
 }
 
 export interface ISettingsProfilesState {
   choosenProfile: string,
-  profiles: ISettingsProfiles
+  profiles: Array<ISettingsProfile>
 }
 
 export interface ISettingsProfilesMessage {
@@ -81,6 +82,10 @@ export interface ISettingsState {
     EnergyMode: string
 }
 
+export interface ISettingsStateIndexable extends ISettingsState {
+  [index:string]: string
+}
+
 export interface ICommandBlock {
   [StmCommands.SetValve1]: number
   [StmCommands.SetValve2]: number
@@ -119,6 +124,10 @@ export interface ICommandBlock {
 export interface IBasicMessage {
   id: Extract<keyof ISettingsState, string>, 
   content: string
+}
+
+export interface ISettingsChangeMessage extends IBasicMessage {
+  profile: number
 }
 
 export interface IFullMachineState {

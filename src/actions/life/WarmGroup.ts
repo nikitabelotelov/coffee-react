@@ -16,7 +16,7 @@ export const WarmGroup = (
 ): IObjectAny => {
   const machine = store.getState().machine
   const settings = store.getState().settings
-  const life = state.getState().life
+  const life = store.getState().life
 
   if (state.stop) {
     return state;
@@ -31,7 +31,7 @@ export const WarmGroup = (
   }
 
   const trendG = life[trend]
-  const temperature = trendG[trendG - 1].value
+  const temperature = trendG[trendG.length - 1].value
   //const speed = life['speedG1']
 
   switch (state.step) {

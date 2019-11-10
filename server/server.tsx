@@ -5,9 +5,10 @@ import WebSocket from "ws";
 import Usart from "./usart/Usart";
 import { RSerial } from "./mocha/RSerial";
 import Converter, { ISTMMessage } from "./stm/Converter";
-import { loadSettings } from "./fs/fsLib";
+import { loadSettings, serializeSettingsProfiles } from "./fs/fsLib";
 import { ISettingsProfilesState } from "../src/types";
 import fs from "fs"
+import { settings } from "cluster";
 
 let Serial:any;
 try {
@@ -97,15 +98,16 @@ wss.on("connection", function connectionListener(ws) {
   });
 
   ws.on("message", data => {
-    // console.log(data);
+    console.log(data);
     // @ts-ignore
-    const message = JSON.parse(data)
+    const message: any = JSON.parse(data)
 
     if (message.stm) {
       //console.log("Got message from client. Trying to send to usart.");
       usart.sendMessage(message.stm)
     } else if (message.settings) {
-      
+      settingsProfiles.profiles[message.settings.profile].settings[message.settings.id] = message.settings.content;
+      serializeSettingsProfiles(settingsProfiles);
       // todo: save settings to file
       // read - change - save
     }

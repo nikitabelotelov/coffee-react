@@ -3,7 +3,7 @@ import rootReducer from "../reducers/index";
 import { WebSocketController } from "../actions/WebSocketController";
 import Converter, { ISTMCommand, ISTMMessage, StmMessages } from "../../server/stm/Converter";
 import ACTION_TYPES from "../actions/actionTypes";
-import { IBasicMessage } from "../types";
+import { IBasicMessage, ISettingsChangeMessage } from "../types";
 import { Life } from "../actions/machineLife";
 const store = createStore(rootReducer);
 
@@ -18,13 +18,15 @@ WebSocketInst.registerCallback((data: any) => {
     });
   } 
   if (parsed.settingsProfiles) {
-    // set settings to client store
-    console.log(parsed.settingsProfiles);
+    store.dispatch({
+      type: ACTION_TYPES.settingsProfilesInitialize,
+      payload: parsed
+    });
   }
 })
 
 export const emitSettingsChange = (payload: IBasicMessage) => {
-  WebSocketInst.send(JSON.stringify({ settings: payload }));
+  WebSocketInst.send(JSON.stringify({settings: { ...payload, profile: 0 }}));
 }
 
 export const emitStm = (payload: ISTMCommand, waitEcho?: boolean) => {

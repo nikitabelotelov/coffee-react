@@ -1,5 +1,5 @@
 import ACTION_TYPES from './actionTypes';
-import { IBasicMessage } from '../types';
+import { IBasicMessage, ISettingsChangeMessage } from '../types';
 import { emitSettingsChange } from '../SettingsStore';
 
 export function setSetting(payload: IBasicMessage) {
