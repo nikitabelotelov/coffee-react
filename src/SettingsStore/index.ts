@@ -30,7 +30,8 @@ WebSocketInst.registerCallback((data: any) => {
 setInterval(() => {
   if (needDump) {
     needDump = false;
-    store.dispatch({type: ACTION_TYPES.setMachineState, payload: localState});
+    store.dispatch({type: ACTION_TYPES.setMachineState, payload: localState.machine});
+    localState = store.getState();
   }
 }, 100)
 

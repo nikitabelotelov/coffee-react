@@ -155,20 +155,20 @@ const getSpeed = (source: ITempPoint[]): number => {
   return speed
 }
 
-function rootReducer(state: IAppState = initialState, action: {type: ACTION_TYPES, payload: ISTMMessage | IBasicMessage | ISTMCommand | null }) {
+function rootReducer(state: IAppState = initialState, action: {type: ACTION_TYPES, payload: ISTMMessage | IBasicMessage | ISTMCommand | IMachineState | null }) {
   try {
     switch (action.type) {
       case ACTION_TYPES.setSetting:
-        state.settings[(action.payload as IBasicMessage).id] = action.payload.content;
+        state.settings[(action.payload as IBasicMessage).id] = (action.payload as IBasicMessage).content;
         return { ...state, settings: {...state.settings} };
       case ACTION_TYPES.setMachineState:
         // @ts-ignore
         return {
           ...state,
-          machine: { ...action.payload}
+          machine: { ...action.payload as IMachineState}
         }
       case ACTION_TYPES.currentInfoUpdate:
-        state.machine[(action.payload as ISTMMessage).id] = action.payload.content;
+        state.machine[(action.payload as ISTMMessage).id] = (action.payload as ISTMMessage).content;
 
         if ((action.payload as ISTMMessage).id === StmMessages.PredictGroupTemperature) {
           state.machine[(action.payload as ISTMMessage).id] = `${Math.round(Converter.voltToCelsium((action.payload as ISTMMessage).content)*10)/10}`
