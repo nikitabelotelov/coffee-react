@@ -98,7 +98,7 @@ class MachineLife {
   public checkAndSend(commands:ICommandBlock, command: StmCommands, status: StmMessages) {
     const machine = getLocalState().machine
     if (commands[command] > 0) {
-      if (machine[status] === '0') {
+      if (machine[status] === '2') {
         emitStm({id: command, content: '1'})
       }
     } else {
@@ -194,12 +194,12 @@ class MachineLife {
     this.checkAndSend(commands, StmCommands.SetValve5, StmMessages.Valve5)
     this.checkAndSend(commands, StmCommands.SetValve6, StmMessages.Valve6)
 
-    const vol1 = parseInt(machine[StmMessages.VolumetricGroup1]) || 0
-    if (vol1 > 0 && commands[StmCommands.ResetVolumetricG1] > 0) {
+    const vol1 = parseInt(machine[StmMessages.VolumetricGroup1]) || 1
+    if (vol1 > 1 && commands[StmCommands.ResetVolumetricG1] > 0) {
       emitStm({id: StmCommands.ResetVolumetricG1, content: '1'})
     }
-    const vol2 = parseInt(machine[StmMessages.VolumetricGroup2]) || 0
-    if (vol2 > 0 && commands[StmCommands.ResetVolumetricG2] > 0) {
+    const vol2 = parseInt(machine[StmMessages.VolumetricGroup2]) || 1
+    if (vol2 > 1 && commands[StmCommands.ResetVolumetricG2] > 0) {
       emitStm({id: StmCommands.ResetVolumetricG2, content: '1'})
     }
 

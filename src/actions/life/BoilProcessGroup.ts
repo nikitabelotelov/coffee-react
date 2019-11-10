@@ -5,8 +5,9 @@ import { StmMessages, StmCommands } from "../../../server/stm/Converter";
 
 const checkToStop = (button: StmMessages.Button3 | StmMessages.Button6, state: IObjectAny) => {
   const machine = getLocalState().machine
-  if (machine[button] !== state.buttonState) {
+  if ((machine[button] === '1' || machine[button] === '2') && machine[button] !== state.buttonState) {
     state.step = '0'
+    state.buttonState = machine[button]
     return false
   }
   return true
@@ -35,7 +36,7 @@ export const BoilProcessGroup = (
     case '1':
       if (checkToStop(button, state)) {
         changeStatus(ProcessStatus.wip)
-        if (machine[volumeSensor] === '0') {
+        if (machine[volumeSensor] === '1') {
           state.step = '2'
         } else {
           commands[resetVolumetric]++
@@ -88,7 +89,7 @@ export const BoilProcessGroup = (
     default:
       changeStatus(ProcessStatus.done)
       if (machine[button] !== '') {
-        if (state.buttonState === '1' || state.buttonState === '0') {
+        if (state.buttonState === '1' || state.buttonState === '2') {
           if (machine[button] !== state.buttonState) {
             state.step = '1'
             state.buttonState = machine[button]
