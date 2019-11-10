@@ -1,10 +1,10 @@
 import { IObjectAny, ProcessStatus, ICommandBlock } from "../../types";
-import store, { emitStm } from "../../SettingsStore";
+import store, { emitStm, getLocalState } from "../../SettingsStore";
 import { StmMessages, StmCommands } from "../../../server/stm/Converter";
 
 
 const checkToStop = (button: StmMessages.Button3 | StmMessages.Button6, state: IObjectAny) => {
-  const machine = store.getState().machine
+  const machine = getLocalState().machine
   if (machine[button] !== state.buttonState) {
     state.step = '0'
     return false
@@ -24,7 +24,7 @@ export const BoilProcessGroup = (
   commands: ICommandBlock,
   changeStatus: (newStatus: ProcessStatus) => void
 ): IObjectAny => {
-  const machine = store.getState().machine
+  const machine = getLocalState().machine
   const settings = store.getState().settings
 
   if (state.stop) {

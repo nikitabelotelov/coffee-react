@@ -153,14 +153,22 @@ class MachineLife {
       }
     })
 
-    if (this.count < 10) {
+    if (this.count < 3) {
       this.count++
       emitStm({id: StmCommands.SetBlueGroup1, content: '50000'})
       emitStm({id: StmCommands.SetBlueGroup2, content: '50000'})
-    } else if (this.count < 20) {
+    } else if (this.count < 6) {
       this.count++
       emitStm({id: StmCommands.SetBlueGroup1, content: '0'})
       emitStm({id: StmCommands.SetBlueGroup2, content: '0'})
+    } else if (this.count < 9) {
+      this.count++
+      emitStm({id: StmCommands.SetGreenGroup1, content: '50000'})
+      emitStm({id: StmCommands.SetGreenGroup2, content: '50000'})
+    } else if (this.count < 12) {
+      this.count++
+      emitStm({id: StmCommands.SetGreenGroup1, content: '0'})
+      emitStm({id: StmCommands.SetGreenGroup2, content: '0'})
     } else {
       this.count = 0
       emitStm({id: StmCommands.SetBlueGroup1, content: '0'})
