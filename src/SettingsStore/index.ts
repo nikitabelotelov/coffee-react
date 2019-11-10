@@ -5,22 +5,34 @@ import Converter, { ISTMCommand, ISTMMessage, StmMessages } from "../../server/s
 import ACTION_TYPES from "../actions/actionTypes";
 import { IBasicMessage } from "../types";
 import { Life } from "../actions/machineLife";
+import reducer from "../reducers/index";
+
 const store = createStore(rootReducer);
 
+let localState = store.getState()
+let needDump = false
 const WebSocketInst = new WebSocketController()
 WebSocketInst.registerCallback((data: any) => {
   const parsed = JSON.parse(data)
   if (parsed.stm) {
     const msg = Converter.fromString(parsed.stm) as ISTMMessage;
-    store.dispatch({
+    localState = reducer(localState, {
       type: ACTION_TYPES.currentInfoUpdate,
       payload: msg
-    });
+    })
+    needDump = true
   } 
   if (parsed.settings) {
     // set settings to client store
   }
 })
+
+setInterval(() => {
+  if (needDump) {
+    needDump = false;
+    store.dispatch({type: ACTION_TYPES.setMachineState, payload: localState});
+  }
+}, 100)
 
 export const emit = (payload: IBasicMessage) => {
   WebSocketInst.send(JSON.stringify({ settings: payload }));
