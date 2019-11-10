@@ -155,7 +155,7 @@ const getSpeed = (source: ITempPoint[]): number => {
   return speed
 }
 
-function rootReducer(state: IAppState = initialState, action: {type: ACTION_TYPES, payload: ISTMMessage | IBasicMessage | ISTMCommand | IMachineState | null }) {
+function rootReducer(state: IAppState = initialState, action: {type: ACTION_TYPES, payload: ISTMMessage | IBasicMessage | ISTMCommand | IAppState | null }) {
   try {
     switch (action.type) {
       case ACTION_TYPES.setSetting:
@@ -165,7 +165,8 @@ function rootReducer(state: IAppState = initialState, action: {type: ACTION_TYPE
         // @ts-ignore
         return {
           ...state,
-          machine: { ...action.payload as IMachineState}
+          machine: { ...(action.payload as IAppState).machine},
+          life: { ...(action.payload as IAppState).life}
         }
       case ACTION_TYPES.currentInfoUpdate:
         state.machine[(action.payload as ISTMMessage).id] = (action.payload as ISTMMessage).content;

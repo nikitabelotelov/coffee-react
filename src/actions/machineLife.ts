@@ -1,4 +1,4 @@
-import store, { emitStm } from "../SettingsStore"
+import store, { emitStm, getLocalState } from "../SettingsStore"
 import Converter, { StmMessages, StmCommands } from "../../server/stm/Converter"
 import Message from "../../server/usart/Message"
 import ACTION_TYPES from "./actionTypes"
@@ -96,7 +96,7 @@ class MachineLife {
   }
 
   public checkAndSend(commands:ICommandBlock, command: StmCommands, status: StmMessages) {
-    const machine = store.getState().machine
+    const machine = getLocalState().machine
     if (commands[command] > 0) {
       if (machine[status] === '0') {
         emitStm({id: command, content: '1'})
@@ -111,7 +111,7 @@ class MachineLife {
   public count: number = 0
 
   public step() {
-    const machine = store.getState().machine
+    const machine = getLocalState().machine
     const commands:ICommandBlock = {
       [StmCommands.SetValve1]: 0,
       [StmCommands.SetValve2]: 0,
@@ -153,16 +153,20 @@ class MachineLife {
       }
     })
 
-    if (this.count === 0) {
-      this.count = 1
+    if (this.count < 10) {
+      this.count++
       emitStm({id: StmCommands.SetBlueGroup1, content: '50000'})
       emitStm({id: StmCommands.SetBlueGroup2, content: '50000'})
+    } else if (this.count < 20) {
+      this.count++
+      emitStm({id: StmCommands.SetBlueGroup1, content: '0'})
+      emitStm({id: StmCommands.SetBlueGroup2, content: '0'})
     } else {
       this.count = 0
       emitStm({id: StmCommands.SetBlueGroup1, content: '0'})
       emitStm({id: StmCommands.SetBlueGroup2, content: '0'})
     }
-    
+     
     this.checkAndSend(commands, StmCommands.SetRelay1, StmMessages.Relay1)
     this.checkAndSend(commands, StmCommands.SetRelay2, StmMessages.Relay2)
     this.checkAndSend(commands, StmCommands.SetRelay3, StmMessages.Relay3)

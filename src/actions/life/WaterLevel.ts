@@ -1,9 +1,9 @@
 import { IObjectAny, ProcessStatus, ICommandBlock } from "../../types";
-import store, { emitStm } from "../../SettingsStore";
+import store, { emitStm, getLocalState } from "../../SettingsStore";
 import { StmMessages, StmCommands } from "../../../server/stm/Converter";
 
 export const WaterLevel = (state: IObjectAny, commands: ICommandBlock, changeStatus: (newStatus: ProcessStatus) => void): IObjectAny => {
-  const machine = store.getState().machine
+  const machine = getLocalState().machine
   
   if (state.stop) {
     return state

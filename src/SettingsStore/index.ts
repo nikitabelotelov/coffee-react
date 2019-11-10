@@ -10,17 +10,23 @@ import reducer from "../reducers/index";
 const store = createStore(rootReducer);
 
 let localState = store.getState()
+export const getLocalState = () => {
+  return localState
+}
+
 let needDump = false
 const WebSocketInst = new WebSocketController()
 WebSocketInst.registerCallback((data: any) => {
   const parsed = JSON.parse(data)
   if (parsed.stm) {
     const msg = Converter.fromString(parsed.stm) as ISTMMessage;
-    localState = reducer(localState, {
-      type: ACTION_TYPES.currentInfoUpdate,
-      payload: msg
-    })
-    needDump = true
+    if (msg && msg.content !== '' && msg.content !== undefined) {
+      localState = reducer(localState, {
+        type: ACTION_TYPES.currentInfoUpdate,
+        payload: msg
+      })
+      needDump = true
+    }
   } 
   if (parsed.settings) {
     // set settings to client store
@@ -30,10 +36,10 @@ WebSocketInst.registerCallback((data: any) => {
 setInterval(() => {
   if (needDump) {
     needDump = false;
-    store.dispatch({type: ACTION_TYPES.setMachineState, payload: localState.machine});
+    store.dispatch({type: ACTION_TYPES.setMachineState, payload: localState});
     localState = store.getState();
   }
-}, 100)
+}, 300)
 
 export const emit = (payload: IBasicMessage) => {
   WebSocketInst.send(JSON.stringify({ settings: payload }));
