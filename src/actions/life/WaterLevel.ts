@@ -11,16 +11,21 @@ export const WaterLevel = (state: IObjectAny, commands: ICommandBlock, changeSta
 
   switch (machine[StmMessages.WaterLevel]) {
     case "1":
-      if (state.doneTime < 5000) {
+      if (state.wasWIP && state.doneTime < 5000) {
         changeStatus(ProcessStatus.done)
-        commands[StmCommands.SetValve1] = 0
+        commands[StmCommands.SetValve1] = 1
         commands[StmCommands.SetRelay8]++
+      } else {
+        state.wasWIP = 0
       }
       break
     case "0":
-      changeStatus(ProcessStatus.wip)
-      commands[StmCommands.SetValve1] = 1
-      commands[StmCommands.SetRelay8]++
+      if (state.wipTime > 1000) {
+        changeStatus(ProcessStatus.wip)
+        commands[StmCommands.SetValve1] = 1
+        commands[StmCommands.SetRelay8]++
+        state.wasWIP = 1
+      }
       break
   }
 

@@ -7,28 +7,30 @@ class Message {
     
     const messageBits:number[] = []
     let code:number = 0xFF
-    for (let i=0; i<length; i++) {
+    for (let i=1; i<length; i++) {
       const char = message.charCodeAt(i)
       messageBits.push(char) 
       code = code ^ char
     }
     
-    return [Constants.startBit.charCodeAt(0), length].concat(messageBits).concat([code, Constants.endBit.charCodeAt(0)])
+    return [Constants.startBit.charCodeAt(0), message.charCodeAt(0), length - 1].concat(messageBits).concat([code, Constants.endBit.charCodeAt(0)])
   }
 
   public getMessageFromCode(code: number[]):string {
-    const length = code[1]
-    let message = ''
+    const length = code[2]
+    let message = `${String.fromCharCode(code[1])}`;
     let lastByte = 0xFF
-    if (code.length !== length + 4) {
+    if (code.length !== length + 5) {
+      //console.log('exit1', code.length, length)
       return ''
     }
     for (let i=0; i<length; i++) {
-      const char = code[i + 2]
+      const char = code[i + 3]
       message = `${message}${String.fromCharCode(char)}`
       lastByte = lastByte ^ char
     }
-    if (code[length+2] !== lastByte) {
+    if (code[length+3] !== lastByte) {
+      //console.log('exit2', code[length+3], lastByte)
       return ''
     }
     return message

@@ -4,6 +4,10 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = [{
     target: 'node',
+    watch: true,
+    watchOptions: {
+      ignored: ['/node_modules/', '/dist/']
+    },
     entry: {
       server: "./server/server.tsx"
     },

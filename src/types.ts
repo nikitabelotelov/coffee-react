@@ -58,6 +58,7 @@ export interface IMachineState {
   [StmMessages.Button6]: string;
   [StmMessages.Button7]: string;
   [StmMessages.Button8]: string;
+  [StmMessages.Button9]: string;
 
   [StmMessages.VolumetricGroup1]: string;
   [StmMessages.VolumetricGroup2]: string;
@@ -97,12 +98,22 @@ export interface ICommandBlock {
   [StmCommands.SetRelay7]: number
   [StmCommands.SetRelay8]: number
 
-  [StmCommands.SetRedCold]: number
-  [StmCommands.SetGreenCold]: number
-  [StmCommands.SetBlueCold]: number
-  [StmCommands.SetRedHot]: number
-  [StmCommands.SetGreenHot]: number
-  [StmCommands.SetBlueHot]: number
+  [StmCommands.SetRedGroup1]: number
+  [StmCommands.SetGreenGroup1]: number
+  [StmCommands.SetBlueGroup1]: number
+  [StmCommands.SetRedGroup2]: number
+  [StmCommands.SetGreenGroup2]: number
+  [StmCommands.SetBlueGroup2]: number
+  
+  [StmCommands.SetRedMachine]: number
+  [StmCommands.SetGreenMachine]: number
+  [StmCommands.SetBlueMachine]: number
+
+  [StmCommands.ResetVolumetricG1]: number
+  [StmCommands.ResetVolumetricG2]: number
+
+  [StmCommands.SetSecGroup1]: number
+  [StmCommands.SetSecGroup2]: number
 }
 
 export interface IBasicMessage {

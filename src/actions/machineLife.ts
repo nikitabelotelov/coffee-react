@@ -7,6 +7,8 @@ import { IObjectAny, ProcessStatus, ICommandBlock } from "../types"
 import { WaterLevel } from "./life/WaterLevel"
 import { WaterLevelGroup } from "./life/WaterLevelGroup"
 import { BoilProcessGroup } from "./life/BoilProcessGroup"
+import { WarmPredict } from "./life/WarmPredict"
+import { WarmGroup } from "./life/WarmGroup"
 
 
 export interface IProcesses {
@@ -32,22 +34,40 @@ class MachineLife {
   }
 
   constructor() {
-    const boilGroup1 = new Process('boilGroup1', BoilProcessGroup(StmMessages.Button2, StmCommands.SetValve2, StmCommands.SetValve4, StmMessages.VolumetricGroup1, 'Group1AutoMode1'), 0)
-    boilGroup1.start()
-
+    const boilGroup1 = new Process('boilGroup1', BoilProcessGroup(StmMessages.Button3, StmCommands.SetValve2, StmCommands.SetValve4, StmMessages.VolumetricGroup1, StmCommands.ResetVolumetricG1, 'Group1AutoMode1'), 0)
+    const boilGroup2 = new Process('boilGroup1', BoilProcessGroup(StmMessages.Button6, StmCommands.SetValve3, StmCommands.SetValve5, StmMessages.VolumetricGroup2, StmCommands.ResetVolumetricG2, 'Group1AutoMode2'), 0)
     const waterLevel = new Process('waterLevel', WaterLevel, 20000)
-    this.addProcess({
-      process: boilGroup1,
-      children: [waterLevel]
-    })
-
+    const predictWarm = new Process('predictWarm', WarmPredict, 0)
     const waterLevelG1 = new Process('waterLevelG1', WaterLevelGroup(StmMessages.Group1Pressure, StmCommands.SetValve2, 'Group1Temperature'), 20000)
     const waterLevelG2 = new Process('waterLevelG2', WaterLevelGroup(StmMessages.Group2Pressure, StmCommands.SetValve3, 'Group2Temperature'), 20000)
+
+    const warmG1 = new Process('warmG1', WarmGroup(StmMessages.Group1Pressure, StmCommands.SetRelay4, StmCommands.SetRelay5, "Group1Temperature", "middleTTrendG1"), 0)
+    const warmG2 = new Process('warmG2', WarmGroup(StmMessages.Group2Pressure, StmCommands.SetRelay6, StmCommands.SetRelay7, "Group2Temperature", "middleTTrendG2"), 0)
+
+    this.addProcess({
+      process: boilGroup1,
+      children: [waterLevelG1]
+    })
+    this.addProcess({
+      process: boilGroup2,
+      children: [waterLevelG2]
+    })
+
+    boilGroup1.start()
+    boilGroup2.start()
+
     waterLevel.start()
+    predictWarm.start()
+
+    waterLevelG1.start()
+    waterLevelG2.start()
+
+    warmG1.start()
+    warmG2.start()
 
     this.addProcess({
       process: waterLevel,
-      children: [waterLevelG1, waterLevelG2]
+      children: []
     })
     
     this.addProcess({
@@ -57,6 +77,20 @@ class MachineLife {
 
     this.addProcess({
       process: waterLevelG2,
+      children: []
+    })
+
+    this.addProcess({
+      process: predictWarm,
+      children: []
+    })
+
+    this.addProcess({
+      process: warmG1,
+      children: []
+    })
+    this.addProcess({
+      process: warmG2,
       children: []
     })
   }
@@ -74,8 +108,10 @@ class MachineLife {
     }
   }
 
-  public step() {
+  public count: number = 0
 
+  public step() {
+    const machine = store.getState().machine
     const commands:ICommandBlock = {
       [StmCommands.SetValve1]: 0,
       [StmCommands.SetValve2]: 0,
@@ -93,12 +129,22 @@ class MachineLife {
       [StmCommands.SetRelay7]: 0,
       [StmCommands.SetRelay8]: 0,
 
-      [StmCommands.SetRedCold]: 0,
-      [StmCommands.SetGreenCold]: 0,
-      [StmCommands.SetBlueCold]: 0,
-      [StmCommands.SetRedHot]: 0,
-      [StmCommands.SetGreenHot]: 0,
-      [StmCommands.SetBlueHot]: 0,
+      [StmCommands.SetRedGroup1]: 0,
+      [StmCommands.SetGreenGroup1]: 0,
+      [StmCommands.SetBlueGroup1]: 0,
+      [StmCommands.SetRedGroup2]: 0,
+      [StmCommands.SetGreenGroup2]: 0,
+      [StmCommands.SetBlueGroup2]: 0,
+      
+      [StmCommands.SetRedMachine]: 0,
+      [StmCommands.SetGreenMachine]: 0,
+      [StmCommands.SetBlueMachine]: 0,
+
+      [StmCommands.ResetVolumetricG1]: 0,
+      [StmCommands.ResetVolumetricG2]: 0,
+
+      [StmCommands.SetSecGroup1]: 100,
+      [StmCommands.SetSecGroup2]: 100,
     }
 
     this.processes.forEach(one => {
@@ -107,10 +153,39 @@ class MachineLife {
       }
     })
 
+    /* if (this.count === 0) {
+      this.count = 1
+      emitStm({id: StmCommands.SetBlueGroup1, content: '50000'})
+      emitStm({id: StmCommands.SetBlueGroup2, content: '50000'})
+    } else {
+      this.count = 0
+      emitStm({id: StmCommands.SetBlueGroup1, content: '0'})
+      emitStm({id: StmCommands.SetBlueGroup2, content: '0'})
+    } */
+    
+    this.checkAndSend(commands, StmCommands.SetRelay1, StmMessages.Relay1)
+    this.checkAndSend(commands, StmCommands.SetRelay2, StmMessages.Relay2)
+    this.checkAndSend(commands, StmCommands.SetRelay3, StmMessages.Relay3)
+    this.checkAndSend(commands, StmCommands.SetRelay4, StmMessages.Relay4)
+    this.checkAndSend(commands, StmCommands.SetRelay5, StmMessages.Relay5)
+    this.checkAndSend(commands, StmCommands.SetRelay6, StmMessages.Relay6)
+    this.checkAndSend(commands, StmCommands.SetRelay7, StmMessages.Relay7)
     this.checkAndSend(commands, StmCommands.SetRelay8, StmMessages.Relay8)
     this.checkAndSend(commands, StmCommands.SetValve1, StmMessages.Valve1)
     this.checkAndSend(commands, StmCommands.SetValve2, StmMessages.Valve2)
     this.checkAndSend(commands, StmCommands.SetValve3, StmMessages.Valve3)
+    this.checkAndSend(commands, StmCommands.SetValve4, StmMessages.Valve4)
+    this.checkAndSend(commands, StmCommands.SetValve5, StmMessages.Valve5)
+    this.checkAndSend(commands, StmCommands.SetValve6, StmMessages.Valve6)
+
+    const vol1 = parseInt(machine[StmMessages.VolumetricGroup1]) || 0
+    if (vol1 > 0 && commands[StmCommands.ResetVolumetricG1] > 0) {
+      emitStm({id: StmCommands.ResetVolumetricG1, content: '1'})
+    }
+    const vol2 = parseInt(machine[StmMessages.VolumetricGroup2]) || 0
+    if (vol2 > 0 && commands[StmCommands.ResetVolumetricG2] > 0) {
+      emitStm({id: StmCommands.ResetVolumetricG2, content: '1'})
+    }
 
   }
 }

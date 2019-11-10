@@ -12,6 +12,8 @@ export interface IAppState {
     tTrendG2: ITempPoint[],
     middleTTrendG1: ITempPoint[],
     middleTTrendG2: ITempPoint[],
+    speedG1: number,
+    speedG2: number,
     godMod: number
   }
   update: number,
@@ -26,6 +28,8 @@ const initialState: IAppState = {
     tTrendG2: [],
     middleTTrendG1: [],
     middleTTrendG2: [],
+    speedG1: 0,
+    speedG2: 0,
     godMod: 0,
   },
   machine: {
@@ -52,14 +56,16 @@ const initialState: IAppState = {
     [StmMessages.Relay8]: "",
     [StmMessages.Echo]: "",
     [StmMessages.WaterLevel]: "",
-    [StmMessages.Button1]: "0",
-    [StmMessages.Button2]: "0",
-    [StmMessages.Button3]: "0",
-    [StmMessages.Button4]: "0",
-    [StmMessages.Button5]: "0",
-    [StmMessages.Button6]: "0",
-    [StmMessages.Button7]: "0",
-    [StmMessages.Button8]: "0",
+    [StmMessages.Button1]: "",
+    [StmMessages.Button2]: "",
+    [StmMessages.Button3]: "",
+    [StmMessages.Button4]: "",
+    [StmMessages.Button5]: "",
+    [StmMessages.Button6]: "",
+    [StmMessages.Button7]: "",
+    [StmMessages.Button8]: "",
+    [StmMessages.Button9]: "",
+    
     [StmMessages.VolumetricGroup1]: "0",
     [StmMessages.VolumetricGroup2]: "0",
     
@@ -127,35 +133,77 @@ function CreateMiddleTrend(source: ITempPoint[]): ITempPoint[] {
   return result
 }
 
-const getLastTrend = (source: ITempPoint[]): {time: number, value: number} => {
+const getSpeed = (source: ITempPoint[]): number => {
   const last = source[source.length - 1]
-  return last
+  let min = source[0]
+  let max = source[0]
+  source.forEach(el => {
+    if (el.value < min.value) {
+      min = el
+    }
+    if (el.value > max.value) {
+      max = el
+    }
+  })
+
+  let speed = 0
+
+  if (min.time > max.time) {
+    speed = (last.value - min.value) / (last.time - min.time)
+  } else {
+    speed = (last.value - max.value) / (last.time - max.time)
+  }
+
+  return speed
 }
 
 function rootReducer(state: IAppState = initialState, action: {type: ACTION_TYPES, payload: ISTMMessage | IBasicMessage | ISTMCommand | ISettingsProfilesMessage | null}) {
-  switch (action.type) {
-    case ACTION_TYPES.setSetting:
-      state.settings[(action.payload as IBasicMessage).id] = (action.payload as IBasicMessage).content;
-      return { ...state, settings: {...state.settings} };
-    case ACTION_TYPES.currentInfoUpdate:
-      state.machine[(action.payload as ISTMMessage).id] = (action.payload as ISTMMessage).content;
+  try {
+    switch (action.type) {
+      case ACTION_TYPES.setSetting:
+        state.settings[(action.payload as IBasicMessage).id] = (action.payload as IBasicMessage).content;
+        return { ...state, settings: {...state.settings} };
+      case ACTION_TYPES.currentInfoUpdate:
+        state.machine[(action.payload as ISTMMessage).id] = (action.payload as ISTMMessage).content;
 
-      if ((action.payload as ISTMMessage).id === StmMessages.Group1Temperature) {
-        const temp = Converter.voltToCelsium((action.payload as ISTMMessage).content)
-        state.life.tTrendG1.push({
-          time: Date.now(),
-          value: temp
-        })
-        state.life.tTrendG1 = [...state.life.tTrendG1]
-        if (state.life.tTrendG1.length > 100) {
-          state.life.tTrendG1.splice(0, 1)
-          state.life.middleTTrendG1 = CreateMiddleTrend(state.life.tTrendG1)
+        if ((action.payload as ISTMMessage).id === StmMessages.PredictGroupTemperature) {
+          state.machine[(action.payload as ISTMMessage).id] = `${Math.round(Converter.voltToCelsium((action.payload as ISTMMessage).content)*10)/10}`
         }
-      }
 
-      return { ...state, machine: {...state.machine}, life: {...state.life} };
-    case ACTION_TYPES.settingsProfilesInitialize:
+        if ((action.payload as ISTMMessage).id === StmMessages.Group1Temperature) {
+          const temp = Converter.voltToCelsium((action.payload as ISTMMessage).content)
+          state.life.tTrendG1.push({
+            time: Date.now(),
+            value: temp
+          })
+          state.life.tTrendG1 = [...state.life.tTrendG1]
+          if (state.life.tTrendG1.length > 100) {
+            state.life.tTrendG1.splice(0, 1)
+            state.life.middleTTrendG1 = CreateMiddleTrend(state.life.tTrendG1)
+            state.life.speedG1 = getSpeed(state.life.middleTTrendG1)
+          }
+        }
+
+        if ((action.payload as ISTMMessage).id === StmMessages.Group2Temperature) {
+          const temp = Converter.voltToCelsium((action.payload as ISTMMessage).content)
+          state.life.tTrendG2.push({
+            time: Date.now(),
+            value: temp
+          })
+          state.life.tTrendG2 = [...state.life.tTrendG2]
+          if (state.life.tTrendG2.length > 100) {
+            state.life.tTrendG2.splice(0, 1)
+            state.life.middleTTrendG2 = CreateMiddleTrend(state.life.tTrendG2)
+            state.life.speedG2 = getSpeed(state.life.middleTTrendG2)
+          }
+        }
+
+        return { ...state, machine: {...state.machine}, life: {...state.life} };
+      case ACTION_TYPES.settingsProfilesInitialize:
         return { ...state, settingsProfiles: {...(action.payload as ISettingsProfilesMessage).settingsProfiles} };
+    }
+  } catch(e) {
+    console.log(e)
   }
   return state;
 }

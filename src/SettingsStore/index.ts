@@ -28,7 +28,7 @@ export const emitSettingsChange = (payload: IBasicMessage) => {
 }
 
 export const emitStm = (payload: ISTMCommand, waitEcho?: boolean) => {
-  console.log('COMMAND:', payload)
+  //console.log("Message emitted " + JSON.stringify(payload));
   WebSocketInst.send(JSON.stringify({ stm: Converter.toString(payload) }));
   if (waitEcho) {
     
@@ -37,7 +37,7 @@ export const emitStm = (payload: ISTMCommand, waitEcho?: boolean) => {
       const msg = Converter.fromString(parsed.stm) as ISTMMessage;
       if (msg.id === StmMessages.Echo) {
         const converted = Converter.fromString(msg.content)
-        console.log('ECHO:', converted)
+        // console.log('ECHO:', converted)
         if (payload.id === converted.id && payload.content === converted.content) {
           clearTimeout(echoTimeout)
         } else {
@@ -54,9 +54,11 @@ export const emitStm = (payload: ISTMCommand, waitEcho?: boolean) => {
   }
 }
 
-setInterval(()=>{
-  Life.step()
-}, 100)
+setTimeout(()=>{
+  setInterval(()=>{
+    Life.step()
+  }, 50)
+}, 5000)
 
 
 export default store;

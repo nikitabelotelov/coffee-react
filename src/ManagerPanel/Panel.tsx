@@ -9,11 +9,13 @@ import Update from "./Update";
 import ParametersSettings from "./ParametersSettings";
 import Steam from "./Parameters/Steam";
 import ColorHot from "./Colors/ColorHot";
+import Admin from "./Admin";
 
 export function Panel() {
     return (
       <React.Fragment>
         <Route exact path="/" component={Root} />
+        <Route exact path="*/admin" component={Admin} />
         <Route exact path="*/settings" component={SettingsIndex} />
         <Route exact path="*/settings/profile" component={Profile} />
         <Route exact path="*/settings/color" component={ColorHot} />

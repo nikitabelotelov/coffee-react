@@ -7,13 +7,26 @@ import { RSerial } from "./mocha/RSerial";
 import Converter, { ISTMMessage } from "./stm/Converter";
 import { loadSettings } from "./fs/fsLib";
 import { ISettingsProfilesState } from "../src/types";
+import fs from "fs"
+
+let Serial:any;
+try {
+  Serial = require('raspi-serial').Serial;
+} catch(e) {
+  console.warn('Couldn\'t load raspi-serial. Will use mock-object instead.');
+  Serial = RSerial;
+}
 
 const app: any = express(),
   resourcesPath = path.join("", ".");
 
 let settingsProfiles: ISettingsProfilesState;
-
+const root = process.cwd()
 app.use(express.static(resourcesPath));
+const indexFile = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+app.use('/*', (req:any, res:any) => {
+  res.send(indexFile);
+})
 
 const port = process.env.PORT || 777;
 
@@ -24,7 +37,12 @@ const expressServer = app.listen({ port }, () =>
 const wss = new WebSocket.Server({ server: expressServer });
 const clients: {[propname:string]: {ws: WebSocket}} = {};
 
-const serial = new RSerial();
+let serial;
+if(process.arch === 'arm') {
+  // serial = new Serial({baudRate: 57600});
+} else {
+  serial = new RSerial();
+}
 
 const messagesFromStm:ISTMMessage[] = [];
 const settingsMsg:ISettingsProfilesState[] = [];
@@ -38,7 +56,7 @@ const sendMessages = () => {
       try {
         clients[client].ws.send(JSON.stringify({stm: Converter.toString(msg)}))
       } catch(e) {
-        console.error(e);
+        console.error('Couldn\'t send message to websocket. Connection is probably closed. ' + e.message);
       }
     }
   }
@@ -48,7 +66,7 @@ const sendMessages = () => {
       try {
         clients[client].ws.send(JSON.stringify({settingsProfiles: msg}))
       } catch(e) {
-        console.error(e);
+        console.error('Couldn\'t send message to websocket. Connection is probably closed. ' + e.message);
       }
     }
   }
@@ -56,8 +74,8 @@ const sendMessages = () => {
 
 usart.msgHandlers.push(message => {
   const stm = Converter.fromString(message) as ISTMMessage;
-  messagesFromStm.push(stm)
-  sendMessages()
+  messagesFromStm.push(stm);
+  sendMessages();
 });
 
 wss.on("connection", function connectionListener(ws) {
@@ -84,6 +102,7 @@ wss.on("connection", function connectionListener(ws) {
     const message = JSON.parse(data)
 
     if (message.stm) {
+      //console.log("Got message from client. Trying to send to usart.");
       usart.sendMessage(message.stm)
     } else if (message.settings) {
       
