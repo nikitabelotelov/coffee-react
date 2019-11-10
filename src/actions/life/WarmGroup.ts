@@ -16,7 +16,7 @@ export const WarmGroup = (
 ): IObjectAny => {
   const machine = store.getState().machine
   const settings = store.getState().settings
-  const life = state.getState().life
+  const life = store.getState().life
 
   if (state.stop) {
     return state;
