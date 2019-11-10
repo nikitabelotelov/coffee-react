@@ -88,7 +88,7 @@ export const BoilProcessGroup = (
       break;
     default:
       changeStatus(ProcessStatus.done)
-      if (machine[button] !== '') {
+      if (machine[button] === '1' ||  machine[button] === '2') {
         if (state.buttonState === '1' || state.buttonState === '2') {
           if (machine[button] !== state.buttonState) {
             state.step = '1'
