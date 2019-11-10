@@ -38,8 +38,12 @@ setInterval(() => {
   }
 }, 100)
 
-export const emit = (payload: IBasicMessage) => {
+export const emitSettingsChange = (payload: IBasicMessage) => {
   WebSocketInst.send(JSON.stringify({settings: { ...payload, profile: 0 }}));
+}
+
+export const emitChoosenProfileChange = (payload: string) => {
+  WebSocketInst.send(JSON.stringify({profile: payload}));
 }
 
 export const emitStm = (payload: ISTMCommand, waitEcho?: boolean) => {

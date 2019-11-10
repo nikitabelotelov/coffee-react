@@ -1,5 +1,5 @@
 import ACTION_TYPES from "../actions/actionTypes";
-import { IMachineState, ISettingsState, IBasicMessage, ISettingsProfilesState, ISettingsProfilesMessage, ISettingsChangeMessage } from "../types";
+import { IMachineState, ISettingsState, IBasicMessage, ISettingsProfilesState, ISettingsProfilesMessage, ISettingsChangeMessage, ISettingsProfile } from "../types";
 import Converter, { StmMessages, ISTMMessage, ISTMCommand } from "../../server/stm/Converter";
 import { emitSettingsChange } from "../SettingsStore";
 
@@ -7,7 +7,6 @@ export interface ITempPoint { time: number, value: number }
 
 export interface IAppState {
   machine: IMachineState
-  settings: ISettingsState
   life: {
     tTrendG1: ITempPoint[],
     tTrendG2: ITempPoint[],
@@ -18,9 +17,30 @@ export interface IAppState {
     godMod: number
   }
   update: number,
-  settingsProfiles: ISettingsProfilesState | null
+  settings: ISettingsState,
+  settingsProfiles: ISettingsProfilesState
 }
 
+const initialStandartProfile: ISettingsProfile = {
+  title: "Стандарт",
+  settings: {
+    Group1Temperature: '0',
+    Group1AutoMode1: '0',
+    Group1AutoMode2: '0',
+    Group2Temperature: '0',
+    Group2AutoMode1: '0',
+    Group2AutoMode2: '0',
+    SteamPressure: '0',
+    RedCold: '0',
+    GreenCold: '0',
+    BlueCold: '16',
+    RedHot: '16',
+    GreenHot: '0',
+    BlueHot: '0',
+    EnergyMode: '0',
+  }
+}
+const initialStandartProfileName = "Стандарт"
 
 const initialState: IAppState = {
   update: 0,
@@ -71,23 +91,12 @@ const initialState: IAppState = {
     [StmMessages.VolumetricGroup2]: "0",
 
   },
-  settings: { //TODO:: load from file here
-    Group1Temperature: '0',
-    Group1AutoMode1: '0',
-    Group1AutoMode2: '0',
-    Group2Temperature: '0',
-    Group2AutoMode1: '0',
-    Group2AutoMode2: '0',
-    SteamPressure: '0',
-    RedCold: '0',
-    GreenCold: '0',
-    BlueCold: '16',
-    RedHot: '16',
-    GreenHot: '0',
-    BlueHot: '0',
-    EnergyMode: '0',
-  },
-  settingsProfiles: null
+  settings: initialStandartProfile.settings,
+  settingsProfiles: {
+    choosenProfile: initialStandartProfileName, profiles: [
+      initialStandartProfile
+    ]
+  }
 }
 
 function getChanges(source: ITempPoint[]): number[] {
@@ -158,17 +167,28 @@ const getSpeed = (source: ITempPoint[]): number => {
   return speed
 }
 
-function rootReducer(state: IAppState = initialState, action: { type: ACTION_TYPES, payload: ISTMMessage | IBasicMessage | ISTMCommand | IMachineState | ISettingsProfilesMessage | null }) {
+function getCurrentProfileIndex(state:IAppState): number {
+  let currentSettings: ISettingsState;
+  for (let i = 0; i < state.settingsProfiles.profiles.length; i++) {
+    if (state.settingsProfiles.profiles[i].title === state.settingsProfiles.choosenProfile) {
+      return i;
+    }
+  }
+}
+
+function rootReducer(state: IAppState = initialState, action: { type: ACTION_TYPES, payload: ISTMMessage | IBasicMessage | ISTMCommand | IMachineState | ISettingsProfilesMessage | string | null }) {
   try {
+    let currentProfileIndex = getCurrentProfileIndex(state)
     switch (action.type) {
       case ACTION_TYPES.setSetting:
-        state.settings[(action.payload as IBasicMessage).id] = (action.payload as IBasicMessage).content;
-        return { ...state, settings: {...state.settings} };
+        let currentProfile = state.settingsProfiles.profiles[currentProfileIndex]
+        currentProfile.settings[(action.payload as IBasicMessage).id] = (action.payload as IBasicMessage).content;
+        return { ...state, settings: { ...currentProfile.settings } };
       case ACTION_TYPES.setMachineState:
         // @ts-ignore
         return {
           ...state,
-          machine: { ...action.payload as IMachineState}
+          machine: { ...action.payload as IMachineState }
         }
       case ACTION_TYPES.currentInfoUpdate:
         state.machine[(action.payload as ISTMMessage).id] = (action.payload as ISTMMessage).content;
@@ -214,6 +234,15 @@ function rootReducer(state: IAppState = initialState, action: { type: ACTION_TYP
             profiles: (action.payload as ISettingsProfilesMessage).settingsProfiles.profiles.concat()
           }
         };
+      case ACTION_TYPES.setProfile:
+        return {
+          ...state,
+          settings: {...state.settingsProfiles.profiles[currentProfileIndex].settings},
+          settingsProfiles: {
+            choosenProfile: action.payload as string,
+            profiles: state.settingsProfiles.profiles.concat()
+          }
+        }
     }
   } catch (e) {
     console.log(e)

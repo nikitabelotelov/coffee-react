@@ -98,7 +98,6 @@ wss.on("connection", function connectionListener(ws) {
   });
 
   ws.on("message", data => {
-    console.log(data);
     // @ts-ignore
     const message: any = JSON.parse(data)
 
@@ -108,8 +107,15 @@ wss.on("connection", function connectionListener(ws) {
     } else if (message.settings) {
       settingsProfiles.profiles[message.settings.profile].settings[message.settings.id] = message.settings.content;
       serializeSettingsProfiles(settingsProfiles);
+      console.log(data);
       // todo: save settings to file
       // read - change - save
+    } else if(message.profile) {
+      settingsProfiles.choosenProfile = message.profile;
+      serializeSettingsProfiles(settingsProfiles);
+      console.log(data);
+    } else {
+      console.log(data);
     }
   });
 });

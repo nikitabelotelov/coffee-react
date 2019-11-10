@@ -8,7 +8,7 @@ import { IAppState } from "../../reducers";
 import { StmMessages } from "../../../server/stm/Converter";
 
 
-const SteamView = (props: IAppState) => {
+const SteamView = (props: {settings: ISettingsState}) => {
   const value = Number(props.settings.SteamPressure) || 0
   return (
     <div className="setting__profile-parameters panel_root">

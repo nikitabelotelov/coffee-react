@@ -6,7 +6,7 @@ const settingsProfilesFileName: string = "settingsProfiles.json";
 function getDefaultSettingsProfiles(): ISettingsProfilesState {
     var profiles: Array<ISettingsProfile> = [
         {
-            title: "default",
+            title: "Стандарт",
             settings: {
                 Group1Temperature: '0',
                 Group1AutoMode1: '0',
@@ -25,7 +25,7 @@ function getDefaultSettingsProfiles(): ISettingsProfilesState {
             }
         },
         {
-            title: "user",
+            title: "Пользовательские",
             settings: {
                 Group1Temperature: '1',
                 Group1AutoMode1: '0',
@@ -45,7 +45,7 @@ function getDefaultSettingsProfiles(): ISettingsProfilesState {
         }
     ];
     return {
-        choosenProfile: "default",
+        choosenProfile: "Стандарт",
         profiles: profiles
     };
 }
