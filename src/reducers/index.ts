@@ -18,7 +18,8 @@ export interface IAppState {
   }
   update: number,
   settings: ISettingsState,
-  settingsProfiles: ISettingsProfilesState
+  choosenProfile: string,
+  profiles: Array<ISettingsProfile>
 }
 
 const initialStandartProfile: ISettingsProfile = {
@@ -92,11 +93,8 @@ const initialState: IAppState = {
 
   },
   settings: initialStandartProfile.settings,
-  settingsProfiles: {
-    choosenProfile: initialStandartProfileName, profiles: [
-      initialStandartProfile
-    ]
-  }
+  choosenProfile: initialStandartProfileName,
+  profiles: [initialStandartProfile]
 }
 
 function getChanges(source: ITempPoint[]): number[] {
@@ -167,21 +165,29 @@ const getSpeed = (source: ITempPoint[]): number => {
   return speed
 }
 
-function getCurrentProfileIndex(state:IAppState): number {
+function getCurrentProfileIndex(state: IAppState): number {
   let currentSettings: ISettingsState;
-  for (let i = 0; i < state.settingsProfiles.profiles.length; i++) {
-    if (state.settingsProfiles.profiles[i].title === state.settingsProfiles.choosenProfile) {
+  for (let i = 0; i < state.profiles.length; i++) {
+    if (state.profiles[i].title === state.choosenProfile) {
       return i;
     }
   }
 }
 
-function rootReducer(state: IAppState = initialState, action: { type: ACTION_TYPES, payload: ISTMMessage | IBasicMessage | ISTMCommand | IMachineState | ISettingsProfilesMessage | string | null }) {
+function rootReducer(state: IAppState = initialState, action: {
+  type: ACTION_TYPES, payload: ISTMMessage |
+  IBasicMessage |
+  ISTMCommand |
+  IMachineState |
+  ISettingsProfilesMessage |
+  string |
+  null
+}) {
   try {
     let currentProfileIndex = getCurrentProfileIndex(state)
     switch (action.type) {
       case ACTION_TYPES.setSetting:
-        let currentProfile = state.settingsProfiles.profiles[currentProfileIndex]
+        let currentProfile = state.profiles[currentProfileIndex]
         currentProfile.settings[(action.payload as IBasicMessage).id] = (action.payload as IBasicMessage).content;
         return { ...state, settings: { ...currentProfile.settings } };
       case ACTION_TYPES.setMachineState:
@@ -229,19 +235,15 @@ function rootReducer(state: IAppState = initialState, action: { type: ACTION_TYP
       case ACTION_TYPES.settingsProfilesInitialize:
         return {
           ...state,
-          settingsProfiles: {
             choosenProfile: (action.payload as ISettingsProfilesMessage).settingsProfiles.choosenProfile,
             profiles: (action.payload as ISettingsProfilesMessage).settingsProfiles.profiles.concat()
-          }
         };
       case ACTION_TYPES.setProfile:
         return {
           ...state,
-          settings: {...state.settingsProfiles.profiles[currentProfileIndex].settings},
-          settingsProfiles: {
-            choosenProfile: action.payload as string,
-            profiles: state.settingsProfiles.profiles.concat()
-          }
+          settings: { ...state.profiles[currentProfileIndex].settings },
+          choosenProfile: action.payload as string,
+          profiles: state.profiles
         }
     }
   } catch (e) {

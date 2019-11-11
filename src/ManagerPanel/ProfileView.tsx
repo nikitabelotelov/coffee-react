@@ -9,7 +9,7 @@ export default function ProfileView(opts:IAppState) {
     return (
         <div className='setting__profile panel_root'>
             <ul className='setting__profile-list list-group list-group-flush'>
-                {opts.settingsProfiles.profiles.map((el, key)=>{
+                {opts.profiles.map((el, key)=>{
                     return (<li onClick={() => {
                         settingStore.dispatch(setProfile(el.title))
                     }} className='list-group-item' key={key}>{el.title}</li>)
