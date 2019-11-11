@@ -39,7 +39,9 @@ const Admin = (props: IAppState) => {
                     <div className={"admin__button" + (props.machine[StmMessages.Button9]==='1' ? " admin__button_active" : "")}>B9</div>
                 </div>
                 Насос: {props.machine[StmMessages.Relay8]} <br />
-                Уровень воды: {props.machine[StmMessages.WaterLevel]}
+                Уровень воды: {props.machine[StmMessages.WaterLevel]}<br />
+                Volum1: {props.machine[StmMessages.VolumetricGroup1]}<br />
+                Volum2: {props.machine[StmMessages.VolumetricGroup2]}
             </div>
             <NavLink to={getBackLink()} className='manager-panel__block btn-outline-success'>
                 Назад

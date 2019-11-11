@@ -1,5 +1,5 @@
 import { IObjectAny, ProcessStatus, ICommandBlock } from "../../types";
-import store, { emitStm } from "../../SettingsStore";
+import store, { emitStm, getLocalState } from "../../SettingsStore";
 import Converter, { StmMessages, StmCommands } from "../../../server/stm/Converter";
 
 
@@ -14,9 +14,9 @@ export const WarmGroup = (
   commands: ICommandBlock,
   changeStatus: (newStatus: ProcessStatus) => void
 ): IObjectAny => {
-  const machine = store.getState().machine
+  const machine = getLocalState().machine
   const settings = store.getState().settings
-  const life = store.getState().life
+  const life = getLocalState().life
 
   if (state.stop) {
     return state;

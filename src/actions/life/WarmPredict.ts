@@ -1,5 +1,5 @@
 import { IObjectAny, ProcessStatus, ICommandBlock } from "../../types";
-import store, { emitStm } from "../../SettingsStore";
+import store, { emitStm, getLocalState } from "../../SettingsStore";
 import Converter, { StmMessages, StmCommands } from "../../../server/stm/Converter";
 
 
@@ -8,7 +8,7 @@ export const WarmPredict = (
   commands: ICommandBlock,
   changeStatus: (newStatus: ProcessStatus) => void
 ): IObjectAny => {
-  const machine = store.getState().machine
+  const machine = getLocalState().machine
   const settings = store.getState().settings
 
   if (state.stop) {

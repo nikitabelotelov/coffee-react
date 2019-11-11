@@ -30,11 +30,11 @@ class Usart {
       if (end > -1) {
         const message = this.buffer.splice(0, end+1)
         this.buffer = this.buffer.slice(end + 1)
-        // console.log('ms=', message)
         const msgObject = new Message()
         const stringMsg = msgObject.getMessageFromCode(message)
-        // console.log("Received data from usart. " + stringMsg);
-        this.msgHandlers.forEach(el => el(stringMsg))
+        if (stringMsg) {
+          this.msgHandlers.forEach(el => el(stringMsg))
+        }
         this.extractMessage()
       }
     }
@@ -53,7 +53,6 @@ class Usart {
         const msg = buffer.Buffer.from(this.queue[0]);
         this.queue = this.queue.slice(1)
         this.inProgress = true
-        //console.log("Write to serial " + JSON.stringify(msg));
         this.serial.write(msg, () => {
           this.inProgress = false
           this.queueProcess()

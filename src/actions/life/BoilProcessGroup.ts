@@ -1,12 +1,13 @@
 import { IObjectAny, ProcessStatus, ICommandBlock } from "../../types";
-import store, { emitStm } from "../../SettingsStore";
+import store, { emitStm, getLocalState } from "../../SettingsStore";
 import { StmMessages, StmCommands } from "../../../server/stm/Converter";
 
 
 const checkToStop = (button: StmMessages.Button3 | StmMessages.Button6, state: IObjectAny) => {
-  const machine = store.getState().machine
-  if (machine[button] !== state.buttonState) {
+  const machine = getLocalState().machine
+  if ((machine[button] === '1' || machine[button] === '2') && machine[button] !== state.buttonState) {
     state.step = '0'
+    state.buttonState = machine[button]
     return false
   }
   return true
@@ -24,7 +25,7 @@ export const BoilProcessGroup = (
   commands: ICommandBlock,
   changeStatus: (newStatus: ProcessStatus) => void
 ): IObjectAny => {
-  const machine = store.getState().machine
+  const machine = getLocalState().machine
   const settings = store.getState().settings
 
   if (state.stop) {
@@ -35,7 +36,7 @@ export const BoilProcessGroup = (
     case '1':
       if (checkToStop(button, state)) {
         changeStatus(ProcessStatus.wip)
-        if (machine[volumeSensor] === '0') {
+        if (machine[volumeSensor] === '1') {
           state.step = '2'
         } else {
           commands[resetVolumetric]++
@@ -87,8 +88,8 @@ export const BoilProcessGroup = (
       break;
     default:
       changeStatus(ProcessStatus.done)
-      if (machine[button] !== '') {
-        if (state.buttonState === '1' || state.buttonState === '0') {
+      if (machine[button] === '1' ||  machine[button] === '2') {
+        if (state.buttonState === '1' || state.buttonState === '2') {
           if (machine[button] !== state.buttonState) {
             state.step = '1'
             state.buttonState = machine[button]

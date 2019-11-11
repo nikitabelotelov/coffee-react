@@ -180,6 +180,7 @@ function rootReducer(state: IAppState = initialState, action: {
   ISTMCommand |
   IMachineState |
   ISettingsProfilesMessage |
+  IAppState |
   string |
   null
 }) {
@@ -194,7 +195,8 @@ function rootReducer(state: IAppState = initialState, action: {
         // @ts-ignore
         return {
           ...state,
-          machine: { ...action.payload as IMachineState }
+          machine: { ...(action.payload as IAppState).machine},
+          life: { ...(action.payload as IAppState).life}
         }
       case ACTION_TYPES.currentInfoUpdate:
         state.machine[(action.payload as ISTMMessage).id] = (action.payload as ISTMMessage).content;

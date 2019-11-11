@@ -1,4 +1,4 @@
-import store, { emitStm } from "../SettingsStore"
+import store, { emitStm, getLocalState } from "../SettingsStore"
 import Converter, { StmMessages, StmCommands } from "../../server/stm/Converter"
 import Message from "../../server/usart/Message"
 import ACTION_TYPES from "./actionTypes"
@@ -36,10 +36,10 @@ class MachineLife {
   constructor() {
     const boilGroup1 = new Process('boilGroup1', BoilProcessGroup(StmMessages.Button3, StmCommands.SetValve2, StmCommands.SetValve4, StmMessages.VolumetricGroup1, StmCommands.ResetVolumetricG1, 'Group1AutoMode1'), 0)
     const boilGroup2 = new Process('boilGroup1', BoilProcessGroup(StmMessages.Button6, StmCommands.SetValve3, StmCommands.SetValve5, StmMessages.VolumetricGroup2, StmCommands.ResetVolumetricG2, 'Group1AutoMode2'), 0)
-    const waterLevel = new Process('waterLevel', WaterLevel, 20000)
+    const waterLevel = new Process('waterLevel', WaterLevel, 0)
     const predictWarm = new Process('predictWarm', WarmPredict, 0)
-    const waterLevelG1 = new Process('waterLevelG1', WaterLevelGroup(StmMessages.Group1Pressure, StmCommands.SetValve2, 'Group1Temperature'), 20000)
-    const waterLevelG2 = new Process('waterLevelG2', WaterLevelGroup(StmMessages.Group2Pressure, StmCommands.SetValve3, 'Group2Temperature'), 20000)
+    const waterLevelG1 = new Process('waterLevelG1', WaterLevelGroup(StmMessages.Group1Pressure, StmCommands.SetValve2, 'Group1Temperature'), 0)
+    const waterLevelG2 = new Process('waterLevelG2', WaterLevelGroup(StmMessages.Group2Pressure, StmCommands.SetValve3, 'Group2Temperature'), 0)
 
     const warmG1 = new Process('warmG1', WarmGroup(StmMessages.Group1Pressure, StmCommands.SetRelay4, StmCommands.SetRelay5, "Group1Temperature", "middleTTrendG1"), 0)
     const warmG2 = new Process('warmG2', WarmGroup(StmMessages.Group2Pressure, StmCommands.SetRelay6, StmCommands.SetRelay7, "Group2Temperature", "middleTTrendG2"), 0)
@@ -96,9 +96,9 @@ class MachineLife {
   }
 
   public checkAndSend(commands:ICommandBlock, command: StmCommands, status: StmMessages) {
-    const machine = store.getState().machine
+    const machine = getLocalState().machine
     if (commands[command] > 0) {
-      if (machine[status] === '0') {
+      if (machine[status] === '2') {
         emitStm({id: command, content: '1'})
       }
     } else {
@@ -111,7 +111,7 @@ class MachineLife {
   public count: number = 0
 
   public step() {
-    const machine = store.getState().machine
+    const machine = getLocalState().machine
     const commands:ICommandBlock = {
       [StmCommands.SetValve1]: 0,
       [StmCommands.SetValve2]: 0,
@@ -153,16 +153,32 @@ class MachineLife {
       }
     })
 
-    if (this.count === 0) {
-      this.count = 1
+    if (this.count < 3) {
+      this.count++
       emitStm({id: StmCommands.SetBlueGroup1, content: '50000'})
       emitStm({id: StmCommands.SetBlueGroup2, content: '50000'})
+      emitStm({id: StmCommands.SetGreenGroup1, content: '0'})
+      emitStm({id: StmCommands.SetGreenGroup2, content: '0'})
+    } else if (this.count < 6) {
+      this.count++
+      emitStm({id: StmCommands.SetBlueGroup1, content: '0'})
+      emitStm({id: StmCommands.SetBlueGroup2, content: '0'})
+      emitStm({id: StmCommands.SetRedGroup1, content: '50000'})
+      emitStm({id: StmCommands.SetRedGroup2, content: '50000'})
+    } else if (this.count < 9) {
+      this.count++
+      emitStm({id: StmCommands.SetGreenGroup1, content: '50000'})
+      emitStm({id: StmCommands.SetGreenGroup2, content: '50000'})
+      emitStm({id: StmCommands.SetRedGroup1, content: '0'})
+      emitStm({id: StmCommands.SetRedGroup2, content: '0'})
     } else {
       this.count = 0
+      emitStm({id: StmCommands.SetGreenGroup1, content: '50000'})
+      emitStm({id: StmCommands.SetGreenGroup2, content: '50000'})
       emitStm({id: StmCommands.SetBlueGroup1, content: '0'})
       emitStm({id: StmCommands.SetBlueGroup2, content: '0'})
     }
-    
+     
     this.checkAndSend(commands, StmCommands.SetRelay1, StmMessages.Relay1)
     this.checkAndSend(commands, StmCommands.SetRelay2, StmMessages.Relay2)
     this.checkAndSend(commands, StmCommands.SetRelay3, StmMessages.Relay3)
@@ -178,12 +194,12 @@ class MachineLife {
     this.checkAndSend(commands, StmCommands.SetValve5, StmMessages.Valve5)
     this.checkAndSend(commands, StmCommands.SetValve6, StmMessages.Valve6)
 
-    const vol1 = parseInt(machine[StmMessages.VolumetricGroup1]) || 0
-    if (vol1 > 0 && commands[StmCommands.ResetVolumetricG1] > 0) {
+    const vol1 = parseInt(machine[StmMessages.VolumetricGroup1]) || 1
+    if (vol1 > 1 && commands[StmCommands.ResetVolumetricG1] > 0) {
       emitStm({id: StmCommands.ResetVolumetricG1, content: '1'})
     }
-    const vol2 = parseInt(machine[StmMessages.VolumetricGroup2]) || 0
-    if (vol2 > 0 && commands[StmCommands.ResetVolumetricG2] > 0) {
+    const vol2 = parseInt(machine[StmMessages.VolumetricGroup2]) || 1
+    if (vol2 > 1 && commands[StmCommands.ResetVolumetricG2] > 0) {
       emitStm({id: StmCommands.ResetVolumetricG2, content: '1'})
     }
 
