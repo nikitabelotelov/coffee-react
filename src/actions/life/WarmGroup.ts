@@ -61,8 +61,16 @@ export const WarmGroup = (
       state.power = P + I + D;
       state.power *= 1000
       if (state.power < 0) {
-        state.waitWarmTimeout = 300
+        state.waitWarmTimeout = 1000
       } else {
+        if (e < 0) {
+          if (state.power < 1000) {
+            state.power = 0
+          }
+        } else if (e < 1) {
+          state.power = state.power / 2
+        }
+
         state.waitWarmTimeout = state.power > 5000 ? 5000 : state.power      
       }
       state.prevError = e
