@@ -11,7 +11,7 @@ const Parameters = [
     {
         key: 1,
         title: 'Температуры группы',
-        route: 'steam'
+        route: 'temp'
     },
     {
         key: 2,
@@ -36,7 +36,7 @@ export default function ParametersSettings() {
             <ul className='setting__profile-list list-group list-group-flush'>
                 {Parameters.map((el) => {
                     return (<li className='list-group-item' key={el.key}>
-                        <NavLink to={'hand/steam'}
+                        <NavLink to={`hand/${el.route}`}
                                     className='setting__hand-listItem'>
                             {el.title}
                         </NavLink>

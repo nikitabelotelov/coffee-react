@@ -8,6 +8,7 @@ import Profile from "./Profile";
 import Update from "./Update";
 import ParametersSettings from "./ParametersSettings";
 import Steam from "./Parameters/Steam";
+import GroupTemperature from "./Parameters/GroupTemperature";
 import ColorHot from "./Colors/ColorHot";
 import Admin from "./Admin";
 
@@ -26,6 +27,7 @@ export function Panel() {
           component={ParametersSettings}
         />
         <Route exact path="*/settings/profile/hand/steam" component={Steam} />
+        <Route exact path="*/settings/profile/hand/temp" component={GroupTemperature} />
       </React.Fragment>
     );
 }
