@@ -63,7 +63,9 @@ export const WarmGroup = (
       if (state.power < 0) {
         state.waitWarmTimeout = 1000
       } else {
-        if (e < 0) {
+        if (e < -1) {
+          state.power = 0
+        } else if (e < 0) {
           if (state.power < 1000) {
             state.power = 0
           }
