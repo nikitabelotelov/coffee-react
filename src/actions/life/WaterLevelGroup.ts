@@ -29,16 +29,18 @@ export const WaterLevelGroup = (
     if (!state.started) {
       state.started = Date.now()
     }
-    if (state.started - Date.now() > 1000) {
+    if (Date.now() - state.started > 1000) {
+      state.wasStartedWarm = 1
       changeStatus(ProcessStatus.wip)
       commands[StmCommands.SetRelay8]++
       commands[commandValve]++
     }
-  } else if (state.started && pressure < 400) {
+  } else if (state.wasStartedWarm && pressure < 400) {
     changeStatus(ProcessStatus.wip)
     commands[StmCommands.SetRelay8]++
     commands[commandValve]++
   } else {
+    state.wasStartedWarm = 0
     state.started = 0
     changeStatus(ProcessStatus.done)
   }

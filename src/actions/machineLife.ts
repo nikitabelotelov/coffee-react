@@ -34,8 +34,8 @@ class MachineLife {
   }
 
   constructor() {
-    const boilGroup1 = new Process('boilGroup1', BoilProcessGroup(StmMessages.Button3, StmCommands.SetValve2, StmCommands.SetValve4, StmMessages.VolumetricGroup1, StmCommands.ResetVolumetricG1, 'Group1AutoMode1'), 0)
-    const boilGroup2 = new Process('boilGroup1', BoilProcessGroup(StmMessages.Button6, StmCommands.SetValve3, StmCommands.SetValve5, StmMessages.VolumetricGroup2, StmCommands.ResetVolumetricG2, 'Group1AutoMode2'), 0)
+    const boilGroup1 = new Process('boilGroup1', BoilProcessGroup(StmMessages.Button3, StmCommands.SetValve2, StmCommands.SetValve4, StmMessages.VolumetricGroup1, StmCommands.ResetVolumetricG1, StmCommands.SetSecGroup1, 'Group1AutoMode1'), 0)
+    const boilGroup2 = new Process('boilGroup1', BoilProcessGroup(StmMessages.Button6, StmCommands.SetValve3, StmCommands.SetValve5, StmMessages.VolumetricGroup2, StmCommands.ResetVolumetricG2, StmCommands.SetSecGroup2, 'Group1AutoMode2'), 0)
     const waterLevel = new Process('waterLevel', WaterLevel, 0)
     const predictWarm = new Process('predictWarm', WarmPredict, 0)
     const waterLevelG1 = new Process('waterLevelG1', WaterLevelGroup(StmMessages.Group1Pressure, StmCommands.SetValve2, 'Group1Temperature'), 0)
@@ -203,6 +203,12 @@ class MachineLife {
       emitStm({id: StmCommands.ResetVolumetricG2, content: '1'})
     }
 
+    if (commands[StmCommands.SetSecGroup1] > 0) {
+      emitStm({id: StmCommands.SetSecGroup1, content: `${commands[StmCommands.SetSecGroup1]}`})
+    }
+    if (commands[StmCommands.SetSecGroup2] > 0) {
+      emitStm({id: StmCommands.SetSecGroup2, content: `${commands[StmCommands.SetSecGroup2]}`})
+    }
   }
 }
 

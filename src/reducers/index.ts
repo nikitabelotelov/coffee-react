@@ -250,10 +250,12 @@ function rootReducer(state: IAppState = initialState, action: {
 
         return { ...state, machine: { ...state.machine }, life: { ...state.life } };
       case ACTION_TYPES.settingsProfilesInitialize:
+        state.choosenProfile = (action.payload as ISettingsProfilesMessage).settingsProfiles.choosenProfile
+        state.profiles = [...(action.payload as ISettingsProfilesMessage).settingsProfiles.profiles ]
+        currentProfileIndex = getCurrentProfileIndex(state)
         return {
           ...state,
-            choosenProfile: (action.payload as ISettingsProfilesMessage).settingsProfiles.choosenProfile,
-            profiles: (action.payload as ISettingsProfilesMessage).settingsProfiles.profiles.concat()
+          settings: { ...state.profiles[currentProfileIndex].settings }
         };
       case ACTION_TYPES.setProfile:
         state.choosenProfile = action.payload as string

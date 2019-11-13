@@ -18,13 +18,13 @@ const SteamView = (props: {settings: ISettingsState}) => {
           increment={(value:number) => {
             settingStore.dispatch(setSetting({
               id: 'SteamPressure',
-              content: `${value + 1}`
+              content: `${Math.round((value + 0.1) * 10) / 10}`
             }))
           }}
           decrement={(value:number) => {
             settingStore.dispatch(setSetting({
               id:'SteamPressure',
-              content: `${value - 1}`
+              content: `${Math.round((value - 0.1) * 10) / 10}`
             }))
           }}
           value={value}

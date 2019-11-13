@@ -15,7 +15,7 @@ export const SteamTemperature = (
   }
 
   const pressure = parseInt(machine[StmMessages.SteamPressure], 10) || 0;
-  const needPressure = parseInt(settings.SteamPressure) || 0;
+  const needPressure = (parseInt(settings.SteamPressure) || 0) * 100;
 
   /* TODO: energy mode
   const isEnergyMode = settings.EnergyMode === '1';
@@ -28,10 +28,22 @@ export const SteamTemperature = (
 	}
   */
   if (pressure < needPressure) {
+    if (!state.started) {
+      state.started = Date.now()
+    }
+    if (Date.now() - state.started > 1000) {
+      state.wasStartedWarm = 1
+      changeStatus(ProcessStatus.wip)
+      commands[StmCommands.SetRelay1]++
+      commands[StmCommands.SetRelay2]++
+    }
+  } else if (state.wasStartedWarm && pressure < needPressure + 50) {
     changeStatus(ProcessStatus.wip)
     commands[StmCommands.SetRelay1]++
     commands[StmCommands.SetRelay2]++
   } else {
+    state.started = 0
+    state.wasStartedWarm = 0
     changeStatus(ProcessStatus.done)
   }
 
