@@ -89,22 +89,7 @@ export enum StmCommands {
 }
 
 /*				
-#define DIFFUSOR07 365
-#define DIFFUSOR06 375
-#define ACTIVEDIFFUSOR DIFFUSOR06
-uint16_t koefVarG1 = ACTIVEDIFFUSOR;
-uint16_t koefVarG2 = ACTIVEDIFFUSOR;
-if (needG1Mla1 > 0) {
-					if ( (variomsCount[0]*100) / koefVarG1 >= needG1Mla1){
-						DoButton3();
-					}
-				}
-				if (needG1Mla2 > 0) {
-					if ( (variomsCount[0]*100) / koefVarG1 >= needG1Mla2){
-						DoButton4();
-					}
-				}
-			}*/
+*/
 
 const TempratureData = [4331, 4281, 4232, 4225, 4218, 4211, 4204, 4197, 4190, 4183, 4176, //11
   4467, 4348, 4229, 4107, 4085, 4063, 4040, 4018, 3996, 3971, 3946, //22
@@ -149,7 +134,15 @@ const Converter = {
       }
     }
     return 150;
+  },
+
+  volumetric: (value: number): number => {
+    const DIFFUSOR07 = 365
+    //#define DIFFUSOR06 375
+    //#define ACTIVEDIFFUSOR DIFFUSOR06
+    return Math.round((value*100) / DIFFUSOR07)
   }
+
 }
 
 

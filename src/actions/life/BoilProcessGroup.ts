@@ -76,7 +76,7 @@ export const BoilProcessGroup = (
     case '5':
       if (checkToStop(button, state)) {
         const volumne = parseInt(machine[volumeSensor], 10) || 0
-        const needVolume = parseInt(settings[autoMode]) || 250
+        const needVolume = parseInt(settings[autoMode]) || 100
         if (volumne < needVolume) {
           commands[valveIn]++
           commands[valveOut]++

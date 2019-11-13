@@ -209,6 +209,11 @@ function rootReducer(state: IAppState = initialState, action: {
           state.machine[(action.payload as ISTMMessage).id] = `${Math.round(Converter.voltToCelsium((action.payload as ISTMMessage).content) * 10) / 10}`
         }
 
+        if ((action.payload as ISTMMessage).id === StmMessages.VolumetricGroup1 || (action.payload as ISTMMessage).id === StmMessages.VolumetricGroup2) {
+          const volValue = parseInt((action.payload as ISTMMessage).content) || 1
+          state.machine[(action.payload as ISTMMessage).id] = `${Converter.volumetric(volValue)}`
+        }
+
         if ((action.payload as ISTMMessage).id === StmMessages.Group1Temperature) {
           const temp = Converter.voltToCelsium((action.payload as ISTMMessage).content)
           state.life.tTrendG1.push({
