@@ -31,7 +31,7 @@ export const WarmGroup = (
   }
 
   const trendG = life[trend]
-  const temperature = trendG[trendG.length - 1].value
+  const temperature = trendG[trendG.length - 1] && trendG[trendG.length - 1].value || 0
   //const speed = life['speedG1']
 
   switch (state.step) {

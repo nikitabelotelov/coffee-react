@@ -15,7 +15,7 @@ const checkToStop = (button: StmMessages.Button3 | StmMessages.Button6, state: I
 
 const calcTime = (state: IObjectAny, commands: ICommandBlock, sec: StmCommands.SetSecGroup1 | StmCommands.SetSecGroup2) => {
   const current = Date.now()
-  let duration = Math.round((state.startBoil - current) / 1000)
+  let duration = Math.round((current - state.startBoil) / 1000)
   if (duration < 0) {
     duration = 0
   }
