@@ -137,6 +137,9 @@ const Converter = {
   },
 
   volumetric: (value: number): number => {
+    if (value === 1) {
+      return 1
+    }
     const DIFFUSOR07 = 365
     //#define DIFFUSOR06 375
     //#define ACTIVEDIFFUSOR DIFFUSOR06
