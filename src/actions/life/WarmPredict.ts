@@ -29,9 +29,9 @@ export const WarmPredict = (
   if (temperature < 75) {
     state.started = 1
     changeStatus(ProcessStatus.wip)
-    commands[StmCommands.SetRelay1]++
+    commands[StmCommands.SetRelay3]++
   } else if (state.started) {
-    commands[StmCommands.SetRelay1]++
+    commands[StmCommands.SetRelay3]++
   } else if (temperature > 85) {
     state.started = 0
     changeStatus(ProcessStatus.done)

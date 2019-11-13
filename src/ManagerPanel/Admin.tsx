@@ -22,9 +22,9 @@ const Admin = (props: IAppState) => {
             <div className='manager-panel__block btn-outline-dark admin__text'>
                 Давление пара: {props.machine[StmMessages.SteamPressure]} <br />
                 Клапан: Valve1 = {props.machine[StmMessages.Valve1]} <br />
-                Тен пара: {props.machine[StmMessages.Relay1]} <br />
+                Тен пара: {props.machine[StmMessages.Relay1]} и {props.machine[StmMessages.Relay2]} <br />
                 Температура в преднагреве: {props.machine[StmMessages.PredictGroupTemperature]} <br />
-                Тен преднагрева: {props.machine[StmMessages.Relay2]}
+                Тен преднагрева: {props.machine[StmMessages.Relay3]}
             </div>
             <div className='manager-panel__block btn-outline-dark admin__text'>
                 <div className='admin__buttons'>

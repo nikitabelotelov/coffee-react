@@ -66,7 +66,7 @@ export const WarmGroup = (
         state.waitWarmTimeout = state.power > 5000 ? 5000 : state.power      
       }
       state.prevError = e
-      state.step = 1
+      state.step = '1'
       state.stepStart = Date.now()
       break;
   }
