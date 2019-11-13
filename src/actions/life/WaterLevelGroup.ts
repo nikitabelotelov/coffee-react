@@ -20,11 +20,26 @@ export const WaterLevelGroup = (
 
   const pressure = parseInt(machine[groupPressureFlag], 10) || 0;
   const needTemperature = parseInt(settings[settingsKey]) || 0;
-  if (pressure < 100 && needTemperature > 70) {
+  if (needTemperature < 70) {
+    changeStatus(ProcessStatus.done)
+    return { ...state}
+  }
+
+  if (pressure < 100) {
+    if (!state.started) {
+      state.started = Date.now()
+    }
+    if (state.started - Date.now() > 1000) {
+      changeStatus(ProcessStatus.wip)
+      commands[StmCommands.SetRelay8]++
+      commands[commandValve]++
+    }
+  } else if (state.started && pressure < 400) {
     changeStatus(ProcessStatus.wip)
     commands[StmCommands.SetRelay8]++
     commands[commandValve]++
   } else {
+    state.started = 0
     changeStatus(ProcessStatus.done)
   }
 

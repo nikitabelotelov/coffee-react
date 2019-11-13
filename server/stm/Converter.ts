@@ -144,6 +144,13 @@ const Converter = {
     //#define DIFFUSOR06 375
     //#define ACTIVEDIFFUSOR DIFFUSOR06
     return Math.round((value*100) / DIFFUSOR07)
+  },
+
+  compressure: (value: number): number => {
+    if (value < 750) {
+      return 0
+    }
+    return (value - 750) / 2
   }
 
 }
