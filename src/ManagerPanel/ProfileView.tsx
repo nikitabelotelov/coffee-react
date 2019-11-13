@@ -12,7 +12,7 @@ export default function ProfileView(opts:IAppState) {
                 {opts.profiles.map((el, key)=>{
                     return (<li onClick={() => {
                         settingStore.dispatch(setProfile(el.title))
-                    }} className='list-group-item' key={key}>{el.title}</li>)
+                    }} className='list-group-item' key={key}>{el.title}{el.title === opts.choosenProfile ? '(*)' : ''}</li>)
                 })}
             </ul>
             <NavLink to='profile/hand' className='manager-panel__block btn-outline-dark'>

@@ -55,7 +55,7 @@ export const BoilProcessGroup = (
     case '3':
       if (checkToStop(button, state)) {
         // time before boil. TODO: change 0 to setting
-        if (Date.now() - state.beforePressure > 1000) {
+        if (Date.now() - state.beforePressure > 2000) {
           state.step = '4'
           state.silentBeforePressure = Date.now()
         } else {
@@ -67,7 +67,7 @@ export const BoilProcessGroup = (
     case '4':
       if (checkToStop(button, state)) {
         // time before boil. TODO: change 0 to setting
-        if (Date.now() - state.silentBeforePressure > 1000) {
+        if (Date.now() - state.silentBeforePressure > 2000) {
           state.step = '5'
           state.silentBeforePressure = Date.now()
         }
@@ -76,7 +76,7 @@ export const BoilProcessGroup = (
     case '5':
       if (checkToStop(button, state)) {
         const volumne = parseInt(machine[volumeSensor], 10) || 0
-        const needVolume = parseInt(settings[autoMode]) || 150
+        const needVolume = parseInt(settings[autoMode]) || 250
         if (volumne < needVolume) {
           commands[valveIn]++
           commands[valveOut]++

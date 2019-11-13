@@ -2,6 +2,7 @@ import ACTION_TYPES from "../actions/actionTypes";
 import { IMachineState, ISettingsState, IBasicMessage, ISettingsProfilesState, ISettingsProfilesMessage, ISettingsChangeMessage, ISettingsProfile } from "../types";
 import Converter, { StmMessages, ISTMMessage, ISTMCommand } from "../../server/stm/Converter";
 import { emitSettingsChange } from "../SettingsStore";
+import { Validate } from "./validate";
 
 export interface ITempPoint { time: number, value: number }
 
@@ -199,6 +200,9 @@ function rootReducer(state: IAppState = initialState, action: {
           life: { ...(action.payload as IAppState).life}
         }
       case ACTION_TYPES.currentInfoUpdate:
+        if (!Validate((action.payload as ISTMMessage).id, (action.payload as ISTMMessage).content)) {
+          return state
+        }
         state.machine[(action.payload as ISTMMessage).id] = (action.payload as ISTMMessage).content;
 
         if ((action.payload as ISTMMessage).id === StmMessages.PredictGroupTemperature) {
@@ -241,11 +245,11 @@ function rootReducer(state: IAppState = initialState, action: {
             profiles: (action.payload as ISettingsProfilesMessage).settingsProfiles.profiles.concat()
         };
       case ACTION_TYPES.setProfile:
+        state.choosenProfile = action.payload as string
+        currentProfileIndex = getCurrentProfileIndex(state)
         return {
           ...state,
           settings: { ...state.profiles[currentProfileIndex].settings },
-          choosenProfile: action.payload as string,
-          profiles: state.profiles
         }
     }
   } catch (e) {

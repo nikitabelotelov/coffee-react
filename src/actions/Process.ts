@@ -9,6 +9,7 @@ export class Process {
   public status: ProcessStatus = ProcessStatus.wip
   public errorTimeout: number = 0
   public wipTimeout: number = 0
+  public wipStart: number = 0
   public timeDone: number = 0
   public onStatusChange: (newStatus: ProcessStatus, oldStatus: ProcessStatus) => void
 
@@ -19,6 +20,12 @@ export class Process {
         this.timeDone = Date.now()
       } else {
         this.timeDone = 0
+      }
+
+      if (newStatus === ProcessStatus.wip) {
+        this.wipStart = Date.now()
+      } else {
+        this.wipStart = 0
       }
     }
     this.status = newStatus
@@ -31,6 +38,7 @@ export class Process {
     this.stateMachine = stateMachine
     this.onStatusChangeHdl = this.onStatusChangeHdl.bind(this)
     this.wipTimeout = wipTimeout
+    this.wipStart = Date.now()
   }
 
   public start() {
@@ -48,18 +56,24 @@ export class Process {
     if (!this.errorTimeout && this.wipTimeout) {
       this.errorTimeout = Date.now()
     }
-    const wipTime = Date.now() - this.errorTimeout
 
-    if (this.wipTimeout &&  wipTime > this.wipTimeout) {
+    if (this.status === ProcessStatus.wip) {
+      const wipTime = Date.now() - this.wipStart
+      this.state.wipTime = wipTime
+    } else {
+      this.state.wipTime = 0
+    }
+
+/*    if (this.wipTimeout &&  wipTime > this.wipTimeout) {
       this.state.stop = 0
       // TODO:: NOTFIFICATION ERROR
-    } 
+    }*/
+
     if (this.timeDone && this.status === ProcessStatus.done) {
       this.state.doneTime = Date.now() - this.timeDone
-      this.state.wipTime = 0
     } else {
       this.state.doneTime = 0
-      this.state.wipTime = wipTime
+     
     }
     this.state = this.stateMachine(this.state, commands, this.onStatusChangeHdl)
   }
