@@ -24,6 +24,11 @@
   grid-template-areas: "top top" "top top" "bottom bottom";
 }
 
+.setting__profile-parameters__color {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+}
+
 .manager-panel__block {
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
     border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out,
@@ -106,6 +111,11 @@
 
 .setting__profile-list {
   grid-area: list;
+}
+
+.list-group-item__selected {
+  color: #6610f2;
+  background: #d6d6d6;
 }
 
 .manager-panel__info {

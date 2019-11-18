@@ -26,13 +26,14 @@ export const WarmPredict = (
 
 
   const temperature = parseInt(machine[StmMessages.PredictGroupTemperature], 10)
-  if (temperature < 75) {
+  const needPr = parseInt(settings.PredictTemperature, 10) || 10
+  if (temperature < needPr - 3) {
     state.started = 1
     changeStatus(ProcessStatus.wip)
     commands[StmCommands.SetRelay3]++
   } else if (state.started) {
     commands[StmCommands.SetRelay3]++
-  } else if (temperature > 85) {
+  } else if (temperature > needPr + 3) {
     state.started = 0
     changeStatus(ProcessStatus.done)
   }

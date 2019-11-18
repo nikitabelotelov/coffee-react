@@ -10,6 +10,8 @@ import { BoilProcessGroup } from "./life/BoilProcessGroup"
 import { WarmPredict } from "./life/WarmPredict"
 import { WarmGroup } from "./life/WarmGroup"
 import { SleepMode } from "./life/SleepMode"
+import { CleanMode } from "./life/CleanMode"
+import { Color } from "./life/Color"
 
 
 export interface IProcesses {
@@ -35,16 +37,34 @@ class MachineLife {
   }
 
   constructor() {
-    const boilGroup1 = new Process('boilGroup1', BoilProcessGroup(StmMessages.Button3, StmCommands.SetValve2, StmCommands.SetValve4, StmMessages.VolumetricGroup1, StmCommands.ResetVolumetricG1, StmCommands.SetSecGroup1, 'Group1AutoMode1'), 0)
-    const boilGroup2 = new Process('boilGroup1', BoilProcessGroup(StmMessages.Button6, StmCommands.SetValve3, StmCommands.SetValve5, StmMessages.VolumetricGroup2, StmCommands.ResetVolumetricG2, StmCommands.SetSecGroup2, 'Group1AutoMode2'), 0)
+    const boilGroup1 = new Process('boilGroup1', BoilProcessGroup(StmMessages.Button3, StmCommands.SetValve2, StmCommands.SetValve4, 
+      StmMessages.VolumetricGroup1, StmCommands.ResetVolumetricG1, StmCommands.SetSecGroup1, 'Group1AutoMode1', 'Group1Presoaking', 'Group1PostPresoaking'), 0)
+    const boilGroup2 = new Process('boilGroup1', BoilProcessGroup(StmMessages.Button6, StmCommands.SetValve3, StmCommands.SetValve5, 
+      StmMessages.VolumetricGroup2, StmCommands.ResetVolumetricG2, StmCommands.SetSecGroup2, 'Group2AutoMode1', 'Group2Presoaking', 'Group2PostPresoaking'), 0)
     const waterLevel = new Process('waterLevel', WaterLevel, 0)
     const predictWarm = new Process('predictWarm', WarmPredict, 0)
     const sleepMode = new Process('SleepMode', SleepMode, 0)
+    const colorG1 = new Process('ColorG1', Color("Group1Temperature", "middleTTrendG1", StmCommands.SetRedGroup1, StmCommands.SetGreenGroup1, StmCommands.SetBlueGroup1), 0)
+    const colorG2 = new Process('ColorG2', Color("Group2Temperature", "middleTTrendG2", StmCommands.SetRedGroup2, StmCommands.SetGreenGroup2, StmCommands.SetBlueGroup2), 0)
+    const cleanMode = new Process('CleanMode', CleanMode(StmMessages.Button9), 0)
     const waterLevelG1 = new Process('waterLevelG1', WaterLevelGroup(StmMessages.Group1Pressure, StmCommands.SetValve2, 'Group1Temperature'), 0)
     const waterLevelG2 = new Process('waterLevelG2', WaterLevelGroup(StmMessages.Group2Pressure, StmCommands.SetValve3, 'Group2Temperature'), 0)
 
     const warmG1 = new Process('warmG1', WarmGroup(StmMessages.Group1Pressure, StmCommands.SetRelay4, StmCommands.SetRelay5, "Group1Temperature", "middleTTrendG1"), 0)
     const warmG2 = new Process('warmG2', WarmGroup(StmMessages.Group2Pressure, StmCommands.SetRelay6, StmCommands.SetRelay7, "Group2Temperature", "middleTTrendG2"), 0)
+
+    this.addProcess({
+      process: colorG1,
+      children: []
+    })
+    this.addProcess({
+      process: colorG2,
+      children: []
+    })
+    this.addProcess({
+      process: cleanMode,
+      children: [boilGroup1, boilGroup2, predictWarm]
+    })
 
     this.addProcess({
       process: sleepMode,
@@ -59,6 +79,9 @@ class MachineLife {
       children: [waterLevelG2]
     })
 
+    colorG1.start()
+    colorG2.start()
+
     boilGroup1.start()
     boilGroup2.start()
 
@@ -70,6 +93,9 @@ class MachineLife {
 
     warmG1.start()
     warmG2.start()
+
+    cleanMode.start()
+    sleepMode.start()
 
     this.addProcess({
       process: waterLevel,
@@ -197,32 +223,17 @@ class MachineLife {
       emitStm({id: StmCommands.SetSecGroup2, content: `${commands[StmCommands.SetSecGroup2]}`})
     }
 
-    if (!this.needSend) {
-      if (this.count < 3) {
-        this.count++
-        emitStm({id: StmCommands.SetBlueGroup1, content: '50000'})
-        emitStm({id: StmCommands.SetBlueGroup2, content: '50000'})
-        emitStm({id: StmCommands.SetGreenGroup1, content: '0'})
-        emitStm({id: StmCommands.SetGreenGroup2, content: '0'})
-      } else if (this.count < 6) {
-        this.count++
-        emitStm({id: StmCommands.SetBlueGroup1, content: '0'})
-        emitStm({id: StmCommands.SetBlueGroup2, content: '0'})
-        emitStm({id: StmCommands.SetRedGroup1, content: '50000'})
-        emitStm({id: StmCommands.SetRedGroup2, content: '50000'})
-      } else if (this.count < 9) {
-        this.count++
-        emitStm({id: StmCommands.SetGreenGroup1, content: '50000'})
-        emitStm({id: StmCommands.SetGreenGroup2, content: '50000'})
-        emitStm({id: StmCommands.SetRedGroup1, content: '0'})
-        emitStm({id: StmCommands.SetRedGroup2, content: '0'})
-      } else {
-        this.count = 0
-        emitStm({id: StmCommands.SetGreenGroup1, content: '50000'})
-        emitStm({id: StmCommands.SetGreenGroup2, content: '50000'})
-        emitStm({id: StmCommands.SetBlueGroup1, content: '0'})
-        emitStm({id: StmCommands.SetBlueGroup2, content: '0'})
-      }
+    const procG1 = this.processes.find(pr => pr.process.name === 'ColorG1' ) 
+    if (procG1 && procG1.process && procG1.process.status === ProcessStatus.done) {
+      emitStm({id: StmCommands.SetRedGroup1, content: `${commands[StmCommands.SetRedGroup1]}`})
+      emitStm({id: StmCommands.SetBlueGroup1, content: `${commands[StmCommands.SetBlueGroup1]}`})
+      emitStm({id: StmCommands.SetGreenGroup1, content: `${commands[StmCommands.SetGreenGroup1]}`})
+    }
+    const procG2 = this.processes.find(pr => pr.process.name === 'ColorG2' ) 
+    if (procG2 && procG2.process && procG2.process.status === ProcessStatus.done) {
+      emitStm({id: StmCommands.SetRedGroup2, content: `${commands[StmCommands.SetRedGroup2]}`})
+      emitStm({id: StmCommands.SetBlueGroup2, content: `${commands[StmCommands.SetBlueGroup2]}`})
+      emitStm({id: StmCommands.SetGreenGroup2, content: `${commands[StmCommands.SetGreenGroup2]}`})
     }
   }
 }

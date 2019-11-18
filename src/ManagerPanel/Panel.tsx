@@ -11,6 +11,9 @@ import Steam from "./Parameters/Steam";
 import GroupTemperature from "./Parameters/GroupTemperature";
 import ColorHot from "./Colors/ColorHot";
 import Admin from "./Admin";
+import PreSoaking from "./Parameters/PreSoaking";
+import AutoMode from "./Parameters/AutoMode";
+import Predict from "./Parameters/Predict";
 
 export function Panel() {
     return (
@@ -28,6 +31,9 @@ export function Panel() {
         />
         <Route exact path="*/settings/profile/hand/steam" component={Steam} />
         <Route exact path="*/settings/profile/hand/temp" component={GroupTemperature} />
+        <Route exact path="*/settings/profile/hand/soaking" component={PreSoaking} />
+        <Route exact path="*/settings/profile/hand/automode" component={AutoMode} />
+        <Route exact path="*/settings/profile/hand/predict" component={Predict} />
       </React.Fragment>
     );
 }

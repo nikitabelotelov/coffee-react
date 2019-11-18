@@ -29,7 +29,9 @@ export const BoilProcessGroup = (
   volumeSensor: StmMessages.VolumetricGroup1 | StmMessages.VolumetricGroup2,
   resetVolumetric: StmCommands.ResetVolumetricG1 | StmCommands.ResetVolumetricG2,
   sec: StmCommands.SetSecGroup1 | StmCommands.SetSecGroup2,
-  autoMode: 'Group1AutoMode1' | 'Group1AutoMode2' | 'Group2AutoMode1' | 'Group2AutoMode2'
+  autoMode: 'Group1AutoMode1' | 'Group1AutoMode2' | 'Group2AutoMode1' | 'Group2AutoMode2',
+  presoaking: 'Group1Presoaking' | 'Group2Presoaking', 
+  postPresoaking: 'Group1PostPresoaking' | 'Group2PostPresoaking',
 ) => (
   state: IObjectAny,
   commands: ICommandBlock,
@@ -48,6 +50,9 @@ export const BoilProcessGroup = (
     changeStatus(ProcessStatus.done)
     return { ...state }
   }
+
+  const presoakingTime = (parseInt(settings[presoaking], 10) || 0) * 1000
+  const postPresoakingTime = (parseInt(settings[postPresoaking], 10) || 0) * 1000
 
   switch(state.step) {
     case '1':
@@ -75,7 +80,7 @@ export const BoilProcessGroup = (
       if (checkToStop(button, state)) {
         calcTime(state, commands, sec)
         // time before boil. TODO: change 0 to setting
-        if (Date.now() - state.beforePressure > 2000) {
+        if (Date.now() - state.beforePressure > presoakingTime) {
           state.step = '4'
           state.silentBeforePressure = Date.now()
         } else {
@@ -88,7 +93,7 @@ export const BoilProcessGroup = (
       if (checkToStop(button, state)) {
         calcTime(state, commands, sec)
         // time before boil. TODO: change 0 to setting
-        if (Date.now() - state.silentBeforePressure > 2000) {
+        if (Date.now() - state.silentBeforePressure > postPresoakingTime) {
           state.step = '5'
           state.silentBeforePressure = Date.now()
         }

@@ -69,16 +69,23 @@ export interface ISettingsState {
     Group1Temperature: string,
     Group1AutoMode1: string,
     Group1AutoMode2: string,
+    Group1Presoaking: string,
+    Group1PostPresoaking: string,
     Group2Temperature: string,
     Group2AutoMode1: string,
     Group2AutoMode2: string,
+    Group2Presoaking: string,
+    Group2PostPresoaking: string,
+    PredictTemperature: string,
     SteamPressure: string,
     RedCold: string,
     GreenCold: string,
     BlueCold: string,
+    AlphaCold: string,
     RedHot: string,
     GreenHot: string,
     BlueHot: string,
+    AlphaHot: string,
     EnergyMode: string
 }
 
