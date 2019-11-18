@@ -9,6 +9,7 @@ import { WaterLevelGroup } from "./life/WaterLevelGroup"
 import { BoilProcessGroup } from "./life/BoilProcessGroup"
 import { WarmPredict } from "./life/WarmPredict"
 import { WarmGroup } from "./life/WarmGroup"
+import { SleepMode } from "./life/SleepMode"
 
 
 export interface IProcesses {
@@ -38,12 +39,17 @@ class MachineLife {
     const boilGroup2 = new Process('boilGroup1', BoilProcessGroup(StmMessages.Button6, StmCommands.SetValve3, StmCommands.SetValve5, StmMessages.VolumetricGroup2, StmCommands.ResetVolumetricG2, StmCommands.SetSecGroup2, 'Group1AutoMode2'), 0)
     const waterLevel = new Process('waterLevel', WaterLevel, 0)
     const predictWarm = new Process('predictWarm', WarmPredict, 0)
+    const sleepMode = new Process('SleepMode', SleepMode, 0)
     const waterLevelG1 = new Process('waterLevelG1', WaterLevelGroup(StmMessages.Group1Pressure, StmCommands.SetValve2, 'Group1Temperature'), 0)
     const waterLevelG2 = new Process('waterLevelG2', WaterLevelGroup(StmMessages.Group2Pressure, StmCommands.SetValve3, 'Group2Temperature'), 0)
 
     const warmG1 = new Process('warmG1', WarmGroup(StmMessages.Group1Pressure, StmCommands.SetRelay4, StmCommands.SetRelay5, "Group1Temperature", "middleTTrendG1"), 0)
     const warmG2 = new Process('warmG2', WarmGroup(StmMessages.Group2Pressure, StmCommands.SetRelay6, StmCommands.SetRelay7, "Group2Temperature", "middleTTrendG2"), 0)
 
+    this.addProcess({
+      process: sleepMode,
+      children: []
+    })
     this.addProcess({
       process: boilGroup1,
       children: [waterLevelG1]

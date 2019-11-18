@@ -42,6 +42,13 @@ export const BoilProcessGroup = (
     return state;
   }
 
+  if (machine[StmMessages.Button1] === '1') {
+    state.step = '0'
+    state.buttonState = machine[button]
+    changeStatus(ProcessStatus.done)
+    return { ...state }
+  }
+
   switch(state.step) {
     case '1':
       if (checkToStop(button, state)) {
@@ -91,7 +98,7 @@ export const BoilProcessGroup = (
       if (checkToStop(button, state)) {
         calcTime(state, commands, sec)
         const volumne = parseInt(machine[volumeSensor], 10) || 0
-        const needVolume = parseInt(settings[autoMode]) || 100
+        const needVolume = parseInt(settings[autoMode]) || 150
         if (volumne < needVolume) {
           commands[valveIn]++
           commands[valveOut]++

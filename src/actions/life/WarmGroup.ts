@@ -25,9 +25,13 @@ export const WarmGroup = (
   
   const pressureG = parseInt(machine[pressure], 10) || 0;
 
-  const needTemp = parseInt(settings[setTemp], 10) || 0
+  let needTemp = parseInt(settings[setTemp], 10) || 0
   if (needTemp < 70 || pressureG < 500) {
     return state
+  }
+
+  if (machine[StmMessages.Button1] === '1') {
+    needTemp = 75
   }
 
   const trendG = life[trend]

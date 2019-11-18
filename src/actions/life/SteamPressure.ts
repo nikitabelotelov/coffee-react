@@ -14,6 +14,11 @@ export const SteamTemperature = (
     return state;
   }
 
+  if (machine[StmMessages.Button1] === '1') {
+    changeStatus(ProcessStatus.done)
+    return state
+  }
+
   const pressure = parseInt(machine[StmMessages.SteamPressure], 10) || 0;
   const needPressure = (parseInt(settings.SteamPressure) || 0) * 100;
 
