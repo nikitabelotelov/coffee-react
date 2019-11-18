@@ -14,7 +14,7 @@ let Serial:any;
 try {
   Serial = require('raspi-serial').Serial;
 } catch(e) {
-  console.warn('Couldn\'t load raspi-serial. Will use mock-object instead.');
+  console.warn('Couldn\'t load raspi-serial. Will use mock-object instead. Error: ' + e.message);
   Serial = RSerial;
 }
 
