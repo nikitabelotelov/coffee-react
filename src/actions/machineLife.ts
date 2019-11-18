@@ -99,19 +99,22 @@ class MachineLife {
     const machine = getLocalState().machine
     if (commands[command] > 0) {
       if (machine[status] === '2') {
+        this.needSend = true
         emitStm({id: command, content: '1'})
       }
     } else {
       if (machine[status] === '1') {
+        this.needSend = true
         emitStm({id: command, content: '0'})
       }
     }
   }
 
   public count: number = 0
-
+  public needSend: boolean = false
   public step() {
     const machine = getLocalState().machine
+    this.needSend = false
     const commands:ICommandBlock = {
       [StmCommands.SetValve1]: 0,
       [StmCommands.SetValve2]: 0,
@@ -152,32 +155,6 @@ class MachineLife {
         one.process.step(commands)
       }
     })
-
-    if (this.count < 3) {
-      this.count++
-      emitStm({id: StmCommands.SetBlueGroup1, content: '50000'})
-      emitStm({id: StmCommands.SetBlueGroup2, content: '50000'})
-      emitStm({id: StmCommands.SetGreenGroup1, content: '0'})
-      emitStm({id: StmCommands.SetGreenGroup2, content: '0'})
-    } else if (this.count < 6) {
-      this.count++
-      emitStm({id: StmCommands.SetBlueGroup1, content: '0'})
-      emitStm({id: StmCommands.SetBlueGroup2, content: '0'})
-      emitStm({id: StmCommands.SetRedGroup1, content: '50000'})
-      emitStm({id: StmCommands.SetRedGroup2, content: '50000'})
-    } else if (this.count < 9) {
-      this.count++
-      emitStm({id: StmCommands.SetGreenGroup1, content: '50000'})
-      emitStm({id: StmCommands.SetGreenGroup2, content: '50000'})
-      emitStm({id: StmCommands.SetRedGroup1, content: '0'})
-      emitStm({id: StmCommands.SetRedGroup2, content: '0'})
-    } else {
-      this.count = 0
-      emitStm({id: StmCommands.SetGreenGroup1, content: '50000'})
-      emitStm({id: StmCommands.SetGreenGroup2, content: '50000'})
-      emitStm({id: StmCommands.SetBlueGroup1, content: '0'})
-      emitStm({id: StmCommands.SetBlueGroup2, content: '0'})
-    }
      
     this.checkAndSend(commands, StmCommands.SetRelay1, StmMessages.Relay1)
     this.checkAndSend(commands, StmCommands.SetRelay2, StmMessages.Relay2)
@@ -196,18 +173,50 @@ class MachineLife {
 
     const vol1 = parseInt(machine[StmMessages.VolumetricGroup1]) || 1
     if (vol1 > 1 && commands[StmCommands.ResetVolumetricG1] > 0) {
+      this.needSend = true
       emitStm({id: StmCommands.ResetVolumetricG1, content: '1'})
     }
     const vol2 = parseInt(machine[StmMessages.VolumetricGroup2]) || 1
     if (vol2 > 1 && commands[StmCommands.ResetVolumetricG2] > 0) {
+      this.needSend = true
       emitStm({id: StmCommands.ResetVolumetricG2, content: '1'})
     }
 
     if (commands[StmCommands.SetSecGroup1] > 0) {
+      this.needSend = true
       emitStm({id: StmCommands.SetSecGroup1, content: `${commands[StmCommands.SetSecGroup1]}`})
     }
     if (commands[StmCommands.SetSecGroup2] > 0) {
+      this.needSend = true
       emitStm({id: StmCommands.SetSecGroup2, content: `${commands[StmCommands.SetSecGroup2]}`})
+    }
+
+    if (!this.needSend) {
+      if (this.count < 3) {
+        this.count++
+        emitStm({id: StmCommands.SetBlueGroup1, content: '50000'})
+        emitStm({id: StmCommands.SetBlueGroup2, content: '50000'})
+        emitStm({id: StmCommands.SetGreenGroup1, content: '0'})
+        emitStm({id: StmCommands.SetGreenGroup2, content: '0'})
+      } else if (this.count < 6) {
+        this.count++
+        emitStm({id: StmCommands.SetBlueGroup1, content: '0'})
+        emitStm({id: StmCommands.SetBlueGroup2, content: '0'})
+        emitStm({id: StmCommands.SetRedGroup1, content: '50000'})
+        emitStm({id: StmCommands.SetRedGroup2, content: '50000'})
+      } else if (this.count < 9) {
+        this.count++
+        emitStm({id: StmCommands.SetGreenGroup1, content: '50000'})
+        emitStm({id: StmCommands.SetGreenGroup2, content: '50000'})
+        emitStm({id: StmCommands.SetRedGroup1, content: '0'})
+        emitStm({id: StmCommands.SetRedGroup2, content: '0'})
+      } else {
+        this.count = 0
+        emitStm({id: StmCommands.SetGreenGroup1, content: '50000'})
+        emitStm({id: StmCommands.SetGreenGroup2, content: '50000'})
+        emitStm({id: StmCommands.SetBlueGroup1, content: '0'})
+        emitStm({id: StmCommands.SetBlueGroup2, content: '0'})
+      }
     }
   }
 }
