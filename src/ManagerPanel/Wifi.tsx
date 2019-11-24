@@ -1,10 +1,11 @@
 import { NavLink } from "react-router-dom";
-import * as React from "react";
+import React, { useState, useRef } from 'react';
 import { getBackLink, IWifiNet } from "../types";
 import { IAppState } from "../reducers";
 import settingsStore from "../SettingsStore"
 import { connect } from "react-redux";
 import { connectWifiNet } from "../actions";
+import { text } from "body-parser";
 
 const wifiNets: Array<IWifiNet> = [
     {
@@ -13,19 +14,26 @@ const wifiNets: Array<IWifiNet> = [
 ]
 
 export function WifiView(opts: IAppState) {
+    const [choosenNetwork, setChoosenNetwork] = useState(null)
+    const textInput = useRef(null)
+
     return (
         <div className='wifi__root panel_root'>
             <ul className='list__root'>
                 {opts.availableWifiNets.map((el, key) => {
-                    return (<li className={'list-group-item '}  key={key}>{el.ssid}</li>)
+                    return (<li className={'list-group-item' + (el.ssid === choosenNetwork ? ' list-group-item__selected' : '')} onClick={() => {
+                        setChoosenNetwork(el.ssid)
+                    }} key={key}>{el.ssid}</li>)
                 })}
             </ul>
             <div onClick={() => {
-                        settingsStore.dispatch(connectWifiNet({ ssid: 'testssid', password: 'privet' }))
-                    }} className='manager-panel__block manager-panel__topright'>
+                if (choosenNetwork) {
+                    settingsStore.dispatch(connectWifiNet({ ssid: choosenNetwork, password: textInput.current.value }))
+                }
+            }} className='manager-panel__block manager-panel__topright'>
                 Подключиться
-                <input type="password"/>
             </div>
+            <input ref={textInput} type="password" />
             <NavLink to={getBackLink()} className='manager-panel__block manager-panel__bottomright'>
                 Назад
             </NavLink>
@@ -34,8 +42,8 @@ export function WifiView(opts: IAppState) {
 }
 
 
-const mapStateToProps = (state:IAppState) => {
-    return {...state};
+const mapStateToProps = (state: IAppState) => {
+    return { ...state };
 }
 
 export const Wifi = connect(mapStateToProps)(WifiView);

@@ -1,10 +1,13 @@
 import { IWifiNet } from "../../src/types";
-
-const Wifi = require("node-wifi")
-
-Wifi.init({
-    iface: null
-});
+let Wifi:any;
+if(process.arch === 'arm') {
+    Wifi = require("rpi-wifi")
+} else {
+    Wifi = require("node-wifi")
+    Wifi.init({
+        iface: null
+    });
+}
 
 export function getWifiNetworks(): Promise<Array<IWifiNet>> {
     let result = new Promise<Array<IWifiNet>>((resolve) => {
@@ -14,7 +17,6 @@ export function getWifiNetworks(): Promise<Array<IWifiNet>> {
                 resolve([]);
             } else {
                 resolve(networks);
-                console.log(networks.map((el) => el.ssid))
             }
         })
     })
