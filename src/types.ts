@@ -27,7 +27,8 @@ export interface ISettingsProfilesMessage {
 }
 
 export interface IWifiNet {
-  ssid: string
+  ssid: string,
+  essid?: string
 }
 
 export interface IWifiAuthData extends IWifiNet {

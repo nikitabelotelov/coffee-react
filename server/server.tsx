@@ -6,10 +6,11 @@ import Usart from "./usart/Usart";
 import { RSerial } from "./mocha/RSerial";
 import Converter, { ISTMMessage } from "./stm/Converter";
 import { loadSettings, serializeSettingsProfiles } from "./fs/fsLib";
-import { ISettingsProfilesState, IWifiNetListMessage, IWifiStatusMessage, IWifiNet } from "../src/types";
+import { ISettingsProfilesState, IWifiNetListMessage, IWifiStatusMessage, IWifiNet, WIFI_STATUS } from "../src/types";
 import fs from "fs"
 import { settings } from "cluster";
-import { getWifiNetworks } from "./wifi/Wifi";
+import { getWifiNetworks, connectWifi } from "./wifi/Wifi";
+import { Wifi } from "../src/ManagerPanel/Wifi";
 
 let Serial:any;
 try {
@@ -129,10 +130,23 @@ wss.on("connection", function connectionListener(ws) {
       // todo: save settings to file
       // read - change - save
     } else if(message.profile) {
-      settingsProfiles.choosenProfile = message.profile;
-      serializeSettingsProfiles(settingsProfiles);
+      settingsProfiles.choosenProfile = message.profile
+      serializeSettingsProfiles(settingsProfiles)
     } else if(message.wifi) {
-      
+      console.log(JSON.stringify(message.wifi));
+      connectWifi(message.wifi.ssid, message.wifi.password).then((res) => {
+        wifiMessages.push({
+          status: WIFI_STATUS.CONNECTED,
+          message: ""
+        })
+        sendMessages()
+      }, (res) => {
+        wifiMessages.push({
+          status: WIFI_STATUS.NOT_CONNECTED,
+          message: ""
+        })
+        sendMessages()
+      })
     } else {
       console.log(data);
     } 

@@ -1,5 +1,5 @@
 import ACTION_TYPES from "../actions/actionTypes";
-import { IMachineState, ISettingsState, IBasicMessage, ISettingsProfilesState, ISettingsProfilesMessage, ISettingsChangeMessage, ISettingsProfile, IWifiNet, IWifiAuthData, WIFI_STATUS, IWifiNetListMessage } from "../types";
+import { IMachineState, ISettingsState, IBasicMessage, ISettingsProfilesState, ISettingsProfilesMessage, ISettingsChangeMessage, ISettingsProfile, IWifiNet, IWifiAuthData, WIFI_STATUS, IWifiNetListMessage, IWifiStatusMessage } from "../types";
 import Converter, { StmMessages, ISTMMessage, ISTMCommand } from "../../server/stm/Converter";
 import { emitSettingsChange } from "../SettingsStore";
 import { Validate } from "./validate";
@@ -196,6 +196,7 @@ function rootReducer(state: IAppState = initialState, action: {
   ISettingsProfilesMessage |
   IWifiAuthData |
   IWifiNetListMessage |
+  IWifiStatusMessage |
   IAppState |
   string |
   null
@@ -283,6 +284,9 @@ function rootReducer(state: IAppState = initialState, action: {
         state.currentWifiNet = { ssid: (action.payload as IWifiAuthData).ssid }
         state.wifiStatus = WIFI_STATUS.CONNECTING
         return { ...state }
+      case ACTION_TYPES.wifiStatusUpdate:
+        state.wifiStatus = (action.payload as IWifiStatusMessage).status
+        return { ...state } 
       case ACTION_TYPES.wifiListUpdate:
         state.availableWifiNets = (action.payload as IWifiNetListMessage).list
         return { ...state }

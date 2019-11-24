@@ -3,7 +3,7 @@ import rootReducer from "../reducers/index";
 import { WebSocketController } from "../actions/WebSocketController";
 import Converter, { ISTMCommand, ISTMMessage, StmMessages } from "../../server/stm/Converter";
 import ACTION_TYPES from "../actions/actionTypes";
-import { IBasicMessage, ISettingsChangeMessage, IWifiAuthData, IWifiNetListMessage } from "../types";
+import { IBasicMessage, ISettingsChangeMessage, IWifiAuthData, IWifiNetListMessage, IWifiStatusMessage } from "../types";
 import { Life } from "../actions/machineLife";
 import reducer from "../reducers/index";
 
@@ -41,7 +41,10 @@ WebSocketInst.registerCallback((data: any) => {
         payload: parsed.wifi as IWifiNetListMessage
       })
     } else if(parsed.wifi.status) {
-
+      store.dispatch({
+        type: ACTION_TYPES.wifiStatusUpdate,
+        payload: parsed.wifi as IWifiStatusMessage
+      })
     }
   }
 })
