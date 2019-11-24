@@ -6,9 +6,10 @@ import Usart from "./usart/Usart";
 import { RSerial } from "./mocha/RSerial";
 import Converter, { ISTMMessage } from "./stm/Converter";
 import { loadSettings, serializeSettingsProfiles } from "./fs/fsLib";
-import { ISettingsProfilesState } from "../src/types";
+import { ISettingsProfilesState, IWifiNetListMessage, IWifiStatusMessage, IWifiNet } from "../src/types";
 import fs from "fs"
 import { settings } from "cluster";
+import { getWifiNetworks } from "./wifi/Wifi";
 
 let Serial:any;
 try {
@@ -47,6 +48,7 @@ if(process.arch === 'arm') {
 
 const messagesFromStm:ISTMMessage[] = [];
 const settingsMsg:ISettingsProfilesState[] = [];
+const wifiMessages:Array<IWifiNetListMessage | IWifiStatusMessage> = [];
 
 const usart = new Usart(serial as any);
 
@@ -71,6 +73,16 @@ const sendMessages = () => {
       }
     }
   }
+  while(wifiMessages.length) {
+    let msg = wifiMessages.pop();
+    for (let client in clients) {
+      try {
+        clients[client].ws.send(JSON.stringify({wifi: msg}))
+      } catch(e) {
+        console.error('Couldn\'t send message to websocket. Connection is probably closed. ' + e.message);
+      }
+    }
+  }
 }
 
 usart.msgHandlers.push(message => {
@@ -88,10 +100,17 @@ wss.on("connection", function connectionListener(ws) {
   console.log("новое соединение " + id);
 
   loadSettings().then((result) => {
-    settingsProfiles = result;
-    settingsMsg.push(settingsProfiles);
-    sendMessages();
+    settingsProfiles = result
+    settingsMsg.push(settingsProfiles)
+    sendMessages()
   });
+
+  getWifiNetworks().then((networks: Array<IWifiNet>) => {
+    wifiMessages.push({
+      list: networks
+    })
+    sendMessages()
+  })
 
   ws.on("close", () => {
     delete clients[id];
@@ -107,15 +126,15 @@ wss.on("connection", function connectionListener(ws) {
     } else if (message.settings) {
       settingsProfiles.profiles[message.settings.profile].settings[message.settings.id] = message.settings.content;
       serializeSettingsProfiles(settingsProfiles);
-      console.log(data);
       // todo: save settings to file
       // read - change - save
     } else if(message.profile) {
       settingsProfiles.choosenProfile = message.profile;
       serializeSettingsProfiles(settingsProfiles);
-      console.log(data);
+    } else if(message.wifi) {
+      
     } else {
       console.log(data);
-    }
+    } 
   });
 });

@@ -14,6 +14,7 @@ import Admin from "./Admin";
 import PreSoaking from "./Parameters/PreSoaking";
 import AutoMode from "./Parameters/AutoMode";
 import Predict from "./Parameters/Predict";
+import {Wifi} from "./Wifi";
 
 export function Panel() {
     return (
@@ -23,12 +24,9 @@ export function Panel() {
         <Route exact path="*/settings" component={SettingsIndex} />
         <Route exact path="*/settings/profile" component={Profile} />
         <Route exact path="*/settings/color" component={ColorHot} />
+        <Route exact path="*/settings/wifi" component={Wifi} />
         <Route exact path="*/settings/update" component={Update} />
-        <Route
-          exact
-          path="*/settings/profile/hand"
-          component={ParametersSettings}
-        />
+        <Route exact path="*/settings/profile/hand" component={ParametersSettings} />
         <Route exact path="*/settings/profile/hand/steam" component={Steam} />
         <Route exact path="*/settings/profile/hand/temp" component={GroupTemperature} />
         <Route exact path="*/settings/profile/hand/soaking" component={PreSoaking} />

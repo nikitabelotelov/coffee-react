@@ -1,14 +1,19 @@
 import ACTION_TYPES from './actionTypes';
-import { IBasicMessage, ISettingsChangeMessage } from '../types';
-import { emitSettingsChange, emitChoosenProfileChange } from '../SettingsStore';
+import { IBasicMessage, ISettingsChangeMessage, IWifiAuthData } from '../types';
+import { emitSettingsChange, emitChoosenProfileChange, emitConnectToWifi } from '../SettingsStore';
 
 export function setSetting(payload: IBasicMessage) {
-    emitSettingsChange(payload);
+    emitSettingsChange(payload)
     return {type: ACTION_TYPES.setSetting, payload}
 };
 
 export function setProfile
 (payload: string) {
-    emitChoosenProfileChange(payload);
+    emitChoosenProfileChange(payload)
     return {type: ACTION_TYPES.setProfile, payload}
 };
+
+export function connectWifiNet(payload: IWifiAuthData) {
+    emitConnectToWifi(payload)
+    return {type: ACTION_TYPES.connectingWifi, payload}
+}

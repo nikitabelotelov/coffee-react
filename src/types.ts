@@ -5,7 +5,6 @@ export type IObjectAny = {
   [propname: string]: any
 }
 
-
 export enum ProcessStatus {
   wip = 'wip',
   done = 'done',
@@ -27,7 +26,28 @@ export interface ISettingsProfilesMessage {
   settingsProfiles: ISettingsProfilesState
 }
 
-// testGit
+export interface IWifiNet {
+  ssid: string
+}
+
+export interface IWifiAuthData extends IWifiNet {
+  password: string
+}
+
+export enum WIFI_STATUS {
+  NOT_CONNECTED,
+  CONNECTING,
+  CONNECTED
+}
+
+export interface IWifiNetListMessage {
+  list: Array<IWifiNet>
+}
+
+export interface IWifiStatusMessage {
+  status: WIFI_STATUS,
+  message: string
+}
 
 export interface IMachineState {
   [StmMessages.SteamPressure]: string;

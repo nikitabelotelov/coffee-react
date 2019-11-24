@@ -84,6 +84,12 @@
   color: #ffffff;
 }
 
+.manager-panel__right {
+  grid-area: right;
+  background: #6610f2;
+  color: #ffffff;
+}
+
 .manager-panel__top {
   grid-area: top;
   background: #6610f2;
@@ -98,8 +104,16 @@
 
 .setting__root {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr;
+  grid-template-areas: "topleft topmiddle right" "bottomleft bottommiddle right";
+}
+
+.wifi__root {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas: "list topright" "list bottomright";
 }
 
 .setting__profile {
@@ -111,6 +125,16 @@
 
 .setting__profile-list {
   grid-area: list;
+}
+
+.list__root {
+  grid-area: list;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  padding-left: 0;
+  margin-bottom: 0;
 }
 
 .list-group-item__selected {

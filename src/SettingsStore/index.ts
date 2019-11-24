@@ -3,7 +3,7 @@ import rootReducer from "../reducers/index";
 import { WebSocketController } from "../actions/WebSocketController";
 import Converter, { ISTMCommand, ISTMMessage, StmMessages } from "../../server/stm/Converter";
 import ACTION_TYPES from "../actions/actionTypes";
-import { IBasicMessage, ISettingsChangeMessage } from "../types";
+import { IBasicMessage, ISettingsChangeMessage, IWifiAuthData, IWifiNetListMessage } from "../types";
 import { Life } from "../actions/machineLife";
 import reducer from "../reducers/index";
 
@@ -34,6 +34,16 @@ WebSocketInst.registerCallback((data: any) => {
       payload: parsed
     });
   }
+  if(parsed.wifi) {
+    if(parsed.wifi.list) {
+      store.dispatch({
+        type: ACTION_TYPES.wifiListUpdate,
+        payload: parsed.wifi as IWifiNetListMessage
+      })
+    } else if(parsed.wifi.status) {
+
+    }
+  }
 })
 
 setInterval(() => {
@@ -50,6 +60,10 @@ export const emitSettingsChange = (payload: IBasicMessage) => {
 
 export const emitChoosenProfileChange = (payload: string) => {
   WebSocketInst.send(JSON.stringify({profile: payload}));
+}
+
+export const emitConnectToWifi = (payload: IWifiAuthData) => {
+  WebSocketInst.send(JSON.stringify({wifi: payload}));
 }
 
 export const emitStm = (payload: ISTMCommand, waitEcho?: boolean) => {

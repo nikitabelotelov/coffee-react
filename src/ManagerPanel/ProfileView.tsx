@@ -8,7 +8,7 @@ import { IAppState } from "../reducers";
 export default function ProfileView(opts:IAppState) {
     return (
         <div className='setting__profile panel_root'>
-            <ul className='setting__profile-list list-group list-group-flush'>
+            <ul className='list__root'>
                 {opts.profiles.map((el, key)=>{
                     return (<li onClick={() => {
                         settingStore.dispatch(setProfile(el.title))

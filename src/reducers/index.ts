@@ -1,5 +1,5 @@
 import ACTION_TYPES from "../actions/actionTypes";
-import { IMachineState, ISettingsState, IBasicMessage, ISettingsProfilesState, ISettingsProfilesMessage, ISettingsChangeMessage, ISettingsProfile } from "../types";
+import { IMachineState, ISettingsState, IBasicMessage, ISettingsProfilesState, ISettingsProfilesMessage, ISettingsChangeMessage, ISettingsProfile, IWifiNet, IWifiAuthData, WIFI_STATUS, IWifiNetListMessage } from "../types";
 import Converter, { StmMessages, ISTMMessage, ISTMCommand } from "../../server/stm/Converter";
 import { emitSettingsChange } from "../SettingsStore";
 import { Validate } from "./validate";
@@ -20,7 +20,10 @@ export interface IAppState {
   update: number,
   settings: ISettingsState,
   choosenProfile: string,
-  profiles: Array<ISettingsProfile>
+  profiles: Array<ISettingsProfile>,
+  availableWifiNets: Array<IWifiNet>,
+  currentWifiNet: IWifiNet | null,
+  wifiStatus: WIFI_STATUS
 }
 
 const initialStandartProfile: ISettingsProfile = {
@@ -102,7 +105,10 @@ const initialState: IAppState = {
   },
   settings: initialStandartProfile.settings,
   choosenProfile: initialStandartProfileName,
-  profiles: [initialStandartProfile]
+  profiles: [initialStandartProfile],
+  currentWifiNet: null,
+  availableWifiNets: [],
+  wifiStatus: WIFI_STATUS.NOT_CONNECTED
 }
 
 function getChanges(source: ITempPoint[]): number[] {
@@ -188,6 +194,8 @@ function rootReducer(state: IAppState = initialState, action: {
   ISTMCommand |
   IMachineState |
   ISettingsProfilesMessage |
+  IWifiAuthData |
+  IWifiNetListMessage |
   IAppState |
   string |
   null
@@ -271,6 +279,13 @@ function rootReducer(state: IAppState = initialState, action: {
           ...state,
           settings: { ...state.profiles[currentProfileIndex].settings },
         }
+      case ACTION_TYPES.connectingWifi:
+        state.currentWifiNet = { ssid: (action.payload as IWifiAuthData).ssid }
+        state.wifiStatus = WIFI_STATUS.CONNECTING
+        return { ...state }
+      case ACTION_TYPES.wifiListUpdate:
+        state.availableWifiNets = (action.payload as IWifiNetListMessage).list
+        return { ...state }
     }
   } catch (e) {
     console.log(e)
