@@ -27,6 +27,8 @@ export interface ISettingsProfilesMessage {
   settingsProfiles: ISettingsProfilesState
 }
 
+// testGit
+
 export interface IMachineState {
   [StmMessages.SteamPressure]: string;
   [StmMessages.Group1Pressure]: string;
