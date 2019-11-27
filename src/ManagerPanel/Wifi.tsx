@@ -33,7 +33,7 @@ export function WifiView(opts: IAppState) {
             }} className='manager-panel__block manager-panel__topright'>
                 Подключиться
             </div>
-            <input ref={textInput} type="password" />
+            <input ref={textInput} type="text" />
             <NavLink to={getBackLink()} className='manager-panel__block manager-panel__bottomright'>
                 Назад
             </NavLink>
