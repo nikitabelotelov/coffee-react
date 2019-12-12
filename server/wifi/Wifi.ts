@@ -1,5 +1,5 @@
-import { IWifiNet } from "../../src/types";
-
+import { IWifiNet } from "../../src/types"
+import {default as RaspbianWifiManager} from "./rpi/RaspbianWifiManager"
 function isArm(): boolean {
    return process.arch === 'arm' 
 }
