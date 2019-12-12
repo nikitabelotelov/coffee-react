@@ -9,7 +9,7 @@ if(isArm()) {
     try {
         Wifi = require("./rpi/RaspbianWifiManager")
     } catch(e) {
-        console.log("Couldn't load rpi-wifi")
+        console.log("Couldn't load rpi-wifi: " + e)
     }
 } else {
     Wifi = require("node-wifi")
