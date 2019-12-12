@@ -9,7 +9,7 @@ import { loadSettings, serializeSettingsProfiles } from "./fs/fsLib";
 import { ISettingsProfilesState, IWifiNetListMessage, IWifiStatusMessage, IWifiNet, WIFI_STATUS } from "../src/types";
 import fs from "fs"
 import { settings } from "cluster";
-import { getWifiNetworks, connectWifi } from "./wifi/Wifi";
+import { WifiManager } from "./wifi/Wifi";
 import { Wifi } from "../src/ManagerPanel/Wifi";
 
 let Serial:any;
@@ -106,7 +106,7 @@ wss.on("connection", function connectionListener(ws) {
     sendMessages()
   });
 
-  getWifiNetworks().then((networks: Array<IWifiNet>) => {
+  WifiManager.getAvailableNetworks().then((networks: Array<IWifiNet>) => {
     wifiMessages.push({
       list: networks
     })
@@ -134,7 +134,8 @@ wss.on("connection", function connectionListener(ws) {
       serializeSettingsProfiles(settingsProfiles)
     } else if(message.wifi) {
       console.log(JSON.stringify(message.wifi));
-      connectWifi(message.wifi.ssid, message.wifi.password).then((res) => {
+      WifiManager.connectWifi(message.wifi.ssid, message.wifi.password).then((res) => {
+        console.log("Wifi connected");
         wifiMessages.push({
           status: WIFI_STATUS.CONNECTED,
           message: ""

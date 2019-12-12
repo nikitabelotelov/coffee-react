@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import React, { useState, useRef } from 'react';
-import { getBackLink, IWifiNet } from "../types";
+import { getBackLink, IWifiNet, WIFI_STATUS } from "../types";
 import { IAppState } from "../reducers";
 import settingsStore from "../SettingsStore"
 import { connect } from "react-redux";
@@ -23,7 +23,7 @@ export function WifiView(opts: IAppState) {
                 {opts.availableWifiNets.map((el, key) => {
                     return (<li className={'list-group-item' + (el.ssid === choosenNetwork ? ' list-group-item__selected' : '')} onClick={() => {
                         setChoosenNetwork(el.ssid)
-                    }} key={key}>{el.ssid}</li>)
+                    }} key={key}>{el.ssid} {(opts.wifiStatus === WIFI_STATUS.CONNECTED && el.ssid === opts.currentWifiNet.ssid) ? "*" : ''}</li>)
                 })}
             </ul>
             <div onClick={() => {
@@ -33,7 +33,7 @@ export function WifiView(opts: IAppState) {
             }} className='manager-panel__block manager-panel__topright'>
                 Подключиться
             </div>
-            <input ref={textInput} type="password" />
+            <input placeholder="введите пароль" ref={textInput} type="text" />
             <NavLink to={getBackLink()} className='manager-panel__block manager-panel__bottomright'>
                 Назад
             </NavLink>

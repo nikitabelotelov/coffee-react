@@ -1,9 +1,13 @@
 import { IWifiNet } from "../../src/types";
-import { reject } from "q";
+
+function isArm(): boolean {
+   return process.arch === 'arm' 
+}
+
 let Wifi:any;
-if(process.arch === 'arm') {
+if(isArm()) {
     try {
-        Wifi = require("rpi-wifi")
+        Wifi = require("./rpi/RaspbianWifiManager")
     } catch(e) {
         console.log("Couldn't load rpi-wifi")
     }
@@ -11,50 +15,53 @@ if(process.arch === 'arm') {
     Wifi = require("node-wifi")
     Wifi.init({
         iface: null
-    });
+    })
 }
 
-export function getWifiNetworks(): Promise<Array<IWifiNet>> {
-    let result = new Promise<Array<IWifiNet>>((resolve) => {
-        Wifi.scan((err: any, networks: Array<IWifiNet>) => {
-            if(err) {
-                console.error("Error while scanning wifi networks: " + err);
-                resolve([]);
-            } else {
-                if(process.arch === 'arm') {
-                    resolve(networks.map((el) => { return { ssid: el.essid } }))
+export class WifiManager {
+    wifiAPI: any
+    static getAvailableNetworks(): Promise<Array<IWifiNet>> {
+        return new Promise<Array<IWifiNet>>((resolve) => {
+            Wifi.scan((err: any, networks: Array<IWifiNet>) => {
+                if(err) {
+                    console.error("Error while scanning wifi networks: " + err);
+                    resolve([]);
                 } else {
                     resolve(networks)
                 }
-            }
+            })
         })
-    })
-    return result;
-}
-
-export function connectWifi(ssid: string, password: string): Promise<any> {
-    return new Promise((resolve) => {
-        if(process.arch === 'arm') {
-            Wifi.addWpaDhcpNetwork(ssid, password, function(err: any) {
-                if (err) {
-                    console.log("Couldn't add network " + ssid + ' ' + err);
-                    reject();
-                }
-                Wifi.connect(ssid, (err: any) => {
+    }
+    static connectWifi(ssid: string, password: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            if(isArm()) {
+                console.log("Trying to add " + ssid + " with password " + password)
+                Wifi.addWpaDhcpNetwork(ssid, password, function(err: any) {
+                    if (err) {
+                        console.log("Couldn't add network " + ssid + ' ' + err);
+                        reject();
+                    }
+                    console.log("Trying to connect " + ssid + " with password " + password)
+                    Wifi.connect(ssid, (err: any) => {
+                        if (err) {
+                            console.log("Couldn't connect to network " + ssid + ' ' + err);
+                            reject();
+                        }
+                        resolve()
+                    });
+                });
+            } else {
+                console.log("Trying to connect " + ssid + " with password " + password)
+                Wifi.connect({ssid, password}, {}, (err: any) => {
                     if (err) {
                         console.log("Couldn't connect to network " + ssid + ' ' + err);
+                        reject();
                     }
-                    resolve(true)
-                });
-            }, "00:00:00:00:00:00");
-        }
-        console.log("trying to connect " + ssid + " with password " + password)
-        Wifi.connect({ssid, password}, (err: any) => {
-            if (err) {
-                console.log("Couldn't connect to network " + ssid + ' ' + err);
+                    console.log("Wifi connected " + ssid + " with password " + password)
+                    resolve()
+                })
             }
-            resolve()
         })
-    }) 
+    }
 }
 

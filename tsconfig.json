@@ -5,6 +5,8 @@
         "sourceMap": true,
         "noImplicitAny": true,
         "esModuleInterop": true,
+        "allowJs": true,
+        "checkJs": false,
         "module": "commonjs",
         "target": "es5",
         "jsx": "react"
