@@ -51,9 +51,9 @@ export default class RaspbianWifiManager {
     public addWpaDhcpNetwork(ssid: string, psk: string): Promise<any> {
         return new Promise((resolve, reject) => {
             this.wpasup.addNetwork(ssid, psk);
-            this.wpasup.persist(function (err: any) {
+            this.wpasup.persist((err: any) => {
                 if(!err) {
-                    this.wpacli.reconfigure(function (err: any) {
+                    this.wpacli.reconfigure((err: any) => {
                         if (err) {
                             reject(err)
                         } else {
