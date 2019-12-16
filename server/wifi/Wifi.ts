@@ -1,5 +1,6 @@
 import { IWifiNet } from "../../src/types"
 import RaspbianWifiManager from "./rpi/RaspbianWifiManager"
+import { logger } from "../../src/logger";
 function isArm(): boolean {
    return process.arch === 'arm' 
 }
@@ -23,7 +24,7 @@ export class WifiManager {
             return new Promise<Array<IWifiNet>>((resolve) => {
                 Wifi.scan((err: any, networks: Array<IWifiNet>) => {
                     if(err) {
-                        console.error("Error while scanning wifi networks: " + err);
+                        logger.error("Error while scanning wifi networks: " + err);
                         resolve([]);
                     } else {
                         resolve(networks)
@@ -35,15 +36,13 @@ export class WifiManager {
     static connectWifi(ssid: string, password: string): Promise<any> {
         return new Promise((resolve, reject) => {
             if(isArm()) {
-                Wifi.addWpaDhcpNetwork(ssid, password, function(err: any) {
-                    if (err) {
-                        reject();
-                    }
+                Wifi.addWpaDhcpNetwork(ssid, password).then(() => {
+                    logger.log("Trying to select network: " + ssid)
                     Wifi.connect(ssid, (err: any) => {
                         if (err) {
                             reject();
                         }
-                        console.log("Wifi connected " + ssid)
+                        logger.log("Wifi connected " + ssid)
                         resolve()
                     });
                 });
@@ -52,7 +51,7 @@ export class WifiManager {
                     if (err) {
                         reject();
                     }
-                    console.log("Wifi connected " + ssid)
+                    logger.log("Wifi connected " + ssid)
                     resolve()
                 })
             }

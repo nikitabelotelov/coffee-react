@@ -1,6 +1,7 @@
 import { existsSync, createReadStream, unlink, writeFile, readFile } from "fs"
 import { createInterface } from "readline"
 import { IWifiNet } from "../../../src/types";
+import { logger } from "../../../src/logger";
 
 interface IParsedNetLine {
     key: string,
@@ -119,7 +120,7 @@ export default class WpaSupplicantService {
 
         if (existsSync(this.configPath)) {
             unlink(this.configPath, () => {
-                console.log("Config successfuly removed.")
+                logger.log("Config successfuly removed.")
                 this.writeConfigFile(this.configPath, content, callback)
             });
         } else {
@@ -129,9 +130,9 @@ export default class WpaSupplicantService {
     protected writeConfigFile(path: string, content: string, cb: Function) {
         writeFile(this.configPath, content, (wErr) => {
             if (wErr) {
-                console.log("Error writting '" + this.configPath + "' file: " + wErr);    
+                logger.log("Error writting '" + this.configPath + "' file: " + wErr);    
             }
-            console.log("Trying to call write callback with " + wErr)
+            logger.log("Trying to call write callback with " + wErr)
             cb(wErr);
         });
     }

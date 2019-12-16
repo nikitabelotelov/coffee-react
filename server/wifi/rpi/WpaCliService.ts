@@ -1,4 +1,5 @@
 import {exec} from "child_process"
+import { logger } from "../../../src/logger";
 
 function parseStatus(text: string): any {
 	let content = text.split("\n");
@@ -15,8 +16,9 @@ function parseStatus(text: string): any {
 
 function execCommand(program: string, args: string, callback: Function) {
     let command = program + ' ' + args;
-    console.log("Trying to execute command: " + command)
+    logger.log("Trying to execute command: " + command)
     exec(command, (error, stdout, stderr) => {
+        logger.log("Out logs for command '" + command + "'\n"  + stdout)
         if (stdout.includes("FAIL")) {
             console.error("Failed to proceed command: " + command + '\n' + stdout);
             callback(stdout);
