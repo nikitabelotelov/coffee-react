@@ -127,7 +127,11 @@ wss.on("connection", function connectionListener(ws) {
       usart.sendMessage(message.stm)
     } else if (message.update) {
       logger.log("Update requested!")
-      process.send("update")
+      if(typeof process.send === 'function') {
+        process.send("update")
+      } else {
+        logger.error("Couldn't update in this environment. Please start process via coffee-service")
+      }
     } else if (message.settings) {
       settingsProfiles.profiles[message.settings.profile].settings[message.settings.id] = message.settings.content;
       serializeSettingsProfiles(settingsProfiles);
