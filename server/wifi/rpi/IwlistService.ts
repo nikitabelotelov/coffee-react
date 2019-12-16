@@ -1,15 +1,5 @@
 import {exec} from "child_process"
-
-function execCommand(program: string, args: string, callback: Function) {
-    let command = program + ' ' + args;
-    exec(command, (error, stdout, stderr) => {
-        if (stdout.includes("FAIL")) {
-            callback(stdout);
-        } else {
-            callback();
-        }
-    });
-}
+import { logger } from "../../../src/logger";
 
 export default class IwlistService {
     path: string
@@ -20,7 +10,8 @@ export default class IwlistService {
         var command = this.path + ' ' + 'wlan0' + ' scan';
         exec(command, (error, stdout, stderr) => {
             if (error) {
-                callback(error);
+				logger.error("Error while executing command '" + command + "': " + error)
+                callback(error, []);
             } else {
                 var networks = parseIwlist (stdout);
                 callback(null, networks);

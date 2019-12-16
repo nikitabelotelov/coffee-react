@@ -1,5 +1,5 @@
 import ACTION_TYPES from "../actions/actionTypes";
-import { IMachineState, ISettingsState, IBasicMessage, ISettingsProfilesState, ISettingsProfilesMessage, ISettingsChangeMessage, ISettingsProfile, IWifiNet, IWifiAuthData, WIFI_STATUS, IWifiNetListMessage, IWifiStatusMessage } from "../types";
+import { IMachineState, ISettingsState, IBasicMessage, ISettingsProfilesState, ISettingsProfilesMessage, ISettingsChangeMessage, ISettingsProfile, IWifiNet, IWifiAuthData, WIFI_STATUS, IWifiNetListMessage, IWifiStatus } from "../types";
 import Converter, { StmMessages, ISTMMessage, ISTMCommand } from "../../server/stm/Converter";
 import { emitSettingsChange } from "../SettingsStore";
 import { Validate } from "./validate";
@@ -22,8 +22,7 @@ export interface IAppState {
   choosenProfile: string,
   profiles: Array<ISettingsProfile>,
   availableWifiNets: Array<IWifiNet>,
-  currentWifiNet: IWifiNet | null,
-  wifiStatus: WIFI_STATUS
+  wifiStatus: IWifiStatus
 }
 
 const initialStandartProfile: ISettingsProfile = {
@@ -106,9 +105,10 @@ const initialState: IAppState = {
   settings: initialStandartProfile.settings,
   choosenProfile: initialStandartProfileName,
   profiles: [initialStandartProfile],
-  currentWifiNet: null,
   availableWifiNets: [],
-  wifiStatus: WIFI_STATUS.NOT_CONNECTED
+  wifiStatus: {
+    wifiStatus: WIFI_STATUS.NOT_CONNECTED
+  }
 }
 
 function getChanges(source: ITempPoint[]): number[] {
@@ -196,7 +196,7 @@ function rootReducer(state: IAppState = initialState, action: {
   ISettingsProfilesMessage |
   IWifiAuthData |
   IWifiNetListMessage |
-  IWifiStatusMessage |
+  IWifiStatus |
   IAppState |
   string |
   null
@@ -212,8 +212,8 @@ function rootReducer(state: IAppState = initialState, action: {
         // @ts-ignore
         return {
           ...state,
-          machine: { ...(action.payload as IAppState).machine},
-          life: { ...(action.payload as IAppState).life}
+          machine: { ...(action.payload as IAppState).machine },
+          life: { ...(action.payload as IAppState).life }
         }
       case ACTION_TYPES.currentInfoUpdate:
         if (!Validate((action.payload as ISTMMessage).id, (action.payload as ISTMMessage).content)) {
@@ -231,7 +231,7 @@ function rootReducer(state: IAppState = initialState, action: {
         }
 
         if ((action.payload as ISTMMessage).id === StmMessages.SteamPressure ||
-        (action.payload as ISTMMessage).id === StmMessages.Group1Pressure || (action.payload as ISTMMessage).id === StmMessages.Group2Pressure) {
+          (action.payload as ISTMMessage).id === StmMessages.Group1Pressure || (action.payload as ISTMMessage).id === StmMessages.Group2Pressure) {
           const prValue = parseInt((action.payload as ISTMMessage).content) || 0
           state.machine[(action.payload as ISTMMessage).id] = `${Converter.compressure(prValue)}`
         }
@@ -267,7 +267,7 @@ function rootReducer(state: IAppState = initialState, action: {
         return { ...state, machine: { ...state.machine }, life: { ...state.life } };
       case ACTION_TYPES.settingsProfilesInitialize:
         state.choosenProfile = (action.payload as ISettingsProfilesMessage).settingsProfiles.choosenProfile
-        state.profiles = [...(action.payload as ISettingsProfilesMessage).settingsProfiles.profiles ]
+        state.profiles = [...(action.payload as ISettingsProfilesMessage).settingsProfiles.profiles]
         currentProfileIndex = getCurrentProfileIndex(state)
         return {
           ...state,
@@ -280,16 +280,12 @@ function rootReducer(state: IAppState = initialState, action: {
           ...state,
           settings: { ...state.profiles[currentProfileIndex].settings },
         }
-      case ACTION_TYPES.connectingWifi:
-        state.currentWifiNet = { ssid: (action.payload as IWifiAuthData).ssid }
-        state.wifiStatus = WIFI_STATUS.CONNECTING
-        return { ...state }
       case ACTION_TYPES.wifiStatusUpdate:
-        state.wifiStatus = (action.payload as IWifiStatusMessage).status
-        return { ...state } 
+        return {
+          ...state, wifiStatus: { ...(action.payload as IWifiStatus) }
+        }
       case ACTION_TYPES.wifiListUpdate:
-        state.availableWifiNets = (action.payload as IWifiNetListMessage).list
-        return { ...state }
+        return { ...state, availableWifiNets: (action.payload as IWifiNetListMessage).list }
     }
   } catch (e) {
     console.log(e)

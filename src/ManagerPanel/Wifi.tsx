@@ -26,8 +26,8 @@ export function WifiView(opts: IAppState) {
                 {opts.availableWifiNets.map((el, key) => {
                     return (<li className={'list-group-item' + (el.ssid === choosenNetwork ? ' list-group-item__selected' : '')} onClick={() => {
                         setChoosenNetwork(el.ssid)
-                    }} key={key}>{el.ssid} {(opts.wifiStatus === WIFI_STATUS.CONNECTED && el.ssid === opts.currentWifiNet.ssid) ? "*" : '' }
-                         {(opts.wifiStatus === WIFI_STATUS.CONNECTING && el.ssid === opts.currentWifiNet.ssid) ? "CONNECTING" : '' }</li>)
+                    }} key={key}>{el.ssid} {(opts.wifiStatus.wifiStatus === WIFI_STATUS.CONNECTED && el.ssid === opts.wifiStatus.currentWifiNet.ssid) ? "*" : '' }
+                         {(opts.wifiStatus.wifiStatus === WIFI_STATUS.CONNECTING && el.ssid === opts.wifiStatus.currentWifiNet.ssid) ? "CONNECTING" : '' }</li>)
                 })}
             </ul>
             <div onClick={() => {

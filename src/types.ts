@@ -28,7 +28,6 @@ export interface ISettingsProfilesMessage {
 
 export interface IWifiNet {
   ssid: string,
-  essid?: string,
   psk?: string
 }
 
@@ -46,9 +45,9 @@ export interface IWifiNetListMessage {
   list: Array<IWifiNet>
 }
 
-export interface IWifiStatusMessage {
-  status: WIFI_STATUS,
-  message?: string
+export interface IWifiStatus {
+  currentWifiNet?: IWifiNet | null,
+  wifiStatus: WIFI_STATUS
 }
 
 export interface IMachineState {

@@ -6,7 +6,7 @@ import Usart from "./usart/Usart";
 import { RSerial } from "./mocha/RSerial";
 import Converter, { ISTMMessage } from "./stm/Converter";
 import { loadSettings, serializeSettingsProfiles } from "./fs/fsLib";
-import { ISettingsProfilesState, IWifiNetListMessage, IWifiStatusMessage, IWifiNet, WIFI_STATUS } from "../src/types";
+import { ISettingsProfilesState, IWifiNetListMessage, IWifiStatus, IWifiNet, WIFI_STATUS } from "../src/types";
 import fs from "fs"
 import { settings } from "cluster";
 import { WifiManager } from "./wifi/Wifi";
@@ -49,7 +49,7 @@ if(process.arch === 'arm') {
 
 const messagesFromStm:ISTMMessage[] = [];
 const settingsMsg:ISettingsProfilesState[] = [];
-const wifiMessages:Array<IWifiNetListMessage | IWifiStatusMessage> = [];
+const wifiMessages:Array<IWifiNetListMessage | IWifiStatus> = [];
 
 const usart = new Usart(serial as any);
 
@@ -107,10 +107,11 @@ wss.on("connection", function connectionListener(ws) {
   });
 
   WifiManager.getAvailableNetworks().then((networks: Array<IWifiNet>) => {
-    wifiMessages.push({
-      list: networks
-    })
-    sendMessages()
+    WifiManager.status().then((status) => {
+      wifiMessages.push(status)
+      wifiMessages.push({ list: networks })
+      sendMessages()
+    });
   })
 
   ws.on("close", () => {
@@ -132,18 +133,21 @@ wss.on("connection", function connectionListener(ws) {
     } else if(message.wifi) {
       console.log(JSON.stringify(message.wifi));
       wifiMessages.push({
-        status: WIFI_STATUS.CONNECTING
+        wifiStatus: WIFI_STATUS.CONNECTING,
+        currentWifiNet: { ssid: message.wifi.ssid }
       });
       sendMessages()
       WifiManager.connectWifi(message.wifi.ssid, message.wifi.password).then((res) => {
         console.log("Wifi connected");
         wifiMessages.push({
-          status: WIFI_STATUS.CONNECTED
+          wifiStatus: WIFI_STATUS.CONNECTED,
+          currentWifiNet: { ssid: message.wifi.ssid }
         })
         sendMessages()
       }, (res) => {
         wifiMessages.push({
-          status: WIFI_STATUS.NOT_CONNECTED,
+          wifiStatus: WIFI_STATUS.NOT_CONNECTED,
+          currentWifiNet: { ssid: message.wifi.ssid }
         })
         sendMessages()
       })

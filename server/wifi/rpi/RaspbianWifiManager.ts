@@ -2,6 +2,7 @@ import WpaCliService from './WpaCliService'
 import IwlistService from './IwlistService'
 import WpaSupplicantService from './WpaSupplicantService'
 import { logger } from '../../../src/logger'
+import { IWifiStatus } from '../../../src/types'
 
 export default class RaspbianWifiManager {
     protected wpacli: WpaCliService
@@ -23,28 +24,14 @@ export default class RaspbianWifiManager {
         return this.wpasup.init()
     }
 
-    public status(): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.wpacli.status(function (err: any, current: any) {
-                if (err) {
-                    reject(err);
-                } else {
-                    if(current) {
-                        resolve(current);
-                    }
-                }
-            });
-        });
+    public status(): Promise<IWifiStatus> {
+        return this.wpacli.status()
     }
 
     public scan(): Promise<any> {
         return new Promise((resolve, reject) => {
             this.iwlist.scan((err: any, networks: any) => {
-                if (err) {
-                    reject("Couldn't scan for networks: " + err);
-                } else {
-                    resolve(networks)
-                }
+                resolve(networks)
             });
         });
     }
