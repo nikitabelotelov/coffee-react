@@ -119,6 +119,7 @@ export default class WpaSupplicantService {
 
         if (existsSync(this.configPath)) {
             unlink(this.configPath, () => {
+                console.log("Config successfuly removed.")
                 this.writeConfigFile(this.configPath, content, callback)
             });
         } else {
@@ -130,6 +131,7 @@ export default class WpaSupplicantService {
             if (wErr) {
                 console.log("Error writting '" + this.configPath + "' file: " + wErr);    
             }
+            console.log("Trying to call write callback with " + wErr)
             cb(wErr);
         });
     }
