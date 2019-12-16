@@ -17,16 +17,20 @@ if(isArm()) {
 
 export class WifiManager {
     static getAvailableNetworks(): Promise<Array<IWifiNet>> {
-        return new Promise<Array<IWifiNet>>((resolve) => {
-            Wifi.scan((err: any, networks: Array<IWifiNet>) => {
-                if(err) {
-                    console.error("Error while scanning wifi networks: " + err);
-                    resolve([]);
-                } else {
-                    resolve(networks)
-                }
+        if(isArm()) {
+            return  Wifi.scan();
+        } else {
+            return new Promise<Array<IWifiNet>>((resolve) => {
+                Wifi.scan((err: any, networks: Array<IWifiNet>) => {
+                    if(err) {
+                        console.error("Error while scanning wifi networks: " + err);
+                        resolve([]);
+                    } else {
+                        resolve(networks)
+                    }
+                })
             })
-        })
+        }
     }
     static connectWifi(ssid: string, password: string): Promise<any> {
         return new Promise((resolve, reject) => {
