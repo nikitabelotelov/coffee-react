@@ -38,11 +38,8 @@ export class WifiManager {
             if(isArm()) {
                 Wifi.addWpaDhcpNetwork(ssid, password).then(() => {
                     logger.log("Trying to select network: " + ssid)
-                    Wifi.connect(ssid, (err: any) => {
-                        if (err) {
-                            reject();
-                        }
-                        logger.log("Wifi connected " + ssid)
+                    Wifi.connect(ssid).then((err: any) => {
+                        logger.log("Connected to network: " + ssid)
                         resolve()
                     });
                 });
