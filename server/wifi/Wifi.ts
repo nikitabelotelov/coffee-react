@@ -47,6 +47,6 @@ export class WifiManager {
         })
     }
     static status(): Promise<IWifiStatus> {
-        return Wifi.static()
+        return Wifi.status()
     }
 }
