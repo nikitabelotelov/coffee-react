@@ -1,12 +1,35 @@
-var exec = require('child_process').exec;
+import {exec} from "child_process"
 
-function IwlistService (path) {
-	this._path = path ? path : 'iwlist';
+function execCommand(program: string, args: string, callback: Function) {
+    let command = program + ' ' + args;
+    exec(command, (error, stdout, stderr) => {
+        if (stdout.includes("FAIL")) {
+            callback(stdout);
+        } else {
+            callback();
+        }
+    });
 }
 
-//Private methods
+export default class IwlistService {
+    path: string
+    constructor() {
+        this.path = 'iwlist'
+    }
+    public scan(callback: Function) {
+        var command = this.path + ' ' + 'wlan0' + ' scan';
+        exec(command, (error, stdout, stderr) => {
+            if (error) {
+                callback(error);
+            } else {
+                var networks = parseIwlist (stdout);
+                callback(null, networks);
+            }
+        });
+    }
+}
 
-function parseIwlist (text) {
+function parseIwlist (text: string): any {
 	var content = text.split("\n");
 	content.splice(0,1);
 
@@ -31,11 +54,11 @@ function parseIwlist (text) {
 	return networks;
 }
 
-function parseCell (cellContent) {
+function parseCell (cellContent: any): any {
 	if (cellContent.length == 0) return null;
-	var network = {};
+	var network: any = {};
 
-	cellContent.forEach(function(cell) {
+	cellContent.forEach(function(cell: any) {
 		if (cell.includes('Address:')) network.address = cell.replace(/.*Address:\s*/, '');
 		else if (cell.includes('Channel:')) network.channel = cell.replace(/.*Channel:\s*/, '');
 		else if (cell.includes('Frequency:')) network.frequency = cell.match(/Frequency:\s*\d+(.\d+)*\sGHz/)[0].replace(/Frequency:\s*/,'');
@@ -56,21 +79,3 @@ function parseCell (cellContent) {
 
 	return network;
 }
-
-//Public methods
-
-IwlistService.prototype.scan = function (callback, interfaceName) {
-	interfaceName = interfaceName ? interfaceName : 'wlan0';
-
-	var command = this._path + ' ' + interfaceName + ' scan';
-	exec(command, (error, stdout, stderr) => {
-		if (error) {
-			callback(error);
-		} else {
-			var networks = parseIwlist (stdout);
-			callback(null, networks);
-		}
-	});
-}
-
-module.exports = IwlistService;
