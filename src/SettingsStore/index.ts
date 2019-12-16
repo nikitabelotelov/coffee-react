@@ -40,7 +40,7 @@ WebSocketInst.registerCallback((data: any) => {
         type: ACTION_TYPES.wifiListUpdate,
         payload: parsed.wifi as IWifiNetListMessage
       })
-    } else if(parsed.wifi.status) {
+    } else if(parsed.wifi.wifiStatus) {
       store.dispatch({
         type: ACTION_TYPES.wifiStatusUpdate,
         payload: parsed.wifi as IWifiStatus
