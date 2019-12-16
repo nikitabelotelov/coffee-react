@@ -1,7 +1,6 @@
 import ACTION_TYPES from "../actions/actionTypes";
 import { IMachineState, ISettingsState, IBasicMessage, ISettingsProfilesState, ISettingsProfilesMessage, ISettingsChangeMessage, ISettingsProfile, IWifiNet, IWifiAuthData, WIFI_STATUS, IWifiNetListMessage, IWifiStatus } from "../types";
 import Converter, { StmMessages, ISTMMessage, ISTMCommand } from "../../server/stm/Converter";
-import { emitSettingsChange } from "../SettingsStore";
 import { Validate } from "./validate";
 
 export interface ITempPoint { time: number, value: number }

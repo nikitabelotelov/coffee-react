@@ -7,7 +7,8 @@ enum ACTION_TYPES {
     settingsProfilesInitialize = "settingsProfilesInitialize",
     wifiListUpdate = "wifiListUpdate",
     connectingWifi = "connectingWifi",
-    wifiStatusUpdate = "wifiStatusUpdate"
+    wifiStatusUpdate = "wifiStatusUpdate",
+    needUpdate = "needUpdate"
 };
 
 export default ACTION_TYPES;

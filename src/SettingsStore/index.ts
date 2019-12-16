@@ -58,15 +58,19 @@ setInterval(() => {
 }, 300)
 
 export const emitSettingsChange = (payload: IBasicMessage) => {
-  WebSocketInst.send(JSON.stringify({settings: { ...payload, profile: 0 }}));
+  WebSocketInst.send(JSON.stringify({settings: { ...payload, profile: 0 }}))
 }
 
 export const emitChoosenProfileChange = (payload: string) => {
-  WebSocketInst.send(JSON.stringify({profile: payload}));
+  WebSocketInst.send(JSON.stringify({profile: payload}))
 }
 
 export const emitConnectToWifi = (payload: IWifiAuthData) => {
-  WebSocketInst.send(JSON.stringify({wifi: payload}));
+  WebSocketInst.send(JSON.stringify({wifi: payload}))
+}
+
+export const emitUpdate = () => {
+  WebSocketInst.send(JSON.stringify({update: true}))
 }
 
 export const emitStm = (payload: ISTMCommand, waitEcho?: boolean) => {

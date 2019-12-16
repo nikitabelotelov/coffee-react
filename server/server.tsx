@@ -11,6 +11,7 @@ import fs from "fs"
 import { settings } from "cluster";
 import { WifiManager } from "./wifi/Wifi";
 import { Wifi } from "../src/ManagerPanel/Wifi";
+import { logger } from "../src/logger";
 
 let Serial:any;
 try {
@@ -124,6 +125,9 @@ wss.on("connection", function connectionListener(ws) {
 
     if (message.stm) {
       usart.sendMessage(message.stm)
+    } else if (message.update) {
+      logger.log("Update requested!")
+      process.send("update")
     } else if (message.settings) {
       settingsProfiles.profiles[message.settings.profile].settings[message.settings.id] = message.settings.content;
       serializeSettingsProfiles(settingsProfiles);
