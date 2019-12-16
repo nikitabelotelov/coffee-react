@@ -15,7 +15,7 @@ function parseStatus(text: string): any {
 }
 
 function execCommand(program: string, args: string, callback: Function) {
-    let command = program + ' ' + args;
+    let command = program + ' ' + args + ' -i wlan0';
     logger.log("Trying to execute command: " + command)
     exec(command, (error, stdout, stderr) => {
         logger.log("Out logs for command '" + command + "'\n"  + stdout)
