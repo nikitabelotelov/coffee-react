@@ -15,6 +15,7 @@ function parseStatus(text: string): any {
 
 function execCommand(program: string, args: string, callback: Function) {
     let command = program + ' ' + args;
+    console.log("Trying to execute command: " + command)
     exec(command, (error, stdout, stderr) => {
         if (stdout.includes("FAIL")) {
             console.error("Failed to proceed command: " + command + '\n' + stdout);

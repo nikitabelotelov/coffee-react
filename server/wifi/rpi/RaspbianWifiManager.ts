@@ -55,6 +55,7 @@ export default class RaspbianWifiManager {
             // @ts-ignore
             console.log("Trying to persist: " + this.wpasup.configContent)
             this.wpasup.persist((err: any) => {
+                console.log("Persist callback called with result: " + err)
                 if(!err) {
                     this.wpacli.reconfigure((err: any) => {
                         if (err) {
