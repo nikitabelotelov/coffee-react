@@ -50,7 +50,10 @@ export default class RaspbianWifiManager {
 
     public addWpaDhcpNetwork(ssid: string, psk: string): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.wpasup.addNetwork(ssid, psk);
+            console.log("Trying to add " + ssid)
+            this.wpasup.addNetwork(ssid, psk)
+            // @ts-ignore
+            console.log("Trying to persist: " + this.wpasup.configContent)
             this.wpasup.persist((err: any) => {
                 if(!err) {
                     this.wpacli.reconfigure((err: any) => {
@@ -71,6 +74,7 @@ export default class RaspbianWifiManager {
             if (!~index) {
                 reject("Unknown network. You should add network auth data before trying to connect");
             }
+            console.log("Trying to select " + ssid + ' with index ' + index);
             this.wpacli.selectNetwork(index, function (err: any) {
                 if (err) {
                     reject(err);

@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { getBackLink, IWifiNet, WIFI_STATUS } from "../types";
 import { IAppState } from "../reducers";
 import settingsStore from "../SettingsStore"
@@ -16,6 +16,9 @@ const wifiNets: Array<IWifiNet> = [
 export function WifiView(opts: IAppState) {
     const [choosenNetwork, setChoosenNetwork] = useState(null)
     const textInput = useRef(null)
+    // useEffect(() => {
+    //     setInterval
+    // })
 
     return (
         <div className='wifi__root panel_root'>
@@ -23,7 +26,8 @@ export function WifiView(opts: IAppState) {
                 {opts.availableWifiNets.map((el, key) => {
                     return (<li className={'list-group-item' + (el.ssid === choosenNetwork ? ' list-group-item__selected' : '')} onClick={() => {
                         setChoosenNetwork(el.ssid)
-                    }} key={key}>{el.ssid} {(opts.wifiStatus === WIFI_STATUS.CONNECTED && el.ssid === opts.currentWifiNet.ssid) ? "*" : ''}</li>)
+                    }} key={key}>{el.ssid} {(opts.wifiStatus === WIFI_STATUS.CONNECTED && el.ssid === opts.currentWifiNet.ssid) ? "*" : '' }
+                         {(opts.wifiStatus === WIFI_STATUS.CONNECTING && el.ssid === opts.currentWifiNet.ssid) ? "CONNECTING" : '' }</li>)
                 })}
             </ul>
             <div onClick={() => {

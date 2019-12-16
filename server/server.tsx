@@ -122,29 +122,28 @@ wss.on("connection", function connectionListener(ws) {
     const message: any = JSON.parse(data)
 
     if (message.stm) {
-      //console.log("Got message from client. Trying to send to usart.");
       usart.sendMessage(message.stm)
     } else if (message.settings) {
       settingsProfiles.profiles[message.settings.profile].settings[message.settings.id] = message.settings.content;
       serializeSettingsProfiles(settingsProfiles);
-      // todo: save settings to file
-      // read - change - save
     } else if(message.profile) {
       settingsProfiles.choosenProfile = message.profile
       serializeSettingsProfiles(settingsProfiles)
     } else if(message.wifi) {
       console.log(JSON.stringify(message.wifi));
+      wifiMessages.push({
+        status: WIFI_STATUS.CONNECTING
+      });
+      sendMessages()
       WifiManager.connectWifi(message.wifi.ssid, message.wifi.password).then((res) => {
         console.log("Wifi connected");
         wifiMessages.push({
-          status: WIFI_STATUS.CONNECTED,
-          message: ""
+          status: WIFI_STATUS.CONNECTED
         })
         sendMessages()
       }, (res) => {
         wifiMessages.push({
           status: WIFI_STATUS.NOT_CONNECTED,
-          message: ""
         })
         sendMessages()
       })

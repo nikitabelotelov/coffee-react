@@ -48,7 +48,7 @@ export interface IWifiNetListMessage {
 
 export interface IWifiStatusMessage {
   status: WIFI_STATUS,
-  message: string
+  message?: string
 }
 
 export interface IMachineState {
