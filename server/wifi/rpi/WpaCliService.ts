@@ -2,6 +2,7 @@ import {exec} from "child_process"
 import { logger } from "../../../src/logger";
 import { IWifiStatus, WIFI_STATUS } from "../../../src/types";
 import { isRegExp } from "util";
+import { promises } from "dns";
 
 function parseStatus(text: string): IWifiStatus {
 	let content = text.split("\n");

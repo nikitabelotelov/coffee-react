@@ -15,6 +15,7 @@ export function RootView(props: IAppState) {
       </div>
       <div className="manager-panel__block btn-outline-dark manager-panel__topright">
         <b>Группа 2</b>
+        <br />
         Температура: {props.machine[StmMessages.Group2Temperature]} {tg2} C /{" "}
         {props.settings.Group2Temperature} C P = {props.machine[StmMessages.Group2Pressure]}
       </div>

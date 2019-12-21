@@ -47,6 +47,11 @@ export class WifiManager {
         })
     }
     static status(): Promise<IWifiStatus> {
-        return Wifi.status()
+        if(isArm()) {
+            return Wifi.status()
+        } else {
+            logger.warn("Checking net status only supported for wpa supplicant")
+            return new Promise((res) => { res() })
+        }
     }
 }

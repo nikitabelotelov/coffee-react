@@ -6,6 +6,7 @@ import settingsStore from "../SettingsStore"
 import { connect } from "react-redux";
 import { connectWifiNet } from "../actions";
 import { text } from "body-parser";
+import { checkConnection } from "../actions/NetChecker";
 
 const wifiNets: Array<IWifiNet> = [
     {
@@ -15,10 +16,15 @@ const wifiNets: Array<IWifiNet> = [
 
 export function WifiView(opts: IAppState) {
     const [choosenNetwork, setChoosenNetwork] = useState(null)
+    const [netStatus, setNetStatus] = useState(false)
+    useEffect(() => {
+        setInterval(() => {
+            checkConnection().then((res) => {
+                setNetStatus(res)
+            })
+        }, 5000)
+    }, [])
     const textInput = useRef(null)
-    // useEffect(() => {
-    //     setInterval
-    // })
 
     return (
         <div className='wifi__root panel_root'>
@@ -38,6 +44,7 @@ export function WifiView(opts: IAppState) {
                 Подключиться
             </div>
             <input placeholder="введите пароль" ref={textInput} type="text" />
+            <div className="wifi__status">Статус сети:<span className={'wifi__status_indicator ' + (netStatus ? 'wifi__status_indicator-success' : 'wifi__status_indicator-danger') }></span></div>
             <NavLink to={getBackLink()} className='manager-panel__block manager-panel__bottomright'>
                 Назад
             </NavLink>

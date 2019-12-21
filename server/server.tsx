@@ -109,7 +109,7 @@ wss.on("connection", function connectionListener(ws) {
 
   WifiManager.getAvailableNetworks().then((networks: Array<IWifiNet>) => {
     WifiManager.status().then((status) => {
-      wifiMessages.push(status)
+      wifiMessages.push(status || {wifiStatus: WIFI_STATUS.NOT_CONNECTED, message: "Проблемы с сетью. Обратитесь к Саньку. "})
       wifiMessages.push({ list: networks })
       sendMessages()
     });
