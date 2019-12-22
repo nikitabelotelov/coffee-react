@@ -5,24 +5,21 @@ import { IAppState } from "../reducers";
 import settingsStore from "../SettingsStore"
 import { connect } from "react-redux";
 import { connectWifiNet } from "../actions";
-import { text } from "body-parser";
 import { checkConnection } from "../actions/NetChecker";
-
-const wifiNets: Array<IWifiNet> = [
-    {
-        ssid: "test-network"
-    }
-]
 
 export function WifiView(opts: IAppState) {
     const [choosenNetwork, setChoosenNetwork] = useState(null)
     const [netStatus, setNetStatus] = useState(false)
+    let interval: number
     useEffect(() => {
-        setInterval(() => {
+        interval = window.setInterval(() => {
             checkConnection().then((res) => {
                 setNetStatus(res)
             })
         }, 5000)
+        return () => {
+            clearInterval(interval)
+        }
     }, [])
     const textInput = useRef(null)
 
