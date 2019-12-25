@@ -1,9 +1,11 @@
-import {NavLink} from "react-router-dom";
-import * as React from "react";
-import settingStore from "../SettingsStore/index";
-import {setProfile} from "../actions/index";
-import {getBackLink} from "../types";
-import { IAppState } from "../reducers";
+import {NavLink} from "react-router-dom"
+import * as React from "react"
+import settingStore from "../SettingsStore/index"
+import {setProfile} from "../actions/index"
+import {getBackLink} from "../types"
+import { IAppState } from "../reducers"
+
+const userProfileName = 'Пользовательские'
 
 export default function ProfileView(opts:IAppState) {
     return (
@@ -15,7 +17,9 @@ export default function ProfileView(opts:IAppState) {
                     }} className={'list-group-item' + (el.title === opts.choosenProfile ? ' list-group-item__selected' : '')} key={key}>{el.title}</li>)
                 })}
             </ul>
-            <NavLink to='profile/hand' className='manager-panel__block btn-outline-dark'>
+            <NavLink onClick={() => {
+                        settingStore.dispatch(setProfile(userProfileName))
+                    }} to='profile/hand' className='manager-panel__block btn-outline-dark'>
                 Настройка по параметрам
             </NavLink>
             <NavLink to={getBackLink()} className='manager-panel__block btn-outline-success'>
