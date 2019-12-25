@@ -6,10 +6,12 @@ import settingsStore from "../SettingsStore"
 import { connect } from "react-redux";
 import { connectWifiNet } from "../actions";
 import { checkConnection } from "../actions/NetChecker";
+import { Input } from "./Input";
 
 export function WifiView(opts: IAppState) {
     const [choosenNetwork, setChoosenNetwork] = useState(null)
     const [netStatus, setNetStatus] = useState(false)
+    const [pass, setPass] = useState('')
     let interval: number
     useEffect(() => {
         interval = window.setInterval(() => {
@@ -21,7 +23,6 @@ export function WifiView(opts: IAppState) {
             clearInterval(interval)
         }
     }, [])
-    const textInput = useRef(null)
 
     return (
         <div className='wifi__root panel_root'>
@@ -35,12 +36,12 @@ export function WifiView(opts: IAppState) {
             </ul>
             <div onClick={() => {
                 if (choosenNetwork) {
-                    settingsStore.dispatch(connectWifiNet({ ssid: choosenNetwork, password: textInput.current.value }))
+                    settingsStore.dispatch(connectWifiNet({ ssid: choosenNetwork, password: pass }))
                 }
             }} className='manager-panel__block manager-panel__topright'>
                 Подключиться
             </div>
-            <input placeholder="введите пароль" ref={textInput} type="text" />
+            <Input value={pass} onChange={setPass} placeholder="введите пароль" />
             <div className="wifi__status">Статус сети:<span className={'wifi__status_indicator ' + (netStatus ? 'wifi__status_indicator-success' : 'wifi__status_indicator-danger') }></span></div>
             <NavLink to={getBackLink()} className='manager-panel__block manager-panel__bottomright'>
                 Назад
