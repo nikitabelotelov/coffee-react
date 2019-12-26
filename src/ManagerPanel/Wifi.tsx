@@ -6,7 +6,7 @@ import settingsStore from "../SettingsStore"
 import { connect } from "react-redux";
 import { connectWifiNet } from "../actions";
 import { checkConnection } from "../actions/NetChecker";
-import { Input } from "./Input";
+import { Input } from "./WIfi/Input";
 
 export function WifiView(opts: IAppState) {
     const [choosenNetwork, setChoosenNetwork] = useState(null)

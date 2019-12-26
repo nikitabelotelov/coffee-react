@@ -1,4 +1,5 @@
 import React from 'react'
+import './Keyboard.less'
 
 interface IKeyProps {
   symb: string
@@ -9,7 +10,7 @@ interface IKeyProps {
 
 export const Key = (props: IKeyProps) => {
   return (
-    <div onClick={() => props.onClick(props.shift ? props.shiftsymb : props.symb)}>
+    <div className="key" onClick={() => props.onClick(props.shift ? props.shiftsymb : props.symb)}>
       {props.shift ? props.shiftsymb : props.symb}
     </div>
   )
