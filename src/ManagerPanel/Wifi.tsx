@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import { connectWifiNet } from "../actions";
 import { checkConnection } from "../actions/NetChecker";
 import { Input } from "./WIfi/Input";
+import './WIfi/WifiPanel.less';
 
 export function WifiView(opts: IAppState) {
     const [choosenNetwork, setChoosenNetwork] = useState(null)
@@ -25,27 +26,29 @@ export function WifiView(opts: IAppState) {
     }, [])
 
     return (
-        <div className='wifi__root panel_root'>
-            <ul className='list__root'>
+        <div className='wifi__root'>
+            <ul className='wifiPanel__list'>
                 {opts.availableWifiNets.map((el, key) => {
                     return (<li className={'list-group-item' + (el.ssid === choosenNetwork ? ' list-group-item__selected' : '')} onClick={() => {
                         setChoosenNetwork(el.ssid)
-                    }} key={key}>{el.ssid} {(opts.wifiStatus.wifiStatus === WIFI_STATUS.CONNECTED && el.ssid === opts.wifiStatus.currentWifiNet.ssid) ? "*" : '' }
-                         {(opts.wifiStatus.wifiStatus === WIFI_STATUS.CONNECTING && el.ssid === opts.wifiStatus.currentWifiNet.ssid) ? "CONNECTING" : '' }</li>)
+                    }} key={key}>{el.ssid} {(opts.wifiStatus.wifiStatus === WIFI_STATUS.CONNECTED && el.ssid === opts.wifiStatus.currentWifiNet.ssid) ? "*" : ''}
+                        {(opts.wifiStatus.wifiStatus === WIFI_STATUS.CONNECTING && el.ssid === opts.wifiStatus.currentWifiNet.ssid) ? "CONNECTING" : ''}</li>)
                 })}
             </ul>
-            <div onClick={() => {
-                if (choosenNetwork) {
-                    settingsStore.dispatch(connectWifiNet({ ssid: choosenNetwork, password: pass }))
-                }
-            }} className='manager-panel__block manager-panel__topright'>
-                Подключиться
-            </div>
-            <Input value={pass} onChange={setPass} placeholder="введите пароль" />
-            <div className="wifi__status">Статус сети:<span className={'wifi__status_indicator ' + (netStatus ? 'wifi__status_indicator-success' : 'wifi__status_indicator-danger') }></span></div>
-            <NavLink to={getBackLink()} className='manager-panel__block manager-panel__bottomright'>
-                Назад
+            <div className="wifiPanel__controls">
+                <div onClick={() => {
+                    if (choosenNetwork) {
+                        settingsStore.dispatch(connectWifiNet({ ssid: choosenNetwork, password: pass }))
+                    }
+                }} className='manager-panel__block manager-panel__topright wifiPanel__controls_button'>
+                    Подключиться
+                </div>
+                <Input className="wifi__password" value={pass} onChange={setPass} placeholder="введите пароль" />
+                <div className="wifi__status">Статус сети: <span className={'wifi__status_indicator ' + (netStatus ? 'wifi__status_indicator-success' : 'wifi__status_indicator-danger')}></span></div>
+                <NavLink to={getBackLink()} className='manager-panel__block manager-panel__bottomright wifiPanel__controls_button'>
+                    Назад
             </NavLink>
+            </div>
         </div>
     );
 }

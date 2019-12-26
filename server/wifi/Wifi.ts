@@ -23,6 +23,7 @@ export class WifiManager {
         } else {
             return new Promise<Array<IWifiNet>>((resolve) => {
                 Wifi.scan((err: any, networks: Array<IWifiNet>) => {
+                    logger.log("Found networks: " + networks.map((el) => el.ssid))
                     resolve(networks)
                 })
             })

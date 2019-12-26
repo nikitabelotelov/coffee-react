@@ -5,6 +5,7 @@ import { Key } from './Key'
 interface IInputProps {
   value: string
   placeholder: string
+  className: string
   onChange: (value: string) => void
 }
 
@@ -16,6 +17,7 @@ export const Input = (props: IInputProps) => {
   return (
     <div className={focused ? 'input__fullscreen' : ''}>
       <input value={props.value} placeholder={props.placeholder}
+        className={props.className}
         onChange={e => props.onChange(e.target.value)}
         onFocus={() => {
           setFocused(true)
