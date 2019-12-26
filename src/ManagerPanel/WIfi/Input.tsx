@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import "./Keyboard.less"
 import { Key } from './Key'
 
@@ -24,6 +24,10 @@ export const Input = (props: IInputProps) => {
         <div className="keyboard_row">
           <div className="key" onClick={() => setFocused(false)}>Close keyboard</div>
           <div className="key" onClick={() => setShift(!shift)}>SHIFT</div>
+          <div className="key" onClick={() => {
+            const value = props.value.length > 0 ? props.value.slice(0, -1) : props.value
+            props.onChange(value)
+          }}>Backspace</div>
         </div>
         <div className="keyboard_row">
           <Key shift={shift} symb="1" shiftsymb="!" onClick={value => props.onChange(props.value + value)} />
