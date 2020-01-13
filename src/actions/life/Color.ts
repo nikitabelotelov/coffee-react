@@ -51,13 +51,13 @@ export const Color = (
       state.stepStart = Date.now()
 
       if (temperature-20 >= needTemp){
-        commands[red] = (redHot*alphaHot) * 65534;
-        commands[green] = (greenHot*alphaHot) * 65534;
-        commands[blue] = (blueHot*alphaHot) * 65534;
+        commands[red] = Math.round((redHot*alphaHot) * 65534);
+        commands[green] = Math.round((greenHot*alphaHot) * 65534);
+        commands[blue] = Math.round((blueHot*alphaHot) * 65534);
       } else {
-        commands[red] = (temperature * redHot * alphaHot / needTemp) * 65534 + ((needTemp - temperature) / needTemp) * redCold * alphaCold * 65534;
-        commands[green] = (temperature * greenHot * alphaHot / needTemp) * 65534 + ((needTemp - temperature) / needTemp) * greenCold * alphaCold * 65534;
-        commands[blue] = (temperature * blueHot * alphaHot / needTemp) * 65534 + ((needTemp - temperature) / needTemp) * blueCold * alphaCold * 65534;
+        commands[red] = Math.round((temperature * redHot * alphaHot / needTemp) * 65534 + ((needTemp - temperature) / needTemp) * redCold * alphaCold * 65534);
+        commands[green] = Math.round((temperature * greenHot * alphaHot / needTemp) * 65534 + ((needTemp - temperature) / needTemp) * greenCold * alphaCold * 65534);
+        commands[blue] = Math.round((temperature * blueHot * alphaHot / needTemp) * 65534 + ((needTemp - temperature) / needTemp) * blueCold * alphaCold * 65534);
         if (commands[red] > 65534) {
           commands[red] = 65534
         }

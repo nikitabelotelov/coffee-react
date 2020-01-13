@@ -225,10 +225,6 @@ class MachineLife {
 
     const procG1 = this.processes.find(pr => pr.process.name === 'ColorG1' ) 
     if (procG1 && procG1.process && procG1.process.status === ProcessStatus.done) {
-      console.log(`${commands[StmCommands.SetRedGroup1]}
-      ${commands[StmCommands.SetGreenGroup1]}
-      ${commands[StmCommands.SetBlueGroup1]}
-      `)
       emitStm({id: StmCommands.SetRedGroup1, content: `${commands[StmCommands.SetRedGroup1]}`})
       emitStm({id: StmCommands.SetBlueGroup1, content: `${commands[StmCommands.SetBlueGroup1]}`})
       emitStm({id: StmCommands.SetGreenGroup1, content: `${commands[StmCommands.SetGreenGroup1]}`})
