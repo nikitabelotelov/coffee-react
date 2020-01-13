@@ -15,7 +15,7 @@ module.exports = [{
         path: __dirname,
         libraryTarget: 'commonjs2'
     },
-    mode: "production",
+    mode: "development",
     resolve: {
         extensions: [".ts", ".tsx", ".js", ".less"]
     },
