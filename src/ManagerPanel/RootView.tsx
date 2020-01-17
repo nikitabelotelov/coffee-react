@@ -26,7 +26,9 @@ export function RootView(props: IAppState) {
       </NavLink>
       <div className="manager-panel__block manager-panel__bottomleft">
         <b>Паровой</b>
-        Уровень: {props.machine[StmMessages.WaterLevel]} <br />
+        <br />
+        Уровень: {props.machine[StmMessages.WaterLevel]}
+        <br />
         Давление: {props.machine[StmMessages.SteamPressure]} /{" "}
         {props.settings.SteamPressure}
       </div>
