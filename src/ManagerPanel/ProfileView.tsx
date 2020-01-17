@@ -19,10 +19,10 @@ export default function ProfileView(opts:IAppState) {
             </ul>
             <NavLink onClick={() => {
                         settingStore.dispatch(setProfile(userProfileName))
-                    }} to='profile/hand' className='manager-panel__block btn-outline-dark'>
+                    }} to='profile/hand' className='manager-panel__block '>
                 Настройка по параметрам
             </NavLink>
-            <NavLink to={getBackLink()} className='manager-panel__block btn-outline-success'>
+            <NavLink to={getBackLink()} className='manager-panel__block '>
                 Назад
             </NavLink>
         </div>

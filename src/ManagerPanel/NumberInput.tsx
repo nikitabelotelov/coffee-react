@@ -27,16 +27,16 @@ export default function NumberInput(props: NumberInputProps) {
         onMouseDown={() => setStartDec(1)}
         onMouseUp={() => setStartDec(0)}
         onMouseLeave={() => setStartDec(0)}
-        className="btn-outline-dark setting__inputButton"
+        className=" setting__inputButton"
       >
         -
       </button>
       <span className="setting__inputValue">{props.value}</span>
       <button
-        onMouseDown={() => setStartInc(1)}
-        onMouseUp={() => setStartInc(0)}
+        onMouseDown={() => {setStartInc(1); console.log("md")}}
+        onMouseUp={() => {setStartInc(0); console.log("mu") }}
         onMouseLeave={() => setStartInc(0)}
-        className="btn-outline-dark setting__inputButton"
+        className=" setting__inputButton"
       >
         +
       </button>

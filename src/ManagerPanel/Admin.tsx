@@ -11,7 +11,7 @@ const Admin = (props: IAppState) => {
     const tg2 = Math.round((props.life.tTrendG2.length ? props.life.tTrendG2[props.life.tTrendG2.length - 1].value : 0) * 10)/10
     return (
         <div className='setting__root panel_root'>
-            <NavLink to='admin/trend' className='manager-panel__block btn-outline-dark admin__text'>
+            <NavLink to='admin/trend' className='manager-panel__block admin__text'>
                 Группа 1: P = {props.machine[StmMessages.Group1Pressure]}, T = {tg1} ({props.settings.Group1Temperature})<br />
                 Клапан: Valve2 = {props.machine[StmMessages.Valve2]} / valve4 = {props.machine[StmMessages.Valve4]}<br />
                 Тен: {props.machine[StmMessages.Relay4]}<br />
@@ -19,14 +19,14 @@ const Admin = (props: IAppState) => {
                 Клапан: Valve3 = {props.machine[StmMessages.Valve3]} / valve5 = {props.machine[StmMessages.Valve5]}<br />
                 Тен: {props.machine[StmMessages.Relay6]}
             </NavLink>
-            <div className='manager-panel__block btn-outline-dark admin__text'>
+            <div className='manager-panel__block admin__text'>
                 Давление пара: {props.machine[StmMessages.SteamPressure]} <br />
                 Клапан: Valve1 = {props.machine[StmMessages.Valve1]} <br />
                 Тен пара: {props.machine[StmMessages.Relay1]} и {props.machine[StmMessages.Relay2]} <br />
                 Температура в преднагреве: {props.machine[StmMessages.PredictGroupTemperature]} <br />
                 Тен преднагрева: {props.machine[StmMessages.Relay3]}
             </div>
-            <div className='manager-panel__block btn-outline-dark admin__text'>
+            <div className='manager-panel__block admin__text'>
                 <div className='admin__buttons'>
                     <div className={"admin__button" + (props.machine[StmMessages.Button1]==='1' ? " admin__button_active" : "")}>B1</div>
                     <div className={"admin__button" + (props.machine[StmMessages.Button2]==='1' ? " admin__button_active" : "")}>B2</div>
@@ -43,7 +43,7 @@ const Admin = (props: IAppState) => {
                 Volum1: {props.machine[StmMessages.VolumetricGroup1]}<br />
                 Volum2: {props.machine[StmMessages.VolumetricGroup2]}
             </div>
-            <NavLink to={getBackLink()} className='manager-panel__block btn-outline-success'>
+            <NavLink to={getBackLink()} className='manager-panel__block '>
                 Назад
             </NavLink>
         </div>

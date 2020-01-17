@@ -11,12 +11,12 @@ export default function Update(props: any) {
         <div className="" >
             {isUpdate ? "Ждем завершения обновления" :
                 <div className='manager-panel__update panel_root'>
-                    <div className="manager-panel__block manager-panel__left btn-outline-dark manager-panel__info">
+                    <div className="manager-panel__block manager-panel__left manager-panel__info">
                         <b>В процессе обновления функционал кофемашины будет недоступен.
                             Обновление может занять несколько минут.
                     Во время обновления нельзя отключать кофемашину от сети.</b>
                     </div>
-                    <div className='manager-panel__block manager-panel__topright btn-outline-dark'>
+                    <div className='manager-panel__block manager-panel__topright '>
                         <div onClick={() => {
                             setIsUpdate(true)
                             // @ts-ignore
@@ -25,7 +25,7 @@ export default function Update(props: any) {
                         }}>Начать процесс обновления</div>
                     </div>
                     <NavLink to={getBackLink()}
-                        className='manager-panel__block btn-outline-dark manager-panel__bottomright'>
+                        className='manager-panel__block manager-panel__bottomright'>
                         Назад
             </NavLink>
                 </div>

@@ -44,7 +44,7 @@ export default function ParametersSettings() {
       </ul>
       <NavLink
         to={getBackLink()}
-        className="manager-panel__block btn-outline-success"
+        className="manager-panel__block "
       >
         Назад
       </NavLink>
