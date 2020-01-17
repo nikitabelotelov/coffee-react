@@ -19,7 +19,7 @@ export function RootView(props: IAppState) {
         Температура: {props.machine[StmMessages.Group2Temperature]} {tg2} C /{" "}
         {props.settings.Group2Temperature} C P = {props.machine[StmMessages.Group2Pressure]}
       </div>
-      <NavLink to="/admin" className="manager-panel__block btn-outline-dark manager-panel__middleleft">
+      <NavLink to="/admin" className="manager-panel__block btn-outline-dark manager-panel__middleright">
         <b>Преднагревательный</b>
         <br />
         Температура: {props.machine[StmMessages.PredictGroupTemperature]} C
