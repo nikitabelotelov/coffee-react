@@ -15,6 +15,9 @@ export function WifiView(opts: IAppState) {
     const [pass, setPass] = useState('')
     let interval: number
     useEffect(() => {
+        checkConnection().then((res) => {
+            setNetStatus(res)
+        })
         interval = window.setInterval(() => {
             checkConnection().then((res) => {
                 setNetStatus(res)
