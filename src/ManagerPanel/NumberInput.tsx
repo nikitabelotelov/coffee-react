@@ -33,8 +33,8 @@ export default function NumberInput(props: NumberInputProps) {
       </button>
       <span className="setting__inputValue">{props.value}</span>
       <button
-        onMouseDown={() => {setStartInc(1); console.log("md")}}
-        onMouseUp={() => {setStartInc(0); console.log("mu") }}
+        onMouseDown={() => setStartInc(1)}
+        onMouseUp={() => setStartInc(0)}
         onMouseLeave={() => setStartInc(0)}
         className=" setting__inputButton"
       >
