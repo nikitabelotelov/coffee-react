@@ -58,7 +58,7 @@ setInterval(() => {
 }, 300)
 
 export const emitSettingsChange = (payload: IBasicMessage) => {
-  WebSocketInst.send(JSON.stringify({settings: { ...payload, profile: 0 }}))
+  WebSocketInst.send(JSON.stringify({settings: { ...payload }}))
 }
 
 export const emitChoosenProfileChange = (payload: string) => {

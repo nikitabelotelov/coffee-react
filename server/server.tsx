@@ -15,9 +15,9 @@ import { logger } from "../src/logger";
 
 let Serial:any;
 try {
-  Serial = require('raspi-serial').Serial;
+  Serial = require('./raspi').Serial;
 } catch(e) {
-  console.warn('Couldn\'t load raspi-serial. Will use mock-object instead. Error: ' + e.message);
+  logger.warn('Couldn\'t load raspi-serial. Will use mock-object instead. Error: ' + e.message);
   Serial = RSerial;
 }
 
@@ -31,6 +31,10 @@ const indexFile = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 app.use('/*', (req:any, res:any) => {
   res.send(indexFile);
 })
+
+function getCurrentProfileIndex() {
+  return settingsProfiles.profiles.findIndex((profile) => profile.title === settingsProfiles.choosenProfile)
+}
 
 const port = process.env.PORT || 777;
 
@@ -133,20 +137,20 @@ wss.on("connection", function connectionListener(ws) {
         logger.error("Couldn't update in this environment. Please start process via coffee-service")
       }
     } else if (message.settings) {
-      settingsProfiles.profiles[message.settings.profile].settings[message.settings.id] = message.settings.content;
+      settingsProfiles.profiles[getCurrentProfileIndex()].settings[message.settings.id] = message.settings.content;
       serializeSettingsProfiles(settingsProfiles);
     } else if(message.profile) {
       settingsProfiles.choosenProfile = message.profile
       serializeSettingsProfiles(settingsProfiles)
     } else if(message.wifi) {
-      console.log(JSON.stringify(message.wifi));
+      logger.log(JSON.stringify(message.wifi));
       wifiMessages.push({
         wifiStatus: WIFI_STATUS.CONNECTING,
         currentWifiNet: { ssid: message.wifi.ssid }
       });
       sendMessages()
       WifiManager.connectWifi(message.wifi.ssid, message.wifi.password).then((res) => {
-        console.log("Wifi connected");
+        logger.log("Wifi connected");
         wifiMessages.push({
           wifiStatus: WIFI_STATUS.CONNECTED,
           currentWifiNet: { ssid: message.wifi.ssid }
@@ -160,7 +164,7 @@ wss.on("connection", function connectionListener(ws) {
         sendMessages()
       })
     } else {
-      console.log(data);
+      logger.log(data);
     } 
   });
 });
