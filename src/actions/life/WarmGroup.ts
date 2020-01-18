@@ -26,7 +26,7 @@ export const WarmGroup = (
   const pressureG = parseInt(machine[pressure], 10) || 0;
 
   let needTemp = parseInt(settings[setTemp], 10) || 0
-  if (needTemp < 70 || pressureG < 500) {
+  if (needTemp < 70 || pressureG < 100) {
     return state
   }
 
