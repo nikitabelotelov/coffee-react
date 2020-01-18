@@ -15,7 +15,7 @@ import { logger } from "../src/logger";
 
 let Serial:any;
 try {
-  Serial = require('./raspi').Serial;
+  Serial = require('raspi-serial').Serial;
 } catch(e) {
   logger.warn('Couldn\'t load raspi-serial. Will use mock-object instead. Error: ' + e.message);
   Serial = RSerial;
