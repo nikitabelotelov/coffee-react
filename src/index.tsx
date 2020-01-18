@@ -5,6 +5,7 @@ import './index.less';
 import App from './App';
 import store from "./SettingsStore";
 
+// remove context menu
 window.addEventListener('contextmenu', (e) => e.preventDefault())
 
 ReactDOM.render(
