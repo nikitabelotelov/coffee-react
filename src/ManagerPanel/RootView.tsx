@@ -11,18 +11,18 @@ export function RootView(props: IAppState) {
       <div className="manager-panel__block manager-panel__topleft ">
         <b>Группа 1</b>
         <br />
-        Температура: {tg1} C /{" "}{props.settings.Group1Temperature} C
+        {tg1} C /{" "}{props.settings.Group1Temperature} C
       </div>
       <div className="manager-panel__block manager-panel__topright">
         <b>Группа 2</b>
         <br />
-        Температура: {props.machine[StmMessages.Group2Temperature]} {tg2} C /{" "}
-        {props.settings.Group2Temperature} C P = {props.machine[StmMessages.Group2Pressure]}
+        {tg2} C /{" "}
+        {props.settings.Group2Temperature} C
       </div>
       <NavLink to="/admin" className="manager-panel__block manager-panel__middleright">
         <b>Преднагревательный</b>
         <br />
-        Температура: {props.machine[StmMessages.PredictGroupTemperature]} C
+        {props.machine[StmMessages.PredictGroupTemperature]} C
       </NavLink>
       <div className="manager-panel__block manager-panel__bottomleft">
         <b>Паровой</b>

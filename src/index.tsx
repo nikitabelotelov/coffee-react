@@ -5,6 +5,8 @@ import './index.less';
 import App from './App';
 import store from "./SettingsStore";
 
+window.addEventListener('contextmenu', (e) => e.preventDefault())
+
 ReactDOM.render(
     <Provider store={store}>
         <App />
