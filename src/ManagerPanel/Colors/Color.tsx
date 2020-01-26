@@ -1,11 +1,11 @@
 import { connect } from "react-redux";
-import ColorHotView from "./ColorHotView";
+import ColorView from "./ColorView";
 import { IAppState } from "../../reducers";
 
 const mapStateToProps = (state: IAppState) => {
   return { ...state };
 };
 
-const ColorHot = connect(mapStateToProps)(ColorHotView);
+const Color = connect(mapStateToProps)(ColorView);
 
-export default ColorHot;
+export default Color;

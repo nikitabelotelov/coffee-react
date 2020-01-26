@@ -41,12 +41,12 @@ const initialStandartProfile: ISettingsProfile = {
     SteamPressure: '0',
     RedCold: '0',
     GreenCold: '0',
-    BlueCold: '16',
-    AlphaCold: '16',
-    RedHot: '16',
+    BlueCold: '0',
+    AlphaCold: '15',
+    RedHot: '0',
     GreenHot: '0',
     BlueHot: '0',
-    AlphaHot: '16',
+    AlphaHot: '15',
     EnergyMode: '0',
   }
 }

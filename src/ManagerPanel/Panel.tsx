@@ -9,7 +9,7 @@ import Update from "./Update";
 import ParametersSettings from "./ParametersSettings";
 import Steam from "./Parameters/Steam";
 import GroupTemperature from "./Parameters/GroupTemperature";
-import ColorHot from "./Colors/ColorHot";
+import Color from "./Colors/Color";
 import Admin from "./Admin";
 import PreSoaking from "./Parameters/PreSoaking";
 import AutoMode from "./Parameters/AutoMode";
@@ -23,7 +23,7 @@ export function Panel() {
         <Route exact path="*/admin" component={Admin} />
         <Route exact path="*/settings" component={SettingsIndex} />
         <Route exact path="*/settings/profile" component={Profile} />
-        <Route exact path="*/settings/color" component={ColorHot} />
+        <Route exact path="*/settings/color" component={Color} />
         <Route exact path="*/settings/wifi" component={Wifi} />
         <Route exact path="*/settings/update" component={Update} />
         <Route exact path="*/settings/profile/hand" component={ParametersSettings} />
