@@ -13,7 +13,7 @@ const AutoMode = (props: {settings: ISettingsState}) => {
   const value1 = Number(props.settings.Group1AutoMode1) || 0
   const value2 = Number(props.settings.Group2AutoMode1) || 0
   return (
-    <div className="setting__profile-parameters panel_root">
+    <div className="setting__profile-parameters2 panel_root">
       <div className="manager-panel__block manager-panel__top">
         <p>Группа 1: Объем варки</p>
         <NumberInput
@@ -53,7 +53,7 @@ const AutoMode = (props: {settings: ISettingsState}) => {
         to={getBackLink()}
         className="manager-panel__block manager-panel__bottom"
       >
-        Назад
+        &nbsp;&nbsp;&nbsp;&nbsp;Назад&nbsp;&nbsp;&nbsp;&nbsp;
       </NavLink>
     </div>
   );

@@ -14,6 +14,7 @@ export const getLocalState = () => {
   return localState
 }
 
+
 let needDump = false
 const WebSocketInst = new WebSocketController()
 WebSocketInst.registerCallback((data: any) => {
@@ -99,12 +100,6 @@ export const emitStm = (payload: ISTMCommand, waitEcho?: boolean) => {
     WebSocketInst.registerCallback(echoWaiter)
   }
 }
-
-setTimeout(()=>{
-  setInterval(()=>{
-    Life.step()
-  }, 50)
-}, 5000)
 
 
 export default store;

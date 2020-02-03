@@ -24,10 +24,8 @@ export function RootView(props: IAppState) {
         <br />
         {props.machine[StmMessages.PredictGroupTemperature]} C
       </NavLink>
-      <div className="manager-panel__block manager-panel__bottomleft">
+      <div className={`manager-panel__block manager-panel__bottomleft ${props.machine[StmMessages.WaterLevel] === '0' ? 'manager-panel__steam-haswater' : ''}`}>
         <b>Паровой</b>
-        <br />
-        Уровень: {props.machine[StmMessages.WaterLevel]}
         <br />
         Давление: {props.machine[StmMessages.SteamPressure]} /{" "}
         {props.settings.SteamPressure}

@@ -12,6 +12,9 @@ import { settings } from "cluster";
 import { WifiManager } from "./wifi/Wifi";
 import { Wifi } from "../src/ManagerPanel/Wifi";
 import { logger } from "../src/logger";
+import { Life } from "../src/actions/machineLife";
+import ACTION_TYPES from "../src/actions/actionTypes";
+import { store, setUsart } from "../src/actions/serverRedux";
 
 let Serial:any;
 try {
@@ -59,10 +62,17 @@ const wifiMessages:Array<IWifiNetListMessage | IWifiStatus> = [];
 const usart = new Usart(serial as any);
 
 const sendMessages = () => {
+
   while(messagesFromStm.length) {
     let msg = messagesFromStm.pop();
     for (let client in clients) {
       try {
+        if (msg && msg.content !== undefined) {
+          store.dispatch({
+            type: ACTION_TYPES.currentInfoUpdate,
+            payload: msg
+          })
+        }
         clients[client].ws.send(JSON.stringify({stm: Converter.toString(msg)}))
       } catch(e) {
         console.error('Couldn\'t send message to websocket. Connection is probably closed. ' + e.message);
@@ -73,6 +83,10 @@ const sendMessages = () => {
     let msg = settingsMsg.pop();
     for (let client in clients) {
       try {
+        store.dispatch({
+          type: ACTION_TYPES.settingsProfilesInitialize,
+          payload: {settingsProfiles: msg}
+        });
         clients[client].ws.send(JSON.stringify({settingsProfiles: msg}))
       } catch(e) {
         console.error('Couldn\'t send message to websocket. Connection is probably closed. ' + e.message);
@@ -83,6 +97,17 @@ const sendMessages = () => {
     let msg = wifiMessages.pop();
     for (let client in clients) {
       try {
+        if((msg as IWifiNetListMessage).list) {
+          store.dispatch({
+            type: ACTION_TYPES.wifiListUpdate,
+            payload: msg as IWifiNetListMessage
+          })
+        } else if((msg as IWifiStatus).wifiStatus) {
+          store.dispatch({
+            type: ACTION_TYPES.wifiStatusUpdate,
+            payload: msg as IWifiStatus
+          })
+        }
         clients[client].ws.send(JSON.stringify({wifi: msg}))
       } catch(e) {
         console.error('Couldn\'t send message to websocket. Connection is probably closed. ' + e.message);
@@ -91,11 +116,15 @@ const sendMessages = () => {
   }
 }
 
+
 usart.msgHandlers.push(message => {
   const stm = Converter.fromString(message) as ISTMMessage;
   messagesFromStm.push(stm);
   sendMessages();
 });
+
+setUsart(usart)
+
 
 wss.on("connection", function connectionListener(ws) {
   var id = Math.random();
@@ -168,3 +197,10 @@ wss.on("connection", function connectionListener(ws) {
     } 
   });
 });
+
+
+setTimeout(()=>{
+  setInterval(()=>{
+    Life.step()
+  }, 50)
+}, 5000)

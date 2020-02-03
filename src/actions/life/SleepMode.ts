@@ -1,5 +1,5 @@
 import { IObjectAny, ProcessStatus, ICommandBlock } from "../../types";
-import { getLocalState } from "../../SettingsStore";
+import { store } from "../serverRedux"
 import { StmMessages } from "../../../server/stm/Converter";
 
 
@@ -8,7 +8,7 @@ export const SleepMode = (
   commands: ICommandBlock,
   changeStatus: (newStatus: ProcessStatus) => void
 ): IObjectAny => {
-  const machine = getLocalState().machine
+  const machine = store.getState().machine
 
   if (state.stop) {
     return state;

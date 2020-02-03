@@ -1,5 +1,5 @@
 import { IObjectAny, ProcessStatus, ICommandBlock } from "../../types";
-import store, { emitStm, getLocalState } from "../../SettingsStore";
+import { store } from "../serverRedux"
 import Converter, { StmMessages, StmCommands } from "../../../server/stm/Converter";
 
 
@@ -8,7 +8,7 @@ export const WarmPredict = (
   commands: ICommandBlock,
   changeStatus: (newStatus: ProcessStatus) => void
 ): IObjectAny => {
-  const machine = getLocalState().machine
+  const machine = store.getState().machine
   const settings = store.getState().settings
 
   if (state.stop) {
