@@ -20,7 +20,7 @@ export const WarmPredict = (
   const pressureG1 = parseInt(machine[StmMessages.Group1Pressure], 10) || 0;
   const pressureG2 = parseInt(machine[StmMessages.Group2Pressure], 10) || 0;
 
-  if (needTempG1 < 70 && needTempG2 < 70 || pressureG1 < 500 || pressureG2 < 500) {
+  if (needTempG1 < 70 && needTempG2 < 70 || pressureG1 < 100 || pressureG2 < 100) {
     return state
   }
 
