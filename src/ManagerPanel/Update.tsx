@@ -16,13 +16,13 @@ export default function Update(props: any) {
                             Обновление может занять несколько минут.
                     Во время обновления нельзя отключать кофемашину от сети.</b>
                     </div>
-                    <div className='manager-panel__block manager-panel__topright '>
-                        <div onClick={() => {
+                    <div onClick={() => {
                             setIsUpdate(true)
                             // @ts-ignore
                             window.needRefreshGlobal = true
                             settingsStore.dispatch(update())
-                        }}>Начать процесс обновления</div>
+                        }} className='manager-panel__block manager-panel__topright '>
+                        <div>Начать процесс обновления</div>
                     </div>
                     <NavLink to={getBackLink()}
                         className='manager-panel__block manager-panel__bottomright'>
