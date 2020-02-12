@@ -12,7 +12,7 @@ import { SleepMode } from "./life/SleepMode"
 import { CleanMode } from "./life/CleanMode"
 import { Color } from "./life/Color"
 import { store, emitStm } from "./serverRedux"
-
+import { SteamPressure } from "./life/SteamPressure"
 
 export interface IProcesses {
   process: Process
@@ -53,6 +53,7 @@ class MachineLife {
     const warmG1 = new Process('warmG1', WarmGroup(StmMessages.Group1Pressure, StmCommands.SetRelay4, StmCommands.SetRelay5, "Group1Temperature", "middleTTrendG1"), 0)
     const warmG2 = new Process('warmG2', WarmGroup(StmMessages.Group2Pressure, StmCommands.SetRelay6, StmCommands.SetRelay7, "Group2Temperature", "middleTTrendG2"), 0)
 
+    const steamPressure = new Process('steam', SteamPressure, 0)
     this.addProcess({
       process: colorG1,
       children: []
@@ -97,6 +98,13 @@ class MachineLife {
     cleanMode.start()
     sleepMode.start()
 
+    this.addProcess({
+      process: steamPressure,
+      children: []
+    })
+
+    steamPressure.start()
+    
     this.addProcess({
       process: waterLevel,
       children: []

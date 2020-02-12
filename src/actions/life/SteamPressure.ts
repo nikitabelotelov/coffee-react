@@ -2,7 +2,7 @@ import { IObjectAny, ProcessStatus, ICommandBlock } from "../../types";
 import { store } from "../serverRedux"
 import { StmMessages, StmCommands } from "../../../server/stm/Converter";
 
-export const SteamTemperature = (
+export const SteamPressure = (
   state: IObjectAny,
   commands: ICommandBlock,
   changeStatus: (newStatus: ProcessStatus) => void
@@ -16,6 +16,10 @@ export const SteamTemperature = (
 
   if (machine[StmMessages.Button1] === '1') {
     changeStatus(ProcessStatus.done)
+    return state
+  }
+
+  if (machine[StmMessages.WaterLevel] !== '1') {
     return state
   }
 
