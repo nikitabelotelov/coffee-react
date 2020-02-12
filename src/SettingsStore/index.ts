@@ -74,32 +74,4 @@ export const emitUpdate = () => {
   WebSocketInst.send(JSON.stringify({update: true}))
 }
 
-export const emitStm = (payload: ISTMCommand, waitEcho?: boolean) => {
-  //console.log("Message emitted " + JSON.stringify(payload));
-  WebSocketInst.send(JSON.stringify({ stm: Converter.toString(payload) }));
-  if (waitEcho) {
-    
-    const echoWaiter = (data: any) => {
-      const parsed = JSON.parse(data)
-      const msg = Converter.fromString(parsed.stm) as ISTMMessage;
-      if (msg.id === StmMessages.Echo) {
-        const converted = Converter.fromString(msg.content)
-        // console.log('ECHO:', converted)
-        if (payload.id === converted.id && payload.content === converted.content) {
-          clearTimeout(echoTimeout)
-        } else {
-          emitStm(payload, true)
-        }
-        WebSocketInst.unRegisterCallback(echoWaiter)
-      } 
-    }
-    const echoTimeout = setTimeout(() => {
-      emitStm(payload, true)
-      WebSocketInst.unRegisterCallback(echoWaiter)
-    }, 1000)
-    WebSocketInst.registerCallback(echoWaiter)
-  }
-}
-
-
 export default store;

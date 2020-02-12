@@ -65,14 +65,14 @@ const sendMessages = () => {
 
   while(messagesFromStm.length) {
     let msg = messagesFromStm.pop();
+    if (msg && msg.content !== undefined) {
+      store.dispatch({
+        type: ACTION_TYPES.currentInfoUpdate,
+        payload: msg
+      })
+    }
     for (let client in clients) {
       try {
-        if (msg && msg.content !== undefined) {
-          store.dispatch({
-            type: ACTION_TYPES.currentInfoUpdate,
-            payload: msg
-          })
-        }
         clients[client].ws.send(JSON.stringify({stm: Converter.toString(msg)}))
       } catch(e) {
         console.error('Couldn\'t send message to websocket. Connection is probably closed. ' + e.message);
@@ -81,12 +81,12 @@ const sendMessages = () => {
   }
   while(settingsMsg.length) {
     let msg = settingsMsg.pop();
+    store.dispatch({
+      type: ACTION_TYPES.settingsProfilesInitialize,
+      payload: {settingsProfiles: msg}
+    });
     for (let client in clients) {
       try {
-        store.dispatch({
-          type: ACTION_TYPES.settingsProfilesInitialize,
-          payload: {settingsProfiles: msg}
-        });
         clients[client].ws.send(JSON.stringify({settingsProfiles: msg}))
       } catch(e) {
         console.error('Couldn\'t send message to websocket. Connection is probably closed. ' + e.message);
@@ -168,9 +168,17 @@ wss.on("connection", function connectionListener(ws) {
     } else if (message.settings) {
       settingsProfiles.profiles[getCurrentProfileIndex()].settings[message.settings.id] = message.settings.content;
       serializeSettingsProfiles(settingsProfiles);
+      store.dispatch({
+        type: ACTION_TYPES.settingsProfilesInitialize,
+        payload: {settingsProfiles: settingsProfiles}
+      });
     } else if(message.profile) {
       settingsProfiles.choosenProfile = message.profile
       serializeSettingsProfiles(settingsProfiles)
+      store.dispatch({
+        type: ACTION_TYPES.settingsProfilesInitialize,
+        payload: {settingsProfiles: settingsProfiles}
+      });
     } else if(message.wifi) {
       logger.log(JSON.stringify(message.wifi));
       wifiMessages.push({
