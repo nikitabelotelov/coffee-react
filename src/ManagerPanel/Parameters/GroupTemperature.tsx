@@ -13,7 +13,7 @@ const GroupTemperature = (props: {settings: ISettingsState}) => {
   const value = Number(props.settings.Group1Temperature) || 0
   const value2 = Number(props.settings.Group2Temperature) || 0
   return (
-    <div className="setting__profile-parameters panel_root">
+    <div className="setting__profile-parameters2 panel_root">
       <div className="manager-panel__block manager-panel__top">
         <p>Температура группы 1</p>
         <NumberInput

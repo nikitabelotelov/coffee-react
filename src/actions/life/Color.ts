@@ -1,5 +1,5 @@
 import { IObjectAny, ProcessStatus, ICommandBlock } from "../../types";
-import store, { emitStm, getLocalState } from "../../SettingsStore";
+import { store } from "../serverRedux"
 import { StmMessages, StmCommands } from "../../../server/stm/Converter";
 
 export const Color = (
@@ -14,9 +14,9 @@ export const Color = (
   commands: ICommandBlock,
   changeStatus: (newStatus: ProcessStatus) => void
 ): IObjectAny => {
-  const machine = getLocalState().machine
+  const machine = store.getState().machine
   const settings = store.getState().settings
-  const life = getLocalState().life
+  const life = store.getState().life
 
   const redHot = (parseInt(settings.RedHot, 10) || 0) / 16
   const greenHot = (parseInt(settings.GreenHot, 10) || 0) / 16
@@ -50,7 +50,7 @@ export const Color = (
       }
       state.stepStart = Date.now()
 
-      if (temperature-20 >= needTemp){
+      if (temperature+10 >= needTemp){
         commands[red] = Math.round((redHot*alphaHot) * 65534);
         commands[green] = Math.round((greenHot*alphaHot) * 65534);
         commands[blue] = Math.round((blueHot*alphaHot) * 65534);

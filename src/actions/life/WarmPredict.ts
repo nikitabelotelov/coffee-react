@@ -1,5 +1,5 @@
 import { IObjectAny, ProcessStatus, ICommandBlock } from "../../types";
-import store, { emitStm, getLocalState } from "../../SettingsStore";
+import { store } from "../serverRedux"
 import Converter, { StmMessages, StmCommands } from "../../../server/stm/Converter";
 
 
@@ -8,7 +8,7 @@ export const WarmPredict = (
   commands: ICommandBlock,
   changeStatus: (newStatus: ProcessStatus) => void
 ): IObjectAny => {
-  const machine = getLocalState().machine
+  const machine = store.getState().machine
   const settings = store.getState().settings
 
   if (state.stop) {
@@ -20,7 +20,7 @@ export const WarmPredict = (
   const pressureG1 = parseInt(machine[StmMessages.Group1Pressure], 10) || 0;
   const pressureG2 = parseInt(machine[StmMessages.Group2Pressure], 10) || 0;
 
-  if (needTempG1 < 70 && needTempG2 < 70 || pressureG1 < 500 || pressureG2 < 500) {
+  if (needTempG1 < 70 && needTempG2 < 70 || pressureG1 < 100 || pressureG2 < 100) {
     return state
   }
 
@@ -31,11 +31,11 @@ export const WarmPredict = (
     state.started = 1
     changeStatus(ProcessStatus.wip)
     commands[StmCommands.SetRelay3]++
-  } else if (state.started) {
-    commands[StmCommands.SetRelay3]++
   } else if (temperature > needPr + 3) {
     state.started = 0
     changeStatus(ProcessStatus.done)
+  } else if (state.started) {
+    commands[StmCommands.SetRelay3]++
   }
 
 

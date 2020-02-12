@@ -1,4 +1,3 @@
-import store, { emitStm, getLocalState } from "../SettingsStore"
 import Converter, { StmMessages, StmCommands } from "../../server/stm/Converter"
 import Message from "../../server/usart/Message"
 import ACTION_TYPES from "./actionTypes"
@@ -12,7 +11,8 @@ import { WarmGroup } from "./life/WarmGroup"
 import { SleepMode } from "./life/SleepMode"
 import { CleanMode } from "./life/CleanMode"
 import { Color } from "./life/Color"
-
+import { store, emitStm } from "./serverRedux"
+import { SteamPressure } from "./life/SteamPressure"
 
 export interface IProcesses {
   process: Process
@@ -53,6 +53,7 @@ class MachineLife {
     const warmG1 = new Process('warmG1', WarmGroup(StmMessages.Group1Pressure, StmCommands.SetRelay4, StmCommands.SetRelay5, "Group1Temperature", "middleTTrendG1"), 0)
     const warmG2 = new Process('warmG2', WarmGroup(StmMessages.Group2Pressure, StmCommands.SetRelay6, StmCommands.SetRelay7, "Group2Temperature", "middleTTrendG2"), 0)
 
+    const steamPressure = new Process('steam', SteamPressure, 0)
     this.addProcess({
       process: colorG1,
       children: []
@@ -98,6 +99,13 @@ class MachineLife {
     sleepMode.start()
 
     this.addProcess({
+      process: steamPressure,
+      children: []
+    })
+
+    steamPressure.start()
+    
+    this.addProcess({
       process: waterLevel,
       children: []
     })
@@ -128,7 +136,7 @@ class MachineLife {
   }
 
   public checkAndSend(commands:ICommandBlock, command: StmCommands, status: StmMessages) {
-    const machine = getLocalState().machine
+    const machine = store.getState().machine
     if (commands[command] > 0) {
       if (machine[status] === '2') {
         this.needSend = true
@@ -145,7 +153,7 @@ class MachineLife {
   public count: number = 0
   public needSend: boolean = false
   public step() {
-    const machine = getLocalState().machine
+    const machine = store.getState().machine
     this.needSend = false
     const commands:ICommandBlock = {
       [StmCommands.SetValve1]: 0,

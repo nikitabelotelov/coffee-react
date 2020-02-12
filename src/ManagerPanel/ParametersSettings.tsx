@@ -25,7 +25,7 @@ const Parameters = [
   },
   {
     key: 4,
-    title: "Преднагревательный бойлер",
+    title: "Преднагревательный",
     route: "predict"
   }
 ];

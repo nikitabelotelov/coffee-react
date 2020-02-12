@@ -1,10 +1,10 @@
 import { IObjectAny, ProcessStatus, ICommandBlock } from "../../types";
-import store, { emitStm, getLocalState } from "../../SettingsStore";
+import { store } from "../serverRedux"
 import { StmMessages, StmCommands } from "../../../server/stm/Converter";
 
 
 const checkToStop = (button: StmMessages.Button3 | StmMessages.Button6, state: IObjectAny) => {
-  const machine = getLocalState().machine
+  const machine = store.getState().machine
   if ((machine[button] === '1' || machine[button] === '2') && machine[button] !== state.buttonState) {
     state.step = '0'
     state.buttonState = machine[button]
@@ -37,7 +37,7 @@ export const BoilProcessGroup = (
   commands: ICommandBlock,
   changeStatus: (newStatus: ProcessStatus) => void
 ): IObjectAny => {
-  const machine = getLocalState().machine
+  const machine = store.getState().machine
   const settings = store.getState().settings
 
   if (state.stop) {
@@ -72,8 +72,15 @@ export const BoilProcessGroup = (
         calcTime(state, commands, sec)
         commands[valveOut]++
         commands[StmCommands.SetRelay8]++
-        state.step = '3'
-        state.beforePressure = Date.now()
+        if (presoakingTime === 0) {
+          state.step = '5'
+          state.beforePressure = Date.now()
+          state.silentBeforePressure = Date.now()
+        } else {
+          state.step = '3'
+          state.beforePressure = Date.now()
+        }
+        
       }
       break;
     case '3':

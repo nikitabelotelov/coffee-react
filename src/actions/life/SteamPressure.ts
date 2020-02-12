@@ -1,13 +1,13 @@
 import { IObjectAny, ProcessStatus, ICommandBlock } from "../../types";
-import store, { emitStm, getLocalState } from "../../SettingsStore";
+import { store } from "../serverRedux"
 import { StmMessages, StmCommands } from "../../../server/stm/Converter";
 
-export const SteamTemperature = (
+export const SteamPressure = (
   state: IObjectAny,
   commands: ICommandBlock,
   changeStatus: (newStatus: ProcessStatus) => void
 ): IObjectAny => {
-  const machine = getLocalState().machine;
+  const machine = store.getState().machine;
   const settings = store.getState().settings
 
   if (state.stop) {
@@ -19,8 +19,12 @@ export const SteamTemperature = (
     return state
   }
 
+  if (machine[StmMessages.WaterLevel] !== '1') {
+    return state
+  }
+
   const pressure = parseInt(machine[StmMessages.SteamPressure], 10) || 0;
-  const needPressure = (parseInt(settings.SteamPressure) || 0) * 100;
+  const needPressure = (parseFloat(settings.SteamPressure) || 0) * 200;
 
   /* TODO: energy mode
   const isEnergyMode = settings.EnergyMode === '1';
