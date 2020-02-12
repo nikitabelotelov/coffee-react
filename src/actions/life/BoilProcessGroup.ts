@@ -72,8 +72,15 @@ export const BoilProcessGroup = (
         calcTime(state, commands, sec)
         commands[valveOut]++
         commands[StmCommands.SetRelay8]++
-        state.step = '3'
-        state.beforePressure = Date.now()
+        if (presoakingTime === 0) {
+          state.step = '5'
+          state.beforePressure = Date.now()
+          state.silentBeforePressure = Date.now()
+        } else {
+          state.step = '3'
+          state.beforePressure = Date.now()
+        }
+        
       }
       break;
     case '3':
