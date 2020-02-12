@@ -50,7 +50,7 @@ export const Color = (
       }
       state.stepStart = Date.now()
 
-      if (temperature-20 >= needTemp){
+      if (temperature+10 >= needTemp){
         commands[red] = Math.round((redHot*alphaHot) * 65534);
         commands[green] = Math.round((greenHot*alphaHot) * 65534);
         commands[blue] = Math.round((blueHot*alphaHot) * 65534);

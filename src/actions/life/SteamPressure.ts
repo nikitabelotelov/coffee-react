@@ -24,7 +24,7 @@ export const SteamPressure = (
   }
 
   const pressure = parseInt(machine[StmMessages.SteamPressure], 10) || 0;
-  const needPressure = (parseInt(settings.SteamPressure) || 0) * 100;
+  const needPressure = (parseFloat(settings.SteamPressure) || 0) * 200;
 
   /* TODO: energy mode
   const isEnergyMode = settings.EnergyMode === '1';
