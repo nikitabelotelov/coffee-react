@@ -7,6 +7,8 @@ export function RootView(props: IAppState) {
   const tg1 = Math.round((props.life.tTrendG1.length ? props.life.tTrendG1[props.life.tTrendG1.length - 1].value : 0) * 10)/10
   const tg2 = Math.round((props.life.tTrendG2.length ? props.life.tTrendG2[props.life.tTrendG2.length - 1].value : 0) * 10)/10
   const realSteam = Math.round((parseFloat(props.machine[StmMessages.SteamPressure]) / 20)) / 10
+  const pred = parseInt(props.machine[StmMessages.PredictGroupTemperature],10)
+  const predSet = Number(props.settings.PredictTemperature) || 0
   return (
     <div className="manager-panel__root panel_root">
       <div className="manager-panel__block manager-panel__topleft ">
@@ -20,7 +22,7 @@ export function RootView(props: IAppState) {
         {tg2} C /{" "}
         {props.settings.Group2Temperature} C
       </div>
-      <NavLink to="/admin" className="manager-panel__block manager-panel__middleright">
+      <NavLink to="/admin" className={`manager-panel__block manager-panel__middleright1 ${pred >= predSet ? 'manager-panel__steam-haswater' : ''}`}>
         <b>Преднагревательный</b>
         <br />
         {props.machine[StmMessages.PredictGroupTemperature]} C
