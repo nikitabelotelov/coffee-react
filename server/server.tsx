@@ -154,6 +154,8 @@ wss.on("connection", function connectionListener(ws) {
 
   ws.on("message", data => {
     // @ts-ignore
+    console.log(data)
+    // @ts-ignore
     const message: any = JSON.parse(data)
 
     if (message.stm) {
@@ -199,6 +201,14 @@ wss.on("connection", function connectionListener(ws) {
           currentWifiNet: { ssid: message.wifi.ssid }
         })
         sendMessages()
+      })
+    } else if(message.wifiListUpdate) {
+      WifiManager.getAvailableNetworks().then((networks: Array<IWifiNet>) => {
+        WifiManager.status().then((status) => {
+          wifiMessages.push(status || {wifiStatus: WIFI_STATUS.NOT_CONNECTED, message: "Проблемы с сетью. Обратитесь к Саньку. "})
+          wifiMessages.push({ list: networks })
+          sendMessages()
+        });
       })
     } else {
       logger.log(data);

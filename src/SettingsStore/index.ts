@@ -74,4 +74,8 @@ export const emitUpdate = () => {
   WebSocketInst.send(JSON.stringify({update: true}))
 }
 
+export const emitWifiListUpdate = () => {
+  WebSocketInst.send(JSON.stringify({wifiListUpdate: true}))
+}
+
 export default store;

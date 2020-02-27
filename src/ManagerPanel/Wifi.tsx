@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import React, { useState, useRef, useEffect } from 'react';
 import { getBackLink, IWifiNet, WIFI_STATUS } from "../types";
 import { IAppState } from "../reducers";
-import settingsStore from "../SettingsStore"
+import settingsStore, { emitWifiListUpdate } from "../SettingsStore"
 import { connect } from "react-redux";
 import { connectWifiNet } from "../actions";
 import { checkConnection } from "../actions/NetChecker";
@@ -22,6 +22,7 @@ export function WifiView(opts: IAppState) {
             checkConnection().then((res) => {
                 setNetStatus(res)
             })
+            emitWifiListUpdate();
         }, 5000)
         return () => {
             clearInterval(interval)
