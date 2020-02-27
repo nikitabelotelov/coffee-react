@@ -215,10 +215,14 @@ class MachineLife {
     if (vol1 > 1 && commands[StmCommands.ResetVolumetricG1] > 0) {
       this.needSend = true
       emitStm({id: StmCommands.ResetVolumetricG1, content: '1'})
+      emitStm({id: StmCommands.ResetVolumetricG1, content: '1'})
+      emitStm({id: StmCommands.ResetVolumetricG1, content: '1'})
     }
     const vol2 = parseInt(machine[StmMessages.VolumetricGroup2]) || 1
     if (vol2 > 1 && commands[StmCommands.ResetVolumetricG2] > 0) {
       this.needSend = true
+      emitStm({id: StmCommands.ResetVolumetricG2, content: '1'})
+      emitStm({id: StmCommands.ResetVolumetricG2, content: '1'})
       emitStm({id: StmCommands.ResetVolumetricG2, content: '1'})
     }
 

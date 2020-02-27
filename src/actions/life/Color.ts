@@ -34,6 +34,8 @@ export const Color = (
   const trendG = life[trend]
   const temperature = trendG[trendG.length - 1] && trendG[trendG.length - 1].value || 0
 
+  
+
   switch(state.step) {
     case '1':
       if (Date.now() - state.stepStart > 1000) {
@@ -43,12 +45,21 @@ export const Color = (
     
     default:
       changeStatus(ProcessStatus.done)
+      
+      state.stepStart = Date.now()
+      if (machine[StmMessages.Button1] === '1') {
+        commands[red] = 0
+        commands[green] = 0
+        commands[blue] = 0
+        return { ...state };
+      }
+
       if (needTemp < 70) {
         commands[red] = 0
         commands[green] = 0
         commands[blue] = 0
+        return { ...state };
       }
-      state.stepStart = Date.now()
 
       if (temperature+10 >= needTemp){
         commands[red] = Math.round((redHot*alphaHot) * 65534);
