@@ -220,9 +220,13 @@ wss.on("connection", function connectionListener(ws) {
   });
 });
 
-
+let stepVar = 0
 setTimeout(()=>{
   setInterval(()=>{
     Life.step()
+    if (stepVar % 250 === 0) {
+      console.log('step: ', stepVar)
+    }
+    stepVar++
   }, 50)
 }, 5000)
