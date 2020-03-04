@@ -4,7 +4,7 @@ import express from "express";
 import WebSocket from "ws";
 import Usart from "./usart/Usart";
 import { RSerial } from "./mocha/RSerial";
-import Converter, { ISTMMessage } from "./stm/Converter";
+import Converter, { ISTMMessage, StmMessages } from "./stm/Converter";
 import { loadSettings, serializeSettingsProfiles } from "./fs/fsLib";
 import { ISettingsProfilesState, IWifiNetListMessage, IWifiStatus, IWifiNet, WIFI_STATUS } from "../src/types";
 import fs from "fs"
@@ -119,6 +119,9 @@ const sendMessages = () => {
 
 usart.msgHandlers.push(message => {
   const stm = Converter.fromString(message) as ISTMMessage;
+  if (stm.id === StmMessages.Button3) {
+    console.log('B3 = ', stm.content)
+  }
   messagesFromStm.push(stm);
   sendMessages();
 });
