@@ -116,11 +116,12 @@ const sendMessages = () => {
   }
 }
 
-
+let temp123 = 0
 usart.msgHandlers.push(message => {
   const stm = Converter.fromString(message) as ISTMMessage;
   if (stm.id === StmMessages.Button3) {
-    console.log('B3 = ', stm.content)
+    console.log('B3 = ', stm.content, '       : ', temp123)
+    temp123++
   }
   messagesFromStm.push(stm);
   sendMessages();
