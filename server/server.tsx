@@ -129,8 +129,8 @@ usart.msgHandlers.push(message => {
   if (stm.id === StmMessages.VolumetricGroup1) {
   //  console.log('volumet1 = ', stm.content)
   }
-  console.log('MSG ', msgRecAfterLife, ' id: ', stm.id, ' content: ', stm.content)
-  msgRecAfterLife++
+  //console.log('MSG ', msgRecAfterLife, ' id: ', stm.id, ' content: ', stm.content)
+  //msgRecAfterLife++
   if (stm.id === StmMessages.PackageEnd) {
     console.log('---------------Packange End Received********')
     blockLifeCycle = 0
@@ -239,6 +239,8 @@ wss.on("connection", function connectionListener(ws) {
 
 setTimeout(()=>{
   setInterval(()=>{
+    Life.step()
+    /*
     if (!blockLifeCycle) {
       Life.step()
       msgRecAfterLife = 0
@@ -252,6 +254,6 @@ setTimeout(()=>{
         Life.step()
         msgRecAfterLife = 0
       }, 4000)
-    }
-  }, 5000)
+    }*/
+  }, 50)
 }, 5000)

@@ -16,8 +16,7 @@ class Usart {
       serial.on('data', (data: Buffer) => {
         // @ts-ignore
         this.buffer = [...this.buffer, ...data]
-        
-        console.log('on data rec: ', JSON.stringify(this.buffer))
+        //console.log('on data rec: ', JSON.stringify(this.buffer))
         this.extractMessage()
       })
       this.queueProcess()
