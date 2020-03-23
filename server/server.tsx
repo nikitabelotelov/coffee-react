@@ -242,9 +242,11 @@ setTimeout(()=>{
       clearTimeout(intervalRunned)
       intervalRunned = 0
     } else {
+      console.log('Dont have a message')
       intervalRunned = setTimeout(() => {
+        console.log('Dont have a message very long time')
         Life.step()
-      }, 50)
+      }, 100)
     }
   }, 50)
 }, 5000)
