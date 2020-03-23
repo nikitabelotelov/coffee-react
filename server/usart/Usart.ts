@@ -14,11 +14,10 @@ class Usart {
       this.serial = serial
       console.log("Serial opened");
       serial.on('data', (data: Buffer) => {
-        console.log('on data rec')
         // @ts-ignore
         this.buffer = [...this.buffer, ...data]
         
-        console.log('                             ----  ', this.buffer.length)
+        console.log('on data rec: ', JSON.stringify(this.buffer))
         this.extractMessage()
       })
       this.queueProcess()
@@ -36,6 +35,7 @@ class Usart {
         const msgObject = new Message()
         const stringMsg = msgObject.getMessageFromCode(message)
         if (stringMsg) {
+          console.log('-------------------------MESSAGE RECEIEVED------------')
           this.msgHandlers.forEach(el => el(stringMsg))
         }
         this.extractMessage()
