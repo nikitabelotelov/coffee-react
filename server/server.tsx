@@ -26,6 +26,7 @@ try {
 
 let blockLifeCycle = 0
 let intervalRunned:any = 0
+let msgRecAfterLife = 0
 
 const app: any = express(),
   resourcesPath = path.join("", ".");
@@ -126,8 +127,10 @@ usart.msgHandlers.push(message => {
     temp123++
   }
   if (stm.id === StmMessages.VolumetricGroup1) {
-    console.log('volumet1 = ', stm.content)
+  //  console.log('volumet1 = ', stm.content)
   }
+  console.log('MSG ', msgRecAfterLife, ' id: ', stm.id, ' content: ', stm.content)
+  msgRecAfterLife++
   if (stm.id === StmMessages.PackageEnd) {
     console.log('---------------Packange End Received********')
     blockLifeCycle = 0
@@ -238,6 +241,7 @@ setTimeout(()=>{
   setInterval(()=>{
     if (!blockLifeCycle) {
       Life.step()
+      msgRecAfterLife = 0
       blockLifeCycle = 1
       clearTimeout(intervalRunned)
       intervalRunned = 0
@@ -246,7 +250,8 @@ setTimeout(()=>{
       intervalRunned = setTimeout(() => {
         console.log('Dont have a message very long time')
         Life.step()
-      }, 1000)
+        msgRecAfterLife = 0
+      }, 4000)
     }
-  }, 500)
+  }, 5000)
 }, 5000)
