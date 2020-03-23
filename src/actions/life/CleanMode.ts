@@ -30,6 +30,7 @@ export const CleanMode = (
   if (machine[StmMessages.Button1] === '1') {
     state.step = '0'
     state.buttonState = machine[button]
+    commands[StmCommands.SetLightButton9] = 0
     changeStatus(ProcessStatus.done)
     return { ...state }
   }
@@ -47,6 +48,19 @@ export const CleanMode = (
     break;
     case '2':
       if (checkToStop(button, state)) {
+        if (Date.now() - state.cleanStart1 < 500) {
+          commands[StmCommands.SetLightButton9] = 0
+        } else if (Date.now() - state.cleanStart1 < 1000) {
+          commands[StmCommands.SetLightButton9] = 1
+        } else if (Date.now() - state.cleanStart1 < 1500) {
+          commands[StmCommands.SetLightButton9] = 0
+        } else if (Date.now() - state.cleanStart1 < 2000) {
+          commands[StmCommands.SetLightButton9] = 1
+        } else if (Date.now() - state.cleanStart1 < 2500) {
+          commands[StmCommands.SetLightButton9] = 0
+        } else if (Date.now() - state.cleanStart1 < 3000) {
+          commands[StmCommands.SetLightButton9] = 1
+        }
         if (Date.now() - state.cleanStart1 < 3000) {
           if (g1Temp > 70) {
             commands[StmCommands.SetValve2]++
@@ -65,6 +79,19 @@ export const CleanMode = (
       break;
     case '3':
       if (checkToStop(button, state)) {
+        if (Date.now() - state.cleanStart1 < 500) {
+          commands[StmCommands.SetLightButton9] = 0
+        } else if (Date.now() - state.cleanStart1 < 1000) {
+          commands[StmCommands.SetLightButton9] = 1
+        } else if (Date.now() - state.cleanStart1 < 1500) {
+          commands[StmCommands.SetLightButton9] = 0
+        } else if (Date.now() - state.cleanStart1 < 2000) {
+          commands[StmCommands.SetLightButton9] = 1
+        } else if (Date.now() - state.cleanStart1 < 2500) {
+          commands[StmCommands.SetLightButton9] = 0
+        } else if (Date.now() - state.cleanStart1 < 3000) {
+          commands[StmCommands.SetLightButton9] = 1
+        }
         if (Date.now() - state.cleanStart1 > 3000) {
           state.step = '4'
           state.cleanStart1 = Date.now()
@@ -73,6 +100,19 @@ export const CleanMode = (
       break;
     case '4':
       if (checkToStop(button, state)) {
+        if (Date.now() - state.cleanStart1 < 500) {
+          commands[StmCommands.SetLightButton9] = 0
+        } else if (Date.now() - state.cleanStart1 < 1000) {
+          commands[StmCommands.SetLightButton9] = 1
+        } else if (Date.now() - state.cleanStart1 < 1500) {
+          commands[StmCommands.SetLightButton9] = 0
+        } else if (Date.now() - state.cleanStart1 < 2000) {
+          commands[StmCommands.SetLightButton9] = 1
+        } else if (Date.now() - state.cleanStart1 < 2500) {
+          commands[StmCommands.SetLightButton9] = 0
+        } else if (Date.now() - state.cleanStart1 < 3000) {
+          commands[StmCommands.SetLightButton9] = 1
+        }
         if (Date.now() - state.cleanStart1 < 3000) {
           if (g1Temp > 70) {
             commands[StmCommands.SetValve2]++
@@ -91,6 +131,19 @@ export const CleanMode = (
       break;
     case '5':
       if (checkToStop(button, state)) {
+        if (Date.now() - state.cleanStart1 < 500) {
+          commands[StmCommands.SetLightButton9] = 0
+        } else if (Date.now() - state.cleanStart1 < 1000) {
+          commands[StmCommands.SetLightButton9] = 1
+        } else if (Date.now() - state.cleanStart1 < 1500) {
+          commands[StmCommands.SetLightButton9] = 0
+        } else if (Date.now() - state.cleanStart1 < 2000) {
+          commands[StmCommands.SetLightButton9] = 1
+        } else if (Date.now() - state.cleanStart1 < 2500) {
+          commands[StmCommands.SetLightButton9] = 0
+        } else if (Date.now() - state.cleanStart1 < 3000) {
+          commands[StmCommands.SetLightButton9] = 1
+        }
         if (Date.now() - state.cleanStart1 > 3000) {
           state.step = '0'
           state.cleanStart1 = Date.now()
@@ -99,6 +152,7 @@ export const CleanMode = (
       break;
     default:
       changeStatus(ProcessStatus.done)
+      commands[StmCommands.SetLightButton1] = 1
       if (machine[button] === '1' ||  machine[button] === '2') {
         if (state.buttonState === '1' || state.buttonState === '2') {
           if (machine[button] !== state.buttonState) {

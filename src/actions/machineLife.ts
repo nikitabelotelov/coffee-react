@@ -188,6 +188,16 @@ class MachineLife {
 
       [StmCommands.SetSecGroup1]: 100,
       [StmCommands.SetSecGroup2]: 100,
+
+      [StmCommands.SetLightButton1]: 0,
+      [StmCommands.SetLightButton2]: 0,
+      [StmCommands.SetLightButton3]: 0,
+      [StmCommands.SetLightButton4]: 0,
+      [StmCommands.SetLightButton5]: 0,
+      [StmCommands.SetLightButton6]: 0,
+      [StmCommands.SetLightButton7]: 0,
+      [StmCommands.SetLightButton8]: 0,
+      [StmCommands.SetLightButton9]: 0,
     }
 
     this.processes.forEach(one => {
@@ -243,6 +253,9 @@ class MachineLife {
       emitStm({id: StmCommands.SetBlueGroup2, content: `${commands[StmCommands.SetBlueGroup2]}`})
       emitStm({id: StmCommands.SetGreenGroup2, content: `${commands[StmCommands.SetGreenGroup2]}`})
     }
+
+    emitStm({id: StmCommands.SetLightButton1, content: `${commands[StmCommands.SetLightButton1]}`})
+    emitStm({id: StmCommands.SetLightButton9, content: `${commands[StmCommands.SetLightButton9]}`})
 
     emitStm({id: StmCommands.PackageEnd, content: `1`})
   }

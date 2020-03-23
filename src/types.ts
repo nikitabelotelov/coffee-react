@@ -150,6 +150,16 @@ export interface ICommandBlock {
 
   [StmCommands.SetSecGroup1]: number
   [StmCommands.SetSecGroup2]: number
+
+  [StmCommands.SetLightButton1]: number
+  [StmCommands.SetLightButton2]: number
+  [StmCommands.SetLightButton3]: number
+  [StmCommands.SetLightButton4]: number
+  [StmCommands.SetLightButton5]: number
+  [StmCommands.SetLightButton6]: number
+  [StmCommands.SetLightButton7]: number
+  [StmCommands.SetLightButton8]: number
+  [StmCommands.SetLightButton9]: number
 }
 
 export interface IBasicMessage {

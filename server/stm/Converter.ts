@@ -89,6 +89,17 @@ export enum StmCommands {
   SetBlueMachine = 'b',
   
   PackageEnd = 'c',
+
+  SetLightButton1 = 'd',
+  SetLightButton2 = 'e',
+  SetLightButton3 = 'f',
+  SetLightButton4 = 'g',
+  SetLightButton5 = 'h',
+  SetLightButton6 = 'j',
+  SetLightButton7 = 'k',
+  SetLightButton8 = 'l',
+  SetLightButton9 = 'm',
+  
 }
 
 /*				
