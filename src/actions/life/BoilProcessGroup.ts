@@ -6,10 +6,16 @@ import { StmMessages, StmCommands } from "../../../server/stm/Converter";
 const checkToStop = (button: StmMessages.Button3 | StmMessages.Button6, state: IObjectAny) => {
   const machine = store.getState().machine
   if ((machine[button] === '1' || machine[button] === '2') && machine[button] !== state.buttonState) {
-    state.step = '0'
-    console.log('CHECK TO STOP mb=', machine[button], ' state= ',state.buttonState)
-    state.buttonState = machine[button]
-    return false
+    if (state.tempEnd === 1) {
+      state.step = '0'
+      state.tempEnd = 0
+      console.log('CHECK TO STOP mb=', machine[button], ' state= ',state.buttonState)
+      state.buttonState = machine[button]
+      return false
+    } else {
+      state.tempEnd = 1
+      return true
+    }
   }
   return true
 }
@@ -47,6 +53,7 @@ export const BoilProcessGroup = (
 
   if (machine[StmMessages.Button1] === '1') {
     state.step = '0'
+    state.tempEnd = 0
     state.buttonState = machine[button]
     changeStatus(ProcessStatus.done)
     return { ...state }
@@ -54,6 +61,7 @@ export const BoilProcessGroup = (
 
   if (machine[StmMessages.Button9] === '1') {
     state.step = '0'
+    state.tempEnd = 0
     state.buttonState = machine[button]
     changeStatus(ProcessStatus.done)
     return { ...state }
@@ -135,9 +143,11 @@ export const BoilProcessGroup = (
           if (machine[button] !== state.buttonState) {
             state.step = '1'
             state.buttonState = machine[button]
+            state.tempEnd = 0
           }
         } else {
           state.buttonState = machine[button]
+          state.tempEnd = 0
         }
       }
       break
