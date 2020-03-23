@@ -24,6 +24,9 @@ try {
   Serial = RSerial;
 }
 
+let blockLifeCycle = 0
+let intervalRunned:any = 0
+
 const app: any = express(),
   resourcesPath = path.join("", ".");
 
@@ -125,6 +128,14 @@ usart.msgHandlers.push(message => {
   if (stm.id === StmMessages.VolumetricGroup1) {
     console.log('volumet1 = ', stm.content)
   }
+  if (stm.id === StmMessages.PackageEnd) {
+    console.log('Packange End Received')
+    blockLifeCycle = 0
+    if (intervalRunned) {
+      clearTimeout(intervalRunned)
+      intervalRunned = 0
+    }
+  }
   messagesFromStm.push(stm);
   sendMessages();
 });
@@ -222,8 +233,18 @@ wss.on("connection", function connectionListener(ws) {
   });
 });
 
+
 setTimeout(()=>{
   setInterval(()=>{
-    Life.step()
+    if (!blockLifeCycle) {
+      Life.step()
+      blockLifeCycle = 1
+      clearTimeout(intervalRunned)
+      intervalRunned = 0
+    } else {
+      intervalRunned = setTimeout(() => {
+        Life.step()
+      }, 50)
+    }
   }, 50)
 }, 5000)

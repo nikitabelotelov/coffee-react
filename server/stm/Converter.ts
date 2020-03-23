@@ -50,6 +50,8 @@ export enum StmMessages {
   VolumetricGroup1 = 'K',
   VolumetricGroup2 = 'L',
 
+  PackageEnd = 'M'
+
 }
 
 export enum StmCommands {
@@ -86,6 +88,7 @@ export enum StmCommands {
   SetGreenMachine = 'a',
   SetBlueMachine = 'b',
   
+  PackageEnd = 'c',
 }
 
 /*				

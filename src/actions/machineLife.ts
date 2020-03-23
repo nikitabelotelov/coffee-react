@@ -247,6 +247,8 @@ class MachineLife {
       emitStm({id: StmCommands.SetBlueGroup2, content: `${commands[StmCommands.SetBlueGroup2]}`})
       emitStm({id: StmCommands.SetGreenGroup2, content: `${commands[StmCommands.SetGreenGroup2]}`})
     }
+
+    emitStm({id: StmCommands.PackageEnd, content: `1`})
   }
 }
 
