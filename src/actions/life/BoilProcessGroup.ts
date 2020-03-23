@@ -59,14 +59,6 @@ export const BoilProcessGroup = (
     return { ...state }
   }
 
-  if (machine[StmMessages.Button9] === '1') {
-    state.step = '0'
-    state.tempEnd = 0
-    state.buttonState = machine[button]
-    changeStatus(ProcessStatus.done)
-    return { ...state }
-  }
-
   const presoakingTime = (parseInt(settings[presoaking], 10) || 0) * 1000
   const postPresoakingTime = (parseInt(settings[postPresoaking], 10) || 0) * 1000
 

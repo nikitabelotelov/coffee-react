@@ -64,7 +64,7 @@ class MachineLife {
     })
     this.addProcess({
       process: cleanMode,
-      children: []
+      children: [boilGroup1, boilGroup2, predictWarm]
     })
 
     this.addProcess({
