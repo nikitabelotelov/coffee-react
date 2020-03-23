@@ -120,25 +120,25 @@ const sendMessages = () => {
   }
 }
 
-let temp123 = 0
+//let temp123 = 0
 usart.msgHandlers.push(message => {
   const stm = Converter.fromString(message) as ISTMMessage;
   if (stm.id === StmMessages.Button3) {
-    temp123++
+    //temp123++
   }
   if (stm.id === StmMessages.VolumetricGroup1) {
   //  console.log('volumet1 = ', stm.content)
   }
   //console.log('MSG ', msgRecAfterLife, ' id: ', stm.id, ' content: ', stm.content)
   //msgRecAfterLife++
-  if (stm.id === StmMessages.PackageEnd) {
-    console.log('---------------Packange End Received********')
-    blockLifeCycle = 0
-    if (intervalRunned) {
-      clearTimeout(intervalRunned)
-      intervalRunned = 0
-    }
-  }
+  //if (stm.id === StmMessages.PackageEnd) {
+    //console.log('---------------Packange End Received********')
+    //blockLifeCycle = 0
+    //if (intervalRunned) {
+    //  clearTimeout(intervalRunned)
+    //  intervalRunned = 0
+    //}
+  //}
   messagesFromStm.push(stm);
   sendMessages();
 });

@@ -219,7 +219,9 @@ function rootReducer(state: IAppState = initialState, action: {
           return state
         }
         state.machine[(action.payload as ISTMMessage).id] = (action.payload as ISTMMessage).content;
-
+        if ((action.payload as ISTMMessage).id === StmMessages.Button3) {
+          console.log('Button3 = ', (action.payload as ISTMMessage).content)
+        }
         if ((action.payload as ISTMMessage).id === StmMessages.PredictGroupTemperature) {
           state.machine[(action.payload as ISTMMessage).id] = `${Math.round(Converter.voltToCelsium((action.payload as ISTMMessage).content) * 10) / 10}`
         }
