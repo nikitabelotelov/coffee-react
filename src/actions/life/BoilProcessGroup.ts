@@ -7,6 +7,7 @@ const checkToStop = (button: StmMessages.Button3 | StmMessages.Button6, state: I
   const machine = store.getState().machine
   if ((machine[button] === '1' || machine[button] === '2') && machine[button] !== state.buttonState) {
     state.step = '0'
+    console.log('CHECK TO STOP mb=', machine[button], ' state= ',state.buttonState)
     state.buttonState = machine[button]
     return false
   }
@@ -45,6 +46,13 @@ export const BoilProcessGroup = (
   }
 
   if (machine[StmMessages.Button1] === '1') {
+    state.step = '0'
+    state.buttonState = machine[button]
+    changeStatus(ProcessStatus.done)
+    return { ...state }
+  }
+
+  if (machine[StmMessages.Button9] === '1') {
     state.step = '0'
     state.buttonState = machine[button]
     changeStatus(ProcessStatus.done)
