@@ -31,7 +31,6 @@ class Usart {
       const end = this.buffer.indexOf(Constants.endBit.charCodeAt(0))
       if (end > -1) {
         const message = this.buffer.splice(0, end+1)
-        this.buffer = this.buffer.slice(end + 1)
         const msgObject = new Message()
         const stringMsg = msgObject.getMessageFromCode(message)
         if (stringMsg) {
