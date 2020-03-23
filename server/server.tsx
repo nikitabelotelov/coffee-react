@@ -120,7 +120,6 @@ let temp123 = 0
 usart.msgHandlers.push(message => {
   const stm = Converter.fromString(message) as ISTMMessage;
   if (stm.id === StmMessages.Button3) {
-    console.log('B3 = ', stm.content, '       : ', temp123)
     temp123++
   }
   messagesFromStm.push(stm);
@@ -220,11 +219,8 @@ wss.on("connection", function connectionListener(ws) {
   });
 });
 
-let stepVar = 0
 setTimeout(()=>{
   setInterval(()=>{
     Life.step()
-    console.log('step: ', stepVar)
-    stepVar++
   }, 50)
 }, 5000)
