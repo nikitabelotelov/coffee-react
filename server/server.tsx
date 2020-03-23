@@ -246,7 +246,7 @@ setTimeout(()=>{
       intervalRunned = setTimeout(() => {
         console.log('Dont have a message very long time')
         Life.step()
-      }, 100)
+      }, 1000)
     }
-  }, 50)
+  }, 500)
 }, 5000)
