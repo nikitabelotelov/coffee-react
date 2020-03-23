@@ -129,7 +129,7 @@ usart.msgHandlers.push(message => {
     console.log('volumet1 = ', stm.content)
   }
   if (stm.id === StmMessages.PackageEnd) {
-    console.log('Packange End Received')
+    console.log('---------------Packange End Received********')
     blockLifeCycle = 0
     if (intervalRunned) {
       clearTimeout(intervalRunned)
