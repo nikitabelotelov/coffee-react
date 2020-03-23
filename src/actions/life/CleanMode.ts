@@ -152,7 +152,7 @@ export const CleanMode = (
       break;
     default:
       changeStatus(ProcessStatus.done)
-      commands[StmCommands.SetLightButton1] = 1
+      commands[StmCommands.SetLightButton9] = 1
       if (machine[button] === '1' ||  machine[button] === '2') {
         if (state.buttonState === '1' || state.buttonState === '2') {
           if (machine[button] !== state.buttonState) {
