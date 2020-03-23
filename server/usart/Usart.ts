@@ -17,7 +17,7 @@ class Usart {
         // @ts-ignore
         this.buffer = [...this.buffer, ...data]
         
-        console.log('on data rec: ', JSON.stringify(this.buffer))
+        //console.log('on data rec: ', JSON.stringify(this.buffer))
         this.extractMessage()
       })
       this.queueProcess()
@@ -35,7 +35,7 @@ class Usart {
         const msgObject = new Message()
         const stringMsg = msgObject.getMessageFromCode(message)
         if (stringMsg) {
-          console.log('-------------------------MESSAGE RECEIEVED------------')
+          //console.log('-------------------------MESSAGE RECEIEVED------------')
           this.msgHandlers.forEach(el => el(stringMsg))
         }
         this.extractMessage()

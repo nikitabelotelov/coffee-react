@@ -122,6 +122,9 @@ usart.msgHandlers.push(message => {
   if (stm.id === StmMessages.Button3) {
     temp123++
   }
+  if (stm.id === StmMessages.VolumetricGroup1) {
+    console.log('volumet1 = ', stm.content)
+  }
   messagesFromStm.push(stm);
   sendMessages();
 });
