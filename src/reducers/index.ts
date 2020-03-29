@@ -121,7 +121,7 @@ function CreateMiddleTrend(source: ITempPoint[]): ITempPoint[] {
   const result: ITempPoint[] = []
   const average = source.reduce((res, el) => { return res + el.value } , 0) / source.length
 
-  for (let i = 0; i < source.length - 1; i++) {
+  for (let i = 0; i < source.length; i++) {
     const current = source[i]
     if(Math.abs(current.value - average) > 10) {
       if(i === 0) {
@@ -129,6 +129,9 @@ function CreateMiddleTrend(source: ITempPoint[]): ITempPoint[] {
       } else {
         result.push({ value: source[i - 1].value, time: current.time })
       }
+    }
+    else {
+      result.push(current)
     }
   }
   return result
