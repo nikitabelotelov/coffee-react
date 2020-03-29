@@ -17,6 +17,7 @@ export const WaterLevel = (state: IObjectAny, commands: ICommandBlock, changeSta
         commands[StmCommands.SetRelay8]++
       } else {
         state.wasWIP = 0
+        changeStatus(ProcessStatus.done)
       }
       break
     case "2":
@@ -25,7 +26,6 @@ export const WaterLevel = (state: IObjectAny, commands: ICommandBlock, changeSta
         commands[StmCommands.SetValve1] = 1
         commands[StmCommands.SetRelay8]++
         state.wasWIP = 1
-        state.start = 0
       }
       break
   }
