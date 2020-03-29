@@ -20,8 +20,8 @@ export const WaterLevel = (state: IObjectAny, commands: ICommandBlock, changeSta
       }
       break
     case "2":
+      changeStatus(ProcessStatus.wip)
       if (state.wipTime > 3000) {
-        changeStatus(ProcessStatus.wip)
         commands[StmCommands.SetValve1] = 1
         commands[StmCommands.SetRelay8]++
         state.wasWIP = 1

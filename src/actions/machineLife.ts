@@ -46,6 +46,7 @@ class MachineLife {
     const predictWarm = new Process('predictWarm', WarmPredict, 0)
     const sleepMode = new Process('SleepMode', SleepMode, 0)
     const hotWater = new Process('HotWater', HotWater, 0)
+    hotWater.onStatusChangeHdl(ProcessStatus.done)
     const colorG1 = new Process('ColorG1', Color("Group1Temperature", "middleTTrendG1", StmCommands.SetRedGroup1, StmCommands.SetGreenGroup1, StmCommands.SetBlueGroup1), 0)
     const colorG2 = new Process('ColorG2', Color("Group2Temperature", "middleTTrendG2", StmCommands.SetRedGroup2, StmCommands.SetGreenGroup2, StmCommands.SetBlueGroup2), 0)
     const cleanMode = new Process('CleanMode', CleanMode(StmMessages.Button9), 0)
