@@ -13,6 +13,7 @@ import { CleanMode } from "./life/CleanMode"
 import { Color } from "./life/Color"
 import { store, emitStm } from "./serverRedux"
 import { SteamPressure } from "./life/SteamPressure"
+import { HotWater } from "./life/HotWater"
 
 export interface IProcesses {
   process: Process
@@ -44,6 +45,7 @@ class MachineLife {
     const waterLevel = new Process('waterLevel', WaterLevel, 0)
     const predictWarm = new Process('predictWarm', WarmPredict, 0)
     const sleepMode = new Process('SleepMode', SleepMode, 0)
+    const hotWater = new Process('HotWater', HotWater, 0)
     const colorG1 = new Process('ColorG1', Color("Group1Temperature", "middleTTrendG1", StmCommands.SetRedGroup1, StmCommands.SetGreenGroup1, StmCommands.SetBlueGroup1), 0)
     const colorG2 = new Process('ColorG2', Color("Group2Temperature", "middleTTrendG2", StmCommands.SetRedGroup2, StmCommands.SetGreenGroup2, StmCommands.SetBlueGroup2), 0)
     const cleanMode = new Process('CleanMode', CleanMode(StmMessages.Button9), 0)
@@ -72,6 +74,10 @@ class MachineLife {
       children: []
     })
     this.addProcess({
+      process: hotWater,
+      children: [],
+    })
+    this.addProcess({
       process: boilGroup1,
       children: [waterLevelG1]
     })
@@ -97,6 +103,8 @@ class MachineLife {
 
     cleanMode.start()
     sleepMode.start()
+
+    hotWater.start()
 
     this.addProcess({
       process: steamPressure,
@@ -255,6 +263,7 @@ class MachineLife {
     }
 
     emitStm({id: StmCommands.SetLightButton1, content: `${commands[StmCommands.SetLightButton1]}`})
+    emitStm({id: StmCommands.SetLightButton8, content: `${commands[StmCommands.SetLightButton8]}`})
     emitStm({id: StmCommands.SetLightButton9, content: `${commands[StmCommands.SetLightButton9]}`})
 
     emitStm({id: StmCommands.PackageEnd, content: `1`})
