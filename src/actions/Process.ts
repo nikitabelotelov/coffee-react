@@ -33,12 +33,18 @@ export class Process {
 
   constructor(name: string, 
               stateMachine: (state:IObjectAny, commands: ICommandBlock, changeStatus: (newStatus: ProcessStatus) => void) => IObjectAny,
-              wipTimeout: number ) {
+              wipTimeout: number,
+              status?: ProcessStatus) {
     this.name = name
     this.stateMachine = stateMachine
     this.onStatusChangeHdl = this.onStatusChangeHdl.bind(this)
     this.wipTimeout = wipTimeout
     this.wipStart = Date.now()
+    if (status === ProcessStatus.done) {
+      this.wipStart = 0
+      this.timeDone = Date.now()
+      this.status = ProcessStatus.done
+    }
   }
 
   public start() {
