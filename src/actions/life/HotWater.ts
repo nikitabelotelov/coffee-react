@@ -20,6 +20,7 @@ export const HotWater = (
         state.step = '0'
       } else {
         changeStatus(ProcessStatus.wip)
+        commands[StmCommands.SetValve6]++
         if (state.wipTime % 1000 < 500) {
           commands[StmCommands.SetLightButton8] = 0
         } else {
